@@ -1,7 +1,7 @@
-import { StyleSheet, View, type ViewProps } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, View, type ViewProps } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import { Colors, Spacing } from "@tokens";
-import { Colors, Spacing } from "../../styles/";
+import { Colors, Spacing } from '../../styles/';
 
 export type ScreenProps = ViewProps & {
   padded?: boolean | number;
@@ -26,7 +26,7 @@ export function Screen({
   ...rest
 }: ScreenProps) {
   const insets = useSafeAreaInsets();
-  const pad = typeof padded === "number" ? padded : padded ? Spacing.md : 0;
+  const pad = typeof padded === 'number' ? padded : padded ? Spacing.md : 0;
 
   return (
     <View
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   centered: {
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

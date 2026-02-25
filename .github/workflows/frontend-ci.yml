@@ -2,9 +2,9 @@ name: Frontend CI
 
 on:
   pull_request:
-    branches:
-      - dev
-      - main
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
 
 jobs:
   frontend:
@@ -28,3 +28,8 @@ jobs:
         run: |
           cd frontend
           npm run lint
+
+      - name: Format check
+        run: |
+          cd frontend
+          npm run format:check

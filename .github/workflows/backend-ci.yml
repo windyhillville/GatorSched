@@ -2,9 +2,9 @@ name: Backend CI
 
 on:
   pull_request:
-    branches:
-      - dev
-      - main
+    branches: [dev, main]
+  push:
+    branches: [dev, main]
 
 jobs:
   backend:
@@ -23,7 +23,17 @@ jobs:
         run: |
           cd backend
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Ruff format check
+        run: |
+          cd backend
+          ruff format --check .
+
+      - name: Ruff lint
+        run: |
+          cd backend
+          ruff check .
 
       - name: Run tests
         run: |
