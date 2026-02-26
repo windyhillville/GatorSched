@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 
-app = FastAPI(title="GatorSched API")
+from gatorsched_api.api.v1.router import api_router
+from gatorsched_api.api.v1.routes.health import get_version
 
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
+app = FastAPI(title="GatorSched API", version=get_version())
+app.include_router(api_router)

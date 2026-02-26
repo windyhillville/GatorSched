@@ -24,6 +24,33 @@ backend/
 └── README.md # Backend documentation
 ```
 
+## Backend: Editable install + version metadata
+
+This backend is packaged using `pyproject.toml` so we can read version info at runtime
+(e.g., for the `GET /version` endpoint).
+
+### Install (dev)
+
+From the repo root:
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate  # Windows: .\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+
+pip install -r requirements.txt -r requirements-dev.txt
+pip install -e .
+```
+
+### Run the API (dev)
+
+From `backend/` with the venv activated:
+
+```bash
+uvicorn gatorsched_api.main:app --reload --host 127.0.0.1 --port 8000
+```
+
 ### Notes
 
 - `main.py` is the entry point for running the FastAPI server.
