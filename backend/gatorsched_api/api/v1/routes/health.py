@@ -21,4 +21,4 @@ def health():
 
 @router.get("/version")
 def version_info():
-    return {"name": APP_NAME, "version": version(APP_NAME)}
+    return {"name": APP_NAME, "version": get_version()}
