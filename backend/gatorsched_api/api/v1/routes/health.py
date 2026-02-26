@@ -1,4 +1,5 @@
-from importlib.metadata import PackageNotFoundError, version
+from importlib.metadata import PackageNotFoundError
+from importlib.metadata import version as pkg_version
 
 from fastapi import APIRouter
 
@@ -9,7 +10,7 @@ router = APIRouter(tags=["Meta"])
 
 def get_version() -> str:
     try:
-        return version(APP_NAME)
+        return pkg_version(APP_NAME)
     except PackageNotFoundError:
         return "0.0.0"
 
