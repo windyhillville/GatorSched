@@ -1,0 +1,38 @@
+{
+  "folders": [
+    { "name": "repo", "path": "." },
+    { "name": "frontend", "path": "frontend" },
+    { "name": "backend", "path": "backend" }
+  ],
+  "settings": {
+    // ---- Python (backend only behavior still works well from root when the interpreter is set) ----
+    "python.defaultInterpreterPath": "${workspaceFolder:repo}/backend/.venv/bin/python",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestArgs": ["backend/tests"],
+    "python.analysis.extraPaths": ["${workspaceFolder:backend}"],
+
+    // ---- Formatting behavior (safe defaults) ----
+    "editor.formatOnSave": true,
+
+    "[python]": {
+      "editor.defaultFormatter": "charliermarsh.ruff"
+    },
+    "[javascript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[javascriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit",
+      "source.organizeImports": "explicit"
+    }
+  }
+}
