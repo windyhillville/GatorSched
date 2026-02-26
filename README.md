@@ -77,7 +77,7 @@ python -m pip install --upgrade pip
 ## 2) Install backend dependencies
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt -r requirements-dev.txt
 ```
 
 ## 3) Run the API server (don't worry about this right now)
