@@ -10,11 +10,9 @@ from gatorsched_api.db.base import Base
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.main import app
 
-# IMPORTANT:
-# - sqlite:// (no file path) + StaticPool keeps ONE in-memory DB alive across connections.
-# - Without StaticPool, you often get "no such table" because each connection gets a fresh DB.
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
+# - sqlite:// (no file path) + StaticPool keeps ONE in-memory DB alive across entire testing suite
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False},
@@ -35,7 +33,6 @@ def override_get_db() -> Generator[Session, None, None]:
 @pytest.fixture(scope="session", autouse=True)
 def create_test_db() -> Generator[None, None, None]:
     # Import models so SQLAlchemy knows about them before create_all()
-    # (otherwise tables might not get created)
     from gatorsched_api.models import employee  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
@@ -49,3 +46,12 @@ def client() -> Generator[TestClient, None, None]:
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def db_session():
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
