@@ -1,7 +1,9 @@
 from fastapi import APIRouter
 
-from gatorsched_api.api.v1.routes.health import router as health_router
+from .routes.employees import router as employees_router
+from .routes.health import router as health_router
 
-api_router = APIRouter(prefix="/api/v1")
+api_router = APIRouter()
 
 api_router.include_router(health_router)
+api_router.include_router(employees_router)
