@@ -5,7 +5,7 @@ from gatorsched_api.api.v1.routes.health import get_version
 from gatorsched_api.db.init_db import init_db
 
 app = FastAPI(title="GatorSched API", version=get_version())
-app.include_router(api_router)
+app.include_router(api_router, prefix="/api/v1")
 
 
 @app.on_event("startup")
