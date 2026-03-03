@@ -1,0 +1,18 @@
+from pydantic import BaseModel, ConfigDict
+from datetime import time, date
+
+
+class ShiftBase(BaseModel):
+    date: date
+    start_time: time
+    end_time: time
+    min_staff_req: int
+
+
+class ShiftCreate(ShiftBase):
+    pass
+
+
+class ShiftRead(ShiftBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
