@@ -12,8 +12,8 @@ def test_shifts_returns_200(client):
 
 def test_shifts_returns_one_after_insert(client, db_session):
     role = Role(
-        name="Manager",
-        description="Manages staff.",
+        name="Server",
+        description="Serves food to customers.",
     )
 
     db_session.add(role)

@@ -9,6 +9,7 @@ from sqlalchemy.pool import StaticPool
 from gatorsched_api.db.base import Base
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.main import app
+from gatorsched_api.models.role import Role
 
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
@@ -66,3 +67,17 @@ def enable_foreign_keys(dbapi_conn, connection_record):
     cursor = dbapi_conn.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
+
+@pytest.fixture()
+def cashier_role(db_session):
+    role = db_session.query(Role).filter(Role.name == "Cashier").first()
+    if not role:
+        role = Role(
+            name="Cashier",
+            description="Handles checkout.",
+        )
+        db_session.add(role)
+        db_session.commit()
+        db_session.refresh(role)
+
+    return role.id

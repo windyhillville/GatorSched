@@ -12,21 +12,13 @@ def test_schedule_assignments_returns_200(client):
     assert isinstance(res.json(), list)
 
 
-def test_schedule_assignments_returns_one_after_insert(client, db_session):
-    role = Role(
-        name="Sales Associate",
-        description="Sells products to customers.",
-    )
-
-    db_session.add(role)
-    db_session.commit()
-
+def test_schedule_assignments_returns_one_after_insert(client, db_session, cashier_role):
     employee = Employee(
         name="Ben Davidson",
         email="ben11@example.com",
         access_level=AccessLevel.manager,
         is_active=True,
-        role_id=role.id,
+        role_id=cashier_role,
     )
 
     db_session.add(employee)
@@ -37,7 +29,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session):
         start_time=time(9, 0),
         end_time=time(17, 0),
         min_staff_req=2,
-        role_id=role.id,
+        role_id=cashier_role,
     )
 
     db_session.add(shift)

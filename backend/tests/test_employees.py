@@ -1,5 +1,4 @@
 from gatorsched_api.models.employee import AccessLevel, Employee
-from gatorsched_api.models.role import Role
 
 
 def test_employees_returns_200(client):
@@ -8,15 +7,7 @@ def test_employees_returns_200(client):
     assert isinstance(res.json(), list)
 
 
-def test_employees_returns_one_after_insert(client, db_session):
-    role = Role(
-        name="Stocker",
-        description="Stocks shelves.",
-    )
-
-    db_session.add(role)
-    db_session.commit()
-
+def test_employees_returns_one_after_insert(client, db_session, cashier_role):
     employee = Employee(
         name="Ben Davidson",
         email="ben@example.com",
@@ -24,7 +15,7 @@ def test_employees_returns_one_after_insert(client, db_session):
         max_weekly_hours=40,
         access_level=AccessLevel.manager,
         is_active=True,
-        role_id=role.id,
+        role_id=cashier_role,
     )
 
     db_session.add(employee)

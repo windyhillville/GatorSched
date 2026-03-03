@@ -8,7 +8,7 @@ def test_roles_returns_200(client):
 
 
 def test_roles_returns_one_after_insert(client, db_session):
-    role = Role(name="Cashier", description="Handles customer checkout.")
+    role = Role(name="Stocker", description="Stocks shelves.")
 
     db_session.add(role)
     db_session.commit()
@@ -18,8 +18,8 @@ def test_roles_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    cashier = next((r for r in data if r["name"] == "Cashier"), None)
+    cashier = next((r for r in data if r["name"] == "Stocker"), None)
 
     assert cashier is not None
-    assert cashier["name"] == "Cashier"
-    assert cashier["description"] == "Handles customer checkout."
+    assert cashier["name"] == "Stocker"
+    assert cashier["description"] == "Stocks shelves."
