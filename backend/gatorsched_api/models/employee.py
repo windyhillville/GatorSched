@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import StrEnum
 
-from sqlalchemy import Boolean, Integer, String
+from sqlalchemy import Boolean, Integer, String, ForeignKey
 from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -35,3 +35,6 @@ class Employee(Base):
     )
 
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+# Foreign Key: Employee has a role.
+role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)

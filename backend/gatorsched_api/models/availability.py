@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 
-from sqlalchemy import Integer, Time
+from sqlalchemy import Integer, Time, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from datetime import time
 
@@ -19,3 +19,6 @@ class Availability(Base):
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
 
     end_time: Mapped[time] = mapped_column(Time, nullable=False)
+
+    # Foreign Key: Belongs to an employee.
+    employee_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
