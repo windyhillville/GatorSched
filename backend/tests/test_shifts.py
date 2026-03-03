@@ -42,8 +42,9 @@ def test_shifts_returns_one_after_insert(client, db_session):
     assert shift["start_time"] == "09:15:00"
     assert shift["end_time"] == "17:00:00"
 
+
 def test_create_shift(client, db_session):
-    role = Role (
+    role = Role(
         name="Sales Assistant",
         description="Helps with selling product to customers.",
     )

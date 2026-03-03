@@ -1,7 +1,6 @@
 from datetime import date, time
 
 from gatorsched_api.models.employee import AccessLevel, Employee
-from gatorsched_api.models.role import Role
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.models.swap_request import SwapRequest
@@ -64,6 +63,7 @@ def test_request_swaps_returns_one_after_insert(client, db_session, cashier_role
     assert request is not None
     assert request["requester_id"] == requester.id
     assert request["status"] == "pending"
+
 
 def test_create_schedule_assignment(client, db_session, cashier_role):
     requester = Employee(

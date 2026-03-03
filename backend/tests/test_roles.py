@@ -24,8 +24,9 @@ def test_roles_returns_one_after_insert(client, db_session):
     assert cashier["name"] == "Stocker"
     assert cashier["description"] == "Stocks shelves."
 
+
 def test_create_role(client):
-    payload ={
+    payload = {
         "name": "Manager",
         "description": "Manages the store.",
     }

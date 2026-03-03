@@ -2,7 +2,6 @@ from datetime import time
 
 from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.employee import AccessLevel, Employee
-from gatorsched_api.models.role import Role
 
 
 def test_availabilities_returns_200(client):
@@ -42,6 +41,7 @@ def test_availability_returns_one_after_insert(client, db_session, cashier_role)
     assert ben_availability is not None
     assert ben_availability["day_of_week"] == 0
     assert ben_availability["employee_id"] == employee.id
+
 
 def test_create_availability(client, db_session, cashier_role):
     employee = Employee(

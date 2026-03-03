@@ -34,7 +34,8 @@ def override_get_db() -> Generator[Session, None, None]:
 @pytest.fixture(scope="session", autouse=True)
 def create_test_db() -> Generator[None, None, None]:
     # Import models so SQLAlchemy knows about them before create_all()
-    from gatorsched_api.models.availability import Availability # noqa: F401
+    # ruff: noqa: I001
+    from gatorsched_api.models.availability import Availability  # noqa: F401
     from gatorsched_api.models.employee import Employee  # noqa: F401
     from gatorsched_api.models.role import Role  # noqa: F401
     from gatorsched_api.models.schedule_assignment import ScheduleAssignment  # noqa: F401
@@ -62,11 +63,13 @@ def db_session():
     finally:
         db.close()
 
+
 @event.listens_for(engine, "connect")
 def enable_foreign_keys(dbapi_conn, connection_record):
     cursor = dbapi_conn.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
+
 
 @pytest.fixture()
 def cashier_role(db_session):

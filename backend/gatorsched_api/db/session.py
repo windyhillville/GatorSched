@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine,event
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker
 
 DATABASE_URL = "sqlite:///./gatorsched.db"
@@ -13,6 +13,7 @@ SessionLocal = sessionmaker(
     autoflush=False,
     autocommit=False,
 )
+
 
 @event.listens_for(engine, "connect")
 def enable_foreign_keys(dbapi_conn, connection_record):

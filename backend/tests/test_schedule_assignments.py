@@ -1,8 +1,6 @@
 from datetime import date, time
 
-from gatorsched_api.models import employee
 from gatorsched_api.models.employee import AccessLevel, Employee
-from gatorsched_api.models.role import Role
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
 
@@ -54,6 +52,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session, cashi
     assert sched_assignment is not None
     assert sched_assignment["shift_id"] == shift.id
     assert sched_assignment["status"] == "assigned"
+
 
 def test_create_schedule_assignment(client, db_session, cashier_role):
     employee = Employee(
