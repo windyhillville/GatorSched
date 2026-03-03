@@ -7,6 +7,7 @@ from gatorsched_api.schemas.role import RoleRead
 
 router = APIRouter(tags=["roles"])
 
+
 @router.get("/roles", response_model=list[RoleRead])
 def list_roles(db: Session = Depends(get_db)) -> list[RoleRead]:
     roles = db.query(Role)

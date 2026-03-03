@@ -7,6 +7,7 @@ from gatorsched_api.schemas.shift import ShiftRead
 
 router = APIRouter(tags=["shifts"])
 
+
 @router.get("/shifts", response_model=list[ShiftRead])
 def list_shifts(db: Session = Depends(get_db)) -> list[ShiftRead]:
     shifts = db.query(Shift)

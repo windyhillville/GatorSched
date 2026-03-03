@@ -9,7 +9,7 @@ def test_employees_returns_200(client):
 
 
 def test_employees_returns_one_after_insert(client, db_session):
-    role = Role (
+    role = Role(
         name="Stocker",
         description="Stocks shelves.",
     )

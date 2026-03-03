@@ -6,6 +6,7 @@ class ScheduleAssignmentBase(BaseModel):
     employee_id: int
     shift_id: int
 
+
 class ScheduleAssignmentCreate(ScheduleAssignmentBase):
     pass
 

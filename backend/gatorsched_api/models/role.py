@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from gatorsched_api.db.base import Base
 
+
 class Role(Base):
     __tablename__ = "roles"
 

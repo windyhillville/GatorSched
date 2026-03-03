@@ -1,5 +1,6 @@
+from datetime import date, time
+
 from pydantic import BaseModel, ConfigDict
-from datetime import time, date
 
 
 class ShiftBase(BaseModel):

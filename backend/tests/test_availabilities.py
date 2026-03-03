@@ -1,7 +1,8 @@
-from gatorsched_api.models.availability import Availability
-from gatorsched_api.models.employee import Employee, AccessLevel
-from gatorsched_api.models.role import Role
 from datetime import time
+
+from gatorsched_api.models.availability import Availability
+from gatorsched_api.models.employee import AccessLevel, Employee
+from gatorsched_api.models.role import Role
 
 
 def test_availabilities_returns_200(client):
@@ -11,7 +12,7 @@ def test_availabilities_returns_200(client):
 
 
 def test_availability_returns_one_after_insert(client, db_session):
-    role = Role (
+    role = Role(
         name="Server",
         description="Serves food to customers.",
     )

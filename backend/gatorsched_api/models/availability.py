@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-
-from sqlalchemy import Integer, Time, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
 from datetime import time
+
+from sqlalchemy import ForeignKey, Integer, Time
+from sqlalchemy.orm import Mapped, mapped_column
 
 from gatorsched_api.db.base import Base
 

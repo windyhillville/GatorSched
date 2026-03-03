@@ -7,6 +7,7 @@ class SwapRequestBase(BaseModel):
     cover_id: int | None = None
     schedule_assignment_id: int
 
+
 class SwapRequestCreate(SwapRequestBase):
     pass
 

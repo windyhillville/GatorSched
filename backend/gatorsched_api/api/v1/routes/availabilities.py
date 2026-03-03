@@ -7,6 +7,7 @@ from gatorsched_api.schemas.availability import AvailabilityRead
 
 router = APIRouter(tags=["availabilities"])
 
+
 @router.get("/availabilities", response_model=list[AvailabilityRead])
 def list_availabilities(db: Session = Depends(get_db)) -> list[AvailabilityRead]:
     availabilities = db.query(Availability)

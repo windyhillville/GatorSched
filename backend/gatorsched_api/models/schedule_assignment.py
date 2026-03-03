@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-
-from sqlalchemy import Integer, String, ForeignKey
+from sqlalchemy import ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from gatorsched_api.db.base import Base

@@ -1,11 +1,11 @@
 from fastapi import APIRouter
 
+from .routes.availabilities import router as availabilities_router
 from .routes.employees import router as employees_router
 from .routes.health import router as health_router
 from .routes.roles import router as roles_router
-from .routes.shifts import router as shifts_router
-from .routes.availabilities import router as availabilities_router
 from .routes.schedule_assignments import router as schedule_assignments_router
+from .routes.shifts import router as shifts_router
 from .routes.swap_requests import router as swap_requests_router
 
 api_router = APIRouter()

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
-
-from sqlalchemy import Integer, Time, Date, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
 from datetime import date, time
+
+from sqlalchemy import Date, ForeignKey, Integer, Time
+from sqlalchemy.orm import Mapped, mapped_column
 
 from gatorsched_api.db.base import Base
 
@@ -22,5 +22,5 @@ class Shift(Base):
     min_staff_req: Mapped[int] = mapped_column(Integer, default=1, nullable=False)
     # There should always be at least 1 staff on any given shift.
 
-    #Foreign key
+    # Foreign key
     role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)

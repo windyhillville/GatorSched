@@ -1,9 +1,10 @@
-from gatorsched_api.models.swap_request import SwapRequest
+from datetime import date, time
+
+from gatorsched_api.models.employee import AccessLevel, Employee
+from gatorsched_api.models.role import Role
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.models.employee import Employee, AccessLevel
-from gatorsched_api.models.role import Role
-from datetime import time, date
+from gatorsched_api.models.swap_request import SwapRequest
 
 
 def test_swap_requests_returns_200(client):
@@ -13,7 +14,7 @@ def test_swap_requests_returns_200(client):
 
 
 def test_request_swaps_returns_one_after_insert(client, db_session):
-    role = Role (
+    role = Role(
         name="Cook",
         description="Cooks meals.",
     )
@@ -32,10 +33,10 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
     db_session.add(requester)
     db_session.commit()
 
-    shift = Shift (
+    shift = Shift(
         date=date(2026, 3, 2),
-        start_time=time(9,0),
-        end_time=time(17,0),
+        start_time=time(9, 0),
+        end_time=time(17, 0),
         min_staff_req=2,
         role_id=role.id,
     )
@@ -43,7 +44,7 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
     db_session.add(shift)
     db_session.commit()
 
-    assignment = ScheduleAssignment (
+    assignment = ScheduleAssignment(
         employee_id=requester.id,
         shift_id=shift.id,
         status="assigned",
@@ -52,7 +53,7 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
     db_session.add(assignment)
     db_session.commit()
 
-    swap = SwapRequest (
+    swap = SwapRequest(
         requester_id=requester.id,
         cover_id=None,
         schedule_assignment_id=assignment.id,

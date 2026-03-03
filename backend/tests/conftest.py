@@ -33,12 +33,14 @@ def override_get_db() -> Generator[Session, None, None]:
 @pytest.fixture(scope="session", autouse=True)
 def create_test_db() -> Generator[None, None, None]:
     # Import models so SQLAlchemy knows about them before create_all()
-    from gatorsched_api.models import employee  # noqa: F401
-    from gatorsched_api.models import role  # noqa: F401
-    from gatorsched_api.models import shift  # noqa: F401
-    from gatorsched_api.models import availability  # noqa: F401
-    from gatorsched_api.models import schedule_assignment  # noqa: F401
-    from gatorsched_api.models import swap_request  # noqa: F401
+    from gatorsched_api.models import (
+        availability,  # noqa: F401
+        employee,  # noqa: F401
+        role,  # noqa: F401
+        schedule_assignment,  # noqa: F401
+        shift,  # noqa: F401
+        swap_request,  # noqa: F401
+    )
 
     Base.metadata.create_all(bind=engine)
     yield

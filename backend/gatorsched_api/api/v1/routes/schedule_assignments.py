@@ -7,6 +7,7 @@ from gatorsched_api.schemas.schedule_assignment import ScheduleAssignmentRead
 
 router = APIRouter(tags=["schedule_assignments"])
 
+
 @router.get("/schedule_assignments", response_model=list[ScheduleAssignmentRead])
 def list_schedule_assignments(db: Session = Depends(get_db)) -> list[ScheduleAssignmentRead]:
     schedule_assignments = db.query(ScheduleAssignment)

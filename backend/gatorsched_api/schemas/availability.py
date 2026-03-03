@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict
 from datetime import time
+
+from pydantic import BaseModel, ConfigDict
 
 
 class AvailabilityBase(BaseModel):

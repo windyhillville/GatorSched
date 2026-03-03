@@ -1,11 +1,14 @@
-from gatorsched_api.models.shift import Shift
-from gatorsched_api.models.role import Role
 from datetime import date, time
+
+from gatorsched_api.models.role import Role
+from gatorsched_api.models.shift import Shift
+
 
 def test_shifts_returns_200(client):
     res = client.get("/api/v1/shifts")
     assert res.status_code == 200
     assert isinstance(res.json(), list)
+
 
 def test_shifts_returns_one_after_insert(client, db_session):
     role = Role(
@@ -18,8 +21,8 @@ def test_shifts_returns_one_after_insert(client, db_session):
 
     shift = Shift(
         date=date(2026, 3, 2),
-        start_time=time(9,15),
-        end_time=time(17,0),
+        start_time=time(9, 15),
+        end_time=time(17, 0),
         min_staff_req=2,
         role_id=role.id,
     )
