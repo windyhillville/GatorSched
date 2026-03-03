@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.schemas.shift import ShiftRead
+from gatorsched_api.schemas.shift import ShiftCreate
 
 router = APIRouter(tags=["shifts"])
 
@@ -12,3 +13,11 @@ router = APIRouter(tags=["shifts"])
 def list_shifts(db: Session = Depends(get_db)) -> list[ShiftRead]:
     shifts = db.query(Shift)
     return shifts.all()
+
+@router.post("/shifts", response_model=ShiftRead, status_code=201)
+def create_shift(shift_in: ShiftCreate, db: Session = Depends(get_db)) -> Shift:
+    shift = Shift(**shift_in.model_dump())
+    db.add(shift)
+    db.commit()
+    db.refresh(shift)
+    return shift

@@ -42,3 +42,38 @@ def test_availability_returns_one_after_insert(client, db_session, cashier_role)
     assert ben_availability is not None
     assert ben_availability["day_of_week"] == 0
     assert ben_availability["employee_id"] == employee.id
+
+def test_create_availability(client, db_session, cashier_role):
+    employee = Employee(
+        name="John Smith",
+        email="john3@example.com",
+        access_level=AccessLevel.employee,
+        is_active=True,
+        role_id=cashier_role,
+    )
+
+    db_session.add(employee)
+    db_session.commit()
+
+    payload = {
+        "employee_id": employee.id,
+        "day_of_week": 1,
+        "start_time": "08:30:00",
+        "end_time": "17:30:00",
+    }
+
+    create = client.post("/api/v1/availabilities", json=payload)
+    assert create.status_code == 201
+    post_data = create.json()
+    assert post_data["employee_id"] == employee.id
+    assert "id" in post_data
+
+    res = client.get("/api/v1/availabilities")
+    assert res.status_code == 200
+    get_data = res.json()
+    assert isinstance(get_data, list)
+
+    availability = next((s for s in get_data if s["id"] == post_data["id"]), None)
+
+    assert availability is not None
+    assert availability["day_of_week"] == payload["day_of_week"]

@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.schemas.schedule_assignment import ScheduleAssignmentRead
+from gatorsched_api.schemas.schedule_assignment import ScheduleAssignmentCreate
 
 router = APIRouter(tags=["schedule_assignments"])
 
@@ -12,3 +13,11 @@ router = APIRouter(tags=["schedule_assignments"])
 def list_schedule_assignments(db: Session = Depends(get_db)) -> list[ScheduleAssignmentRead]:
     schedule_assignments = db.query(ScheduleAssignment)
     return schedule_assignments.all()
+
+@router.post("/schedule_assignments", response_model=ScheduleAssignmentRead, status_code=201)
+def create_assignment(assignment_in: ScheduleAssignmentCreate, db: Session = Depends(get_db)) -> ScheduleAssignment:
+    assignment = ScheduleAssignment(**assignment_in.model_dump())
+    db.add(assignment)
+    db.commit()
+    db.refresh(assignment)
+    return assignment

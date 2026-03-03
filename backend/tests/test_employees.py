@@ -34,7 +34,7 @@ def test_employees_returns_one_after_insert(client, db_session, cashier_role):
     assert ben["access_level"] == AccessLevel.manager
 
 
-def test_create_employee(client):
+def test_create_employee(client, cashier_role):
     payload = {
         "name": "Johnny Boy",
         "email": "johnny@example.com",
@@ -42,7 +42,7 @@ def test_create_employee(client):
         "max_weekly_hours": 40,
         "access_level": "employee",
         "is_active": True,
-        "role_id": 1,
+        "role_id": cashier_role,
     }
     create = client.post("/api/v1/employees", json=payload)
     assert create.status_code == 201
