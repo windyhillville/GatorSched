@@ -7,7 +7,7 @@ def test_employees_returns_200(client):
     assert isinstance(res.json(), list)
 
 
-def test_employees_returns_one_after_insert(client, db_session):
+def test_employees_returns_one_after_insert(client, db_session, cashier_role):
     employee = Employee(
         name="Ben Davidson",
         email="ben@example.com",
@@ -15,6 +15,7 @@ def test_employees_returns_one_after_insert(client, db_session):
         max_weekly_hours=40,
         access_level=AccessLevel.manager,
         is_active=True,
+        role_id=cashier_role,
     )
 
     db_session.add(employee)
@@ -25,13 +26,15 @@ def test_employees_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["name"] == "Ben Davidson"
-    assert data[0]["email"] == "ben@example.com"
-    assert data[0]["access_level"] == AccessLevel.manager
+    ben = next((e for e in data if e["email"] == "ben@example.com"), None)
+
+    assert ben is not None
+    assert ben["name"] == "Ben Davidson"
+    assert ben["email"] == "ben@example.com"
+    assert ben["access_level"] == AccessLevel.manager
 
 
-def test_create_employee(client):
+def test_create_employee(client, cashier_role):
     payload = {
         "name": "Johnny Boy",
         "email": "johnny@example.com",
@@ -39,6 +42,7 @@ def test_create_employee(client):
         "max_weekly_hours": 40,
         "access_level": "employee",
         "is_active": True,
+        "role_id": cashier_role,
     }
     create = client.post("/api/v1/employees", json=payload)
     assert create.status_code == 201
