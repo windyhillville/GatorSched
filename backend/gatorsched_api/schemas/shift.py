@@ -6,7 +6,8 @@ class ShiftBase(BaseModel):
     date: date
     start_time: time
     end_time: time
-    min_staff_req: int
+    min_staff_req: int = 1
+    role_id: int
 
 
 class ShiftCreate(ShiftBase):

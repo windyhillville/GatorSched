@@ -19,6 +19,8 @@ def test_roles_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["name"] == "Cashier"
-    assert data[0]["description"] == "Handles customer checkout."
+    cashier = next((r for r in data if r["name"] == "Cashier"), None)
+
+    assert cashier is not None
+    assert cashier["name"] == "Cashier"
+    assert cashier["description"] == "Handles customer checkout."

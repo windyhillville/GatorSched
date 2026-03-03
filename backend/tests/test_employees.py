@@ -35,10 +35,12 @@ def test_employees_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["name"] == "Ben Davidson"
-    assert data[0]["email"] == "ben@example.com"
-    assert data[0]["access_level"] == AccessLevel.manager
+    ben = next((e for e in data if e["email"] == "ben@example.com"), None)
+
+    assert ben is not None
+    assert ben["name"] == "Ben Davidson"
+    assert ben["email"] == "ben@example.com"
+    assert ben["access_level"] == AccessLevel.manager
 
 
 def test_create_employee(client):

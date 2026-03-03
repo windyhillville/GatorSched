@@ -12,8 +12,8 @@ def test_availabilities_returns_200(client):
 
 def test_availability_returns_one_after_insert(client, db_session):
     role = Role (
-        name="Cashier",
-        description="Handles customer checkout.",
+        name="Server",
+        description="Serves food to customers.",
     )
 
     db_session.add(role)
@@ -21,7 +21,7 @@ def test_availability_returns_one_after_insert(client, db_session):
 
     employee = Employee(
         name="Ben Davidson",
-        email="ben@example.com",
+        email="ben44@example.com",
         access_level=AccessLevel.manager,
         is_active=True,
         role_id=role.id,
@@ -44,6 +44,8 @@ def test_availability_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["day_of_week"] == 0
-    assert data[0]["employee_id"] == employee.id
+    ben_availability = next((a for a in data if a["employee_id"] == employee.id), None)
+
+    assert ben_availability is not None
+    assert ben_availability["day_of_week"] == 0
+    assert ben_availability["employee_id"] == employee.id

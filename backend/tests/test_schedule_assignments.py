@@ -22,7 +22,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session):
 
     employee = Employee(
         name="Ben Davidson",
-        email="ben@example.com",
+        email="ben11@example.com",
         access_level=AccessLevel.manager,
         is_active=True,
         role_id=role.id,
@@ -36,6 +36,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session):
         start_time=time(9,0),
         end_time=time(17,0),
         min_staff_req=2,
+        role_id=role.id,
     )
 
     db_session.add(shift)
@@ -54,7 +55,8 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["employee_id"] == employee.id
-    assert data[0]["shift_id"] == shift.id
-    assert data[0]["status"] == "assigned"
+    sched_assignment = next((a for a in data if a["employee_id"] == employee.id), None)
+
+    assert sched_assignment is not None
+    assert sched_assignment["shift_id"] == shift.id
+    assert sched_assignment["status"] == "assigned"

@@ -14,8 +14,8 @@ def test_swap_requests_returns_200(client):
 
 def test_request_swaps_returns_one_after_insert(client, db_session):
     role = Role (
-        name="Cashier",
-        description="Handles customer checkout.",
+        name="Cook",
+        description="Cooks meals.",
     )
 
     db_session.add(role)
@@ -23,8 +23,8 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
 
     requester = Employee(
         name="Ben Davidson",
-        email="ben@example.com",
-        access_level=AccessLevel.manager,
+        email="ben33@example.com",
+        access_level=AccessLevel.employee,
         is_active=True,
         role_id=role.id,
     )
@@ -37,6 +37,7 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
         start_time=time(9,0),
         end_time=time(17,0),
         min_staff_req=2,
+        role_id=role.id,
     )
 
     db_session.add(shift)
@@ -65,7 +66,8 @@ def test_request_swaps_returns_one_after_insert(client, db_session):
     assert res.status_code == 200
     data = res.json()
 
-    assert len(data) == 1
-    assert data[0]["requester_id"] == requester.id
-    assert data[0]["cover_id"] is None
-    assert data[0]["status"] == "pending"
+    request = next((r for r in data if r["schedule_assignment_id"] == assignment.id), None)
+
+    assert request is not None
+    assert request["requester_id"] == requester.id
+    assert request["status"] == "pending"

@@ -1,8 +1,5 @@
 from pydantic import BaseModel, ConfigDict
 
-from gatorsched_api.schemas.shift import ShiftRead
-from gatorsched_api.schemas.employee import EmployeeRead
-
 
 class ScheduleAssignmentBase(BaseModel):
     status: str = "assigned"
