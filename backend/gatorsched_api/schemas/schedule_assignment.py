@@ -16,5 +16,3 @@ class ScheduleAssignmentCreate(ScheduleAssignmentBase):
 class ScheduleAssignmentRead(ScheduleAssignmentBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    employee: EmployeeRead
-    shift: ShiftRead

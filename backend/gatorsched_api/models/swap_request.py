@@ -17,6 +17,6 @@ class SwapRequest(Base):
     #Foreign keys
     requester_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
 
-    cover_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
+    cover_id: Mapped[int | None] = mapped_column(Integer, ForeignKey("employees.id"), nullable=True)
 
     schedule_assignment_id: Mapped[int] = mapped_column(Integer, ForeignKey("schedule_assignments.id"), nullable=False)

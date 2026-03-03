@@ -6,6 +6,7 @@ class AvailabilityBase(BaseModel):
     day_of_week: int
     start_time: time
     end_time: time
+    employee_id: int
 
 
 class AvailabilityCreate(AvailabilityBase):

@@ -36,5 +36,5 @@ class Employee(Base):
 
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
 
-# Foreign Key: Employee has a role.
-role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)
+    # Foreign Key: Employee has a role.
+    role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)

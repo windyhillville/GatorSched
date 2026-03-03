@@ -10,6 +10,7 @@ class EmployeeBase(BaseModel):
     max_weekly_hours: int | None = None
     access_level: AccessLevel = AccessLevel.employee
     is_active: bool = True
+    role_id: int
 
 
 class EmployeeCreate(EmployeeBase):
