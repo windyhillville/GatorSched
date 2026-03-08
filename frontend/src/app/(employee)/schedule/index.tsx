@@ -1,4 +1,4 @@
-import { DayGrid, DayItem, Screen } from '@/ui';
+import { DayItem, Header, Screen } from '@/ui';
 // import { Text } from 'react-native';
 
 const fullWeek: DayItem[] = [
@@ -22,7 +22,9 @@ export default function Schedule() {
     <Screen centered>
       {/* <Text>This is the Schedule Screen!</Text> */}
       {/* <Button title="View Schedule" shape="pill" color="default" /> */}
-      <DayGrid days={fullWeek} />
+      {/* <DayGrid days={fullWeek} /> */}
+      <Header title="Schedule" />
+      {/* <DateNavigator label="02/15/26 - 02/21/26" /> */}
     </Screen>
   );
 }
