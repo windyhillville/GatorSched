@@ -12,13 +12,12 @@ export default function Index() {
               <Text>Go to Employee App</Text>
             </Pressable>
           </Link>
-
           <Link href="/(manager)/scheduler" asChild>
             <Pressable style={styles.managerButton}>
               <Text>Go to Manager App</Text>
             </Pressable>
           </Link>
-
+          S
           <Link href="/(auth)" asChild>
             <Pressable style={styles.authButton}>
               <Text>Go to Auth</Text>
