@@ -75,6 +75,8 @@ export const Colors = {
   buttonDefaultBorder: palette.gatorBlue[900],
   buttonAcceptBorder: palette.green,
   buttonRejectBorder: palette.red,
+  chevronDefault: palette.gatorBlue[300],
+  chevronPressed: palette.gatorBlue[400],
 
   // Pure Colors
   baseWhite: palette.white,
