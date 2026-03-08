@@ -1,4 +1,4 @@
-import { Screen } from '@/ui/layout';
+import { Screen } from '@/ui';
 import { Text } from 'react-native';
 
 export default function ForgotPassword() {
