@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   defaultContainer: {
-    borderColor: Colors.buttonPillBorder,
+    borderColor: Colors.buttonDefaultBorder,
   },
   acceptContainer: {
     borderColor: Colors.buttonAcceptBorder,

@@ -72,7 +72,7 @@ export const Colors = {
   // buttonDisabled: palette.gatorBlue[200],
   // buttonLabelPrimary: palette.white,
   // buttonLabelDisabled: palette.gatorBlue[500],
-  buttonPillBorder: palette.gatorBlue[900],
+  buttonDefaultBorder: palette.gatorBlue[900],
   buttonAcceptBorder: palette.green,
   buttonRejectBorder: palette.red,
 
