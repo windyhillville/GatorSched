@@ -1,17 +1,20 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 type HeaderProps = {
   title: string;
   left?: React.ReactNode;
   right?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function Header({ title, left, right }: HeaderProps) {
+export function Header({ title, left, right, style }: HeaderProps) {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.sideLeft}>{left}</View>
       <View style={styles.center}>
-        <Text style={styles.text}>{title}</Text>
+        <Text style={styles.text} numberOfLines={1} adjustsFontSizeToFit>
+          {title}
+        </Text>
       </View>
       <View style={styles.sideRight}>{right}</View>
     </View>
@@ -44,5 +47,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 36,
     lineHeight: 40,
+    textAlign: 'center',
+    flexShrink: 1,
   },
 });
