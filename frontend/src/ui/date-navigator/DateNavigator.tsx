@@ -1,8 +1,5 @@
-import ChevronLeft from '@/assets/images/icons/chevron-left.svg';
-import ChevronRight from '@/assets/images/icons/chevron-right.svg';
-import { Colors } from '@/styles';
-import { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { Chevron } from '../chevron';
 
 type DateNavigatorProps = {
   label: string;
@@ -14,36 +11,11 @@ type DateNavigatorProps = {
 };
 
 export function DateNavigator({ label, onPrevious, onNext }: DateNavigatorProps) {
-  const [isLeftPressed, setIsLeftPressed] = useState(false);
-  const [isRightPressed, setIsRightPressed] = useState(false);
-
   return (
     <View style={styles.container}>
-      <Pressable
-        onPressIn={() => setIsLeftPressed(true)}
-        onPressOut={() => setIsLeftPressed(false)}
-        onPress={() => onPrevious?.()}
-        hitSlop={8}
-      >
-        <ChevronLeft
-          width={24}
-          height={24}
-          stroke={isLeftPressed ? Colors.chevronPressed : Colors.chevronDefault}
-        />
-      </Pressable>
+      <Chevron direction="left" onPress={onPrevious} />
       <Text style={styles.text}>{label}</Text>
-      <Pressable
-        onPressIn={() => setIsRightPressed(true)}
-        onPressOut={() => setIsRightPressed(false)}
-        onPress={() => onNext?.()}
-        hitSlop={8}
-      >
-        <ChevronRight
-          width={24}
-          height={24}
-          stroke={isRightPressed ? Colors.chevronPressed : Colors.chevronDefault}
-        />
-      </Pressable>
+      <Chevron direction="right" onPress={onNext} />
     </View>
   );
 }

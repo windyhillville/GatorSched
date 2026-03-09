@@ -10,13 +10,13 @@ type HeaderProps = {
 export function Header({ title, left, right, style }: HeaderProps) {
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.sideLeft}>{left}</View>
+      <View style={styles.side}>{left}</View>
       <View style={styles.center}>
-        <Text style={styles.text} numberOfLines={1} adjustsFontSizeToFit>
+        <Text style={styles.text} numberOfLines={1}>
           {title}
         </Text>
       </View>
-      <View style={styles.sideRight}>{right}</View>
+      <View style={styles.side}>{right}</View>
     </View>
   );
 }
@@ -29,8 +29,9 @@ const styles = StyleSheet.create({
     minHeight: 56,
     // gap: 64,
   },
-  sideLeft: {
-    flex: 1,
+  side: {
+    // flex: 1,
+    width: 48,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -38,11 +39,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  sideRight: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   text: {
     fontSize: 36,

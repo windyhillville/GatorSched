@@ -17,7 +17,7 @@ export default function Index() {
               <Text>Go to Manager App</Text>
             </Pressable>
           </Link>
-          S
+
           <Link href="/(auth)" asChild>
             <Pressable style={styles.authButton}>
               <Text>Go to Auth</Text>
