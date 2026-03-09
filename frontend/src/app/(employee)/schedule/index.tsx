@@ -53,12 +53,6 @@ export default function Schedule() {
           barColor={Colors.surfaceTertiary}
         />
       </View> */}
-
-      {/* <Text>This is the Schedule Screen!</Text> */}
-      {/* <Button title="View Schedule" shape="pill" color="default" /> */}
-      {/* <DayGrid days={fullWeek} /> */}
-      {/* <Header title="Schedule" /> */}
-      {/* <DateNavigator label="02/15/26 - 02/21/26" /> */}
     </Screen>
   );
 }
@@ -80,7 +74,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    maxWidth: 340,
+    maxWidth: 300,
     ...Platform.select({
       ios: {
         paddingBottom: 40,
