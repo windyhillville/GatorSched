@@ -1,5 +1,15 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
+import { useEffect, useRef } from 'react';
+import {
+  FlatList,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { TimeSlot } from './TimeSlot';
+import { ITEM_SIZE, ROWS_ABOVE_SELECTED, VIEWPORT_HEIGHT } from './constants';
 
 type TimeColumnProps = {
   values: string[];
@@ -8,46 +18,76 @@ type TimeColumnProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-function getVisibleWindow(values: string[], selectedValue: string, windowSize = 5) {
-  const selectedIndex = values.indexOf(selectedValue);
-  if (selectedIndex === -1) return values.slice(0, windowSize);
-
-  const halfWindow = Math.floor(windowSize / 2);
-  let start = selectedIndex - halfWindow;
-  let end = selectedIndex + halfWindow + 1; // slice() is upper-end exclusive, so add 1
-
-  // clamp to 0
-  if (start < 0) {
-    start = 0;
-    end = windowSize;
-  }
-
-  if (end > values.length) {
-    end = values.length;
-    start = Math.max(0, end - windowSize); // clamp to 0 if start < 0
-  }
-
-  return values.slice(start, end);
-}
-
 export function TimeColumn({ values, selectedValue, onSelectValue, style }: TimeColumnProps) {
-  const visibleValues = getVisibleWindow(values, selectedValue ?? values[0]);
+  const flatListRef = useRef<FlatList<string>>(null);
+
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetY = event.nativeEvent.contentOffset.y;
+    const selectedIndex = Math.round(offsetY / ITEM_SIZE);
+    const value = values[selectedIndex];
+
+    if (value && onSelectValue) {
+      onSelectValue(value);
+    }
+
+    flatListRef.current?.scrollToOffset({
+      offset: selectedIndex * ITEM_SIZE,
+      animated: true,
+    });
+  };
+
+  useEffect(() => {
+    const selectedIndex = values.indexOf(selectedValue ?? values[0]);
+    const clampedIndex = Math.max(0, selectedIndex);
+
+    flatListRef.current?.scrollToOffset({
+      offset: clampedIndex * ITEM_SIZE,
+      animated: false,
+    });
+  }, [selectedValue, values]);
+
   return (
-    <View style={[styles.timeColumn, style]}>
-      {visibleValues.map((value) => (
-        <TimeSlot
-          key={value}
-          timeLabel={value}
-          selected={value === selectedValue}
-          onPress={() => onSelectValue?.(value)}
-        />
-      ))}
+    <View style={[styles.viewport, style]}>
+      <FlatList
+        ref={flatListRef}
+        data={values}
+        keyExtractor={(item, index) => item ?? `empty-${index}`}
+        renderItem={({ item }) => {
+          return (
+            <View style={styles.itemContainer}>
+              <TimeSlot timeLabel={item} selected={item === selectedValue} />
+            </View>
+          );
+        }}
+        showsVerticalScrollIndicator={false}
+        snapToInterval={ITEM_SIZE}
+        decelerationRate="fast"
+        nestedScrollEnabled
+        onMomentumScrollEnd={handleScrollEnd}
+        // onScrollEndDrag={handleScrollEnd}
+        contentContainerStyle={styles.contentContainer}
+        getItemLayout={(_, index) => ({
+          length: ITEM_SIZE,
+          offset: ITEM_SIZE * index,
+          index,
+        })}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  timeColumn: {
-    gap: 8,
+  viewport: {
+    height: VIEWPORT_HEIGHT,
+    overflow: 'hidden',
+  },
+  itemContainer: {
+    height: ITEM_SIZE,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  contentContainer: {
+    paddingTop: ROWS_ABOVE_SELECTED * ITEM_SIZE,
+    paddingBottom: ROWS_ABOVE_SELECTED * ITEM_SIZE,
   },
 });

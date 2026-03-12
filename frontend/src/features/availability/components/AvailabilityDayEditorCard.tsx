@@ -1,5 +1,5 @@
 import { Colors } from '@/styles';
-import { Button } from '@/ui';
+import { Button, Chevron } from '@/ui';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TimePickerGroup } from './TimePickerGroup';
@@ -47,11 +47,11 @@ export function AvailabilityDayEditorCard({
   return (
     <View style={styles.cardContainer}>
       <View style={styles.topRow}>
-        {/* <Chevron direction="left" onPress={onBack} style={styles.chevron} /> */}
-        <View style={styles.textContainer}>
+        <Chevron direction="left" onPress={onBack} style={styles.leftSlot} />
+        <View style={styles.centerSlot}>
           <Text style={styles.dayLabel}>{dayLabel}</Text>
         </View>
-        <View style={styles.spacer} />
+        <View style={styles.rightSlot} />
       </View>
 
       <View style={styles.pickerRow}>
@@ -90,23 +90,25 @@ export function AvailabilityDayEditorCard({
 }
 const styles = StyleSheet.create({
   cardContainer: {
+    width: '90%',
+    maxWidth: 360,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: Colors.buttonDefaultBorder,
-    gap: 32,
+    gap: 28, // was 32
     paddingVertical: 24,
     paddingHorizontal: 20,
   },
   topRow: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
   },
-  chevron: {
-    // flex: 1,
-    // paddingLeft: 16,
+  leftSlot: {
+    width: 40,
+    alignItems: 'flex-start',
+    justifyContent: 'center',
   },
-  textContainer: {
+  centerSlot: {
     flex: 1,
     alignItems: 'center',
   },
@@ -114,13 +116,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
   },
-  spacer: {
-    // width: 40,
+  rightSlot: {
+    width: 40,
   },
   pickerRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 32,
+    gap: 24, // was 32
   },
   buttonWrapper: {
     width: '100%',
