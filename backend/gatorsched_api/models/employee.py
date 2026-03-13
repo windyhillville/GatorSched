@@ -1,12 +1,18 @@
 from __future__ import annotations
 
 from enum import StrEnum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import Boolean, ForeignKey, Integer, String
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gatorsched_api.db.base import Base
+
+if TYPE_CHECKING:
+    from .availability import Availability
+    from .role import Role
+    from .schedule_assignment import ScheduleAssignment
 
 
 class AccessLevel(StrEnum):
@@ -38,3 +44,12 @@ class Employee(Base):
 
     # Foreign Key: Employee has a role.
     role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)
+
+    # Relationships
+    role: Mapped[Role] = relationship("Role", back_populates="employees")
+    availabilities: Mapped[list[Availability]] = relationship(
+        "Availability", back_populates="employee"
+    )
+    assignments: Mapped[list[ScheduleAssignment]] = relationship(
+        "ScheduleAssignment", back_populates="employee"
+    )

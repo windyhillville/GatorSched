@@ -48,6 +48,7 @@ def test_create_employee(client, cashier_role):
     assert create.status_code == 201
     post_data = create.json()
     assert post_data["email"] == payload["email"]
+    assert post_data["role"]["id"] == cashier_role
     assert "id" in post_data
 
     res = client.get("/api/v1/employees")
