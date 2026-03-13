@@ -1,4 +1,4 @@
-import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
+import { Platform, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 type HeaderProps = {
   title: string;
@@ -23,6 +23,14 @@ export function Header({ title, left, right, style }: HeaderProps) {
 
 const styles = StyleSheet.create({
   container: {
+    ...Platform.select({
+      ios: {
+        paddingTop: 25,
+      },
+      android: {
+        paddingTop: 40,
+      },
+    }),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

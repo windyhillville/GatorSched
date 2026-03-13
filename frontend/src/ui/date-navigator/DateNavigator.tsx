@@ -3,18 +3,26 @@ import { Chevron } from '../chevron';
 
 type DateNavigatorProps = {
   label: string;
-  // subLabel?: string;
+  subLabel?: string;
   onPrevious?: () => void;
   onNext?: () => void;
   // disabledPrevious?: boolean;
   // disablednext?: boolean;
 };
 
-export function DateNavigator({ label, onPrevious, onNext }: DateNavigatorProps) {
+export function DateNavigator({ label, subLabel, onPrevious, onNext }: DateNavigatorProps) {
+  const header = subLabel ? (
+    <View style={styles.headerContainer}>
+      <Text>{subLabel}</Text>
+      <Text style={styles.labelText}>{label}</Text>
+    </View>
+  ) : (
+    <Text style={styles.labelText}>{label}</Text>
+  );
   return (
     <View style={styles.container}>
       <Chevron direction="left" onPress={onPrevious} />
-      <Text style={styles.text}>{label}</Text>
+      {header}
       <Chevron direction="right" onPress={onNext} />
     </View>
   );
@@ -27,7 +35,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
+  headerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  labelText: {
     fontSize: 17,
   },
 });
