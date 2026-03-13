@@ -52,6 +52,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session, cashi
     assert sched_assignment is not None
     assert sched_assignment["shift_id"] == shift.id
     assert sched_assignment["status"] == "assigned"
+    assert sched_assignment["employee"]["name"] == employee.name
 
 
 def test_create_schedule_assignment(client, db_session, cashier_role):

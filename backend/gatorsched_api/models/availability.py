@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from datetime import time
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Integer, Time
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gatorsched_api.db.base import Base
+
+if TYPE_CHECKING:
+    from .employee import Employee
 
 
 class Availability(Base):
@@ -22,3 +26,6 @@ class Availability(Base):
 
     # Foreign Key: Belongs to an employee.
     employee_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
+
+    # Relationship back to Employee
+    employee: Mapped[Employee] = relationship("Employee", back_populates="availabilities")

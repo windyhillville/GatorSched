@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
@@ -13,8 +14,14 @@ router = APIRouter(tags=["schedule_assignments"])
 
 @router.get("/schedule_assignments", response_model=list[ScheduleAssignmentRead])
 def list_schedule_assignments(db: Session = Depends(get_db)) -> list[ScheduleAssignmentRead]:
-    schedule_assignments = db.query(ScheduleAssignment)
-    return schedule_assignments.all()
+    stmt = select(ScheduleAssignment).options(
+        joinedload(ScheduleAssignment.employee), joinedload(ScheduleAssignment.shift)
+    )
+    return db.scalars(stmt).all()
+
+
+# schedule_assignments = db.query(ScheduleAssignment)
+# return schedule_assignments.all()
 
 
 @router.post("/schedule_assignments", response_model=ScheduleAssignmentRead, status_code=201)
