@@ -1,5 +1,5 @@
 import { Colors } from '@/styles';
-import { Button, DateNavigator } from '@/ui';
+import { Button, DateNavigator, DurationBar } from '@/ui';
 import { StyleSheet, Text, View } from 'react-native';
 
 type ScheduleDaySummaryCardProps = {
@@ -31,7 +31,7 @@ export function ScheduleDaySummaryCard({
         </View>
 
         <View style={styles.barContainer}>
-          <View style={[styles.durationBar, { backgroundColor: barColor }]} />
+          <DurationBar color={barColor} />
         </View>
       </View>
 
@@ -71,16 +71,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   barContainer: {
-    width: '100%',
+    width: '85%',
     alignItems: 'center',
   },
   cardText: {
     fontSize: 16,
-  },
-  durationBar: {
-    width: '85%',
-    height: 40,
-    borderRadius: 36,
   },
   totalHours: {
     textAlign: 'center',
