@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.swap_request import SwapRequest
@@ -10,8 +11,12 @@ router = APIRouter(tags=["swap_requests"])
 
 @router.get("/swap_requests", response_model=list[SwapRequestRead])
 def list_swap_requests(db: Session = Depends(get_db)) -> list[SwapRequestRead]:
-    swap_requests = db.query(SwapRequest)
-    return swap_requests.all()
+    stmt = select(SwapRequest).options(
+        joinedload(SwapRequest.requester), joinedload(SwapRequest.assignment)
+    )
+    return db.scalars(stmt).all()
+    # swap_requests = db.query(SwapRequest)
+    # return swap_requests.all()
 
 
 @router.post("/swap_requests", response_model=SwapRequestRead, status_code=201)

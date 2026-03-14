@@ -10,8 +10,8 @@ engine = create_engine(
 
 SessionLocal = sessionmaker(
     bind=engine,
-    autoflush=False,
-    autocommit=False,
+    autoflush=False,  # SQLAlchemy recommends this to be "True"
+    autocommit=False,  # This is automatic in SQLAlchemy 2.0 - remove after confirming in docs
 )
 
 
