@@ -78,6 +78,9 @@ export const Colors = {
   chevronDefault: palette.gatorBlue[300],
   chevronPressed: palette.gatorBlue[400],
 
+  // Employee Card
+  cardBorder: palette.gatorBlue[200],
+
   // Pure Colors
   baseWhite: palette.white,
   baseBlack: palette.black,

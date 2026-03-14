@@ -1,3 +1,4 @@
+export * from './avatar';
 export * from './accordion-section';
 export * from './button';
 export * from './chevron';
