@@ -18,6 +18,20 @@ def format_time_label(t: time) -> str:
     return t.strftime("%I:%M %p").lstrip("0")
 
 
+## NOTE: Temporary fix until we add a "color" attribute to our Employee entity
+EMPLOYEE_COLORS = {
+    "Benjamin Davidson": "lightblue",
+    "Dominick Consiglio": "lightgreen",
+    "Daniel Moody": "skyblue",
+    "Ron Don": "lightpink",
+    "Johnny Johnson": "peachpuff",
+}
+
+
+def get_employee_color(employee: Employee) -> str:
+    return EMPLOYEE_COLORS.get(employee.name, "lightblue")
+
+
 def generate_schedule_for_date(db: Session, target_date: date) -> GenerateScheduleResponse:
     print("SCHEDULER FUNCTION EXECUTED")
     employeeStmt = (
@@ -75,7 +89,7 @@ def generate_schedule_for_date(db: Session, target_date: date) -> GenerateSchedu
                 employeeName=employee.name,
                 startLabel=format_time_label(shift.start_time),
                 endLabel=format_time_label(shift.end_time),
-                color="lightblue",
+                color=get_employee_color(employee),
             )
 
             role_name = shift.role.name

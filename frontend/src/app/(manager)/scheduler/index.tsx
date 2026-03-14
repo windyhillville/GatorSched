@@ -1,7 +1,8 @@
-import { DaySchedulerView, RoleGroup } from '@/features/manager-scheduler';
+import { DaySchedulerView, RoleGroup, SchedulerEmptyState } from '@/features/manager-scheduler';
+import { generateSchedule } from '@/services/scheduler';
 import { Header, Screen } from '@/ui';
 import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 // MOCK DATA
 const groups: RoleGroup[] = [
@@ -53,13 +54,45 @@ const groups: RoleGroup[] = [
 ];
 
 export default function Scheduler() {
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    Server: true,
-    Cook: true,
-  });
-  return (
-    <Screen insetTop>
-      <Header title="Scheduler" />
+  const [groups, setGroups] = useState<RoleGroup[]>([]);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const targetDate = '2026-03-15';
+
+  async function handleAutoSchedule() {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const generatedGroups = await generateSchedule(targetDate);
+      setGroups(generatedGroups);
+
+      const initialExpandedState = Object.fromEntries(
+        generatedGroups.map((group) => [group.role, true]),
+      );
+      setExpandedSections(initialExpandedState);
+    } catch (err) {
+      setError('Failed to generate schedule.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  const content =
+    groups.length === 0 ? (
+      <View style={styles.emptyStateWrapper}>
+        <SchedulerEmptyState
+          dayLabel="Sunday"
+          dateLabel="March 15th"
+          isLoading={isLoading}
+          onGenerateSchedule={handleAutoSchedule}
+        />
+        {error && <Text style={styles.errorText}>{error}</Text>}
+      </View>
+    ) : (
       <DaySchedulerView
         groups={groups}
         dayLabel="Sunday"
@@ -72,13 +105,35 @@ export default function Scheduler() {
           }))
         }
       />
+    );
+
+  return (
+    <Screen insetTop>
+      <Header title="Scheduler" />
+      {content}
+      {/* <DaySchedulerView
+        groups={groups}
+        dayLabel="Sunday"
+        dateLabel="March 15th"
+        expandedSections={expandedSections}
+        onToggleSection={(role) =>
+          setExpandedSections((prev) => ({
+            ...prev,
+            [role]: !(prev[role] ?? false),
+          }))
+        }
+      /> */}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  schedulerWrapper: {
-    paddingVertical: 24,
-    gap: 16,
+  emptyStateWrapper: {
+    flex: 1,
+  },
+  errorText: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 8,
   },
 });

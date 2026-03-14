@@ -1,5 +1,5 @@
 import { AccordionSection, DateNavigator } from '@/ui';
-import { StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { EmployeeShiftRow } from './components';
 
 type ShiftItem = {
@@ -43,12 +43,15 @@ export function DaySchedulerView({
         onPrevious={onPreviousDay}
         onNext={onNextDay}
       />
-      <View style={styles.accordionGroup}>
-        {groups.map((group) => (
+      <FlatList
+        data={groups}
+        keyExtractor={(group) => group.role}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
+        renderItem={({ item: group }) => (
           <AccordionSection
-            key={group.role}
             title={group.role}
-            expanded={expandedSections[group.role]}
+            expanded={expandedSections[group.role] ?? false}
             onToggle={() => onToggleSection(group.role)}
           >
             {group.shifts.map((shift) => (
@@ -61,19 +64,20 @@ export function DaySchedulerView({
               />
             ))}
           </AccordionSection>
-        ))}
-      </View>
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     gap: 16,
     paddingTop: 24,
   },
-  accordionGroup: {
-    gap: 16,
-    // width: '100%',
+  listContent: {
+    // gap: 16,
+    paddingBottom: 32,
   },
 });
