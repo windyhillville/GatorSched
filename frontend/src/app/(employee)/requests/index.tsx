@@ -1,7 +1,7 @@
 import { RequestCard } from '@/features';
-import { Button, Header, Screen } from '@/ui';
+import { Header, Screen } from '@/ui';
 import JohnDoe from '@/assets/images/avatars/john-doe.png';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 
 export default function Requests() {
   return (

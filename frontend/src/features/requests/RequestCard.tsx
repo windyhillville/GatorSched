@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   Platform,
   Pressable,
-  PressableProps,
   StyleProp,
   StyleSheet,
   Text,
