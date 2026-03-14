@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
@@ -10,8 +11,9 @@ router = APIRouter(tags=["availabilities"])
 
 @router.get("/availabilities", response_model=list[AvailabilityRead])
 def list_availabilities(db: Session = Depends(get_db)) -> list[AvailabilityRead]:
-    availabilities = db.query(Availability)
-    return availabilities.all()
+    return db.scalars(select(Availability)).all()
+    # availabilities = db.query(Availability)
+    # return availabilities.all()
 
 
 @router.post("/availabilities", response_model=AvailabilityRead, status_code=201)

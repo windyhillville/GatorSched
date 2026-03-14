@@ -2,6 +2,8 @@ from datetime import date, time
 
 from pydantic import BaseModel, ConfigDict
 
+from .role import RoleRead
+
 
 class ShiftBase(BaseModel):
     date: date
@@ -18,3 +20,4 @@ class ShiftCreate(ShiftBase):
 class ShiftRead(ShiftBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
+    role: RoleRead
