@@ -1,21 +1,41 @@
-import { RequestCard } from '@/features';
-import { Header, Screen } from '@/ui';
 import JohnDoe from '@/assets/images/avatars/john-doe.png';
+import { CallOutRequestCard, RequestCard, ScheduleInfoCard, SwapRequestCard } from '@/features';
+import { Header, Screen } from '@/ui';
 import { Platform, StyleSheet, View } from 'react-native';
 
 export default function Requests() {
+  function handleCardToggle() {}
   return (
     <Screen insetTop>
       <Header title="Requests" style={styles.header} />
       <View style={styles.cardWrapper}>
         <View style={styles.cardContainer}>
-          <RequestCard purpose="info" user={{ name: 'Jim Bo', pfpColor: 'rgba(40, 167, 69, 1)' }} />
-          <RequestCard
+          <RequestCard purpose="callout-out" user={{ name: 'John Doe', pfpImg: JohnDoe }} />
+          {/* <RequestCard
             purpose="swap-in"
             user={{ name: 'Jane Smith', pfpColor: 'rgba(251, 191, 36, 1)' }}
             other={{ name: 'John Doe', pfpImg: JohnDoe }}
+          /> */}
+          <ScheduleInfoCard
+            user={{ name: 'Joe Bo' }}
+            expanded={false}
+            totalHours={56}
+            onToggle={handleCardToggle}
           />
-          <RequestCard purpose="callout-out" user={{ name: 'John Doe', pfpImg: JohnDoe }} />
+          <SwapRequestCard
+            purpose="swap-in"
+            fromUser={{ name: 'Joe Smo' }}
+            toUser={{ name: 'Johnny Roe' }}
+            expanded={false}
+            onToggle={handleCardToggle}
+          />
+          <CallOutRequestCard
+            purpose="callout-in"
+            user={{ name: 'Roe Moe' }}
+            expanded={false}
+            onToggle={handleCardToggle}
+          />
+          <RequestCard purpose="info" user={{ name: 'Jim Bo', pfpColor: 'rgba(40, 167, 69, 1)' }} />
         </View>
       </View>
     </Screen>

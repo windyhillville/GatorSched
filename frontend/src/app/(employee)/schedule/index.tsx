@@ -1,6 +1,5 @@
-import { ScheduleDaySummaryCard } from '@/features';
-import { Colors } from '@/styles';
-import { DayItem, Header, Screen } from '@/ui';
+import { ScheduleWeekView } from '@/features';
+import { Button, DayItem, Header, Screen } from '@/ui';
 import { Platform, StyleSheet, View } from 'react-native';
 
 const fullWeek: DayItem[] = [
@@ -30,7 +29,7 @@ export default function Schedule() {
   return (
     <Screen insetTop>
       <Header title="Schedule" />
-      {/* <ScheduleWeekView
+      <ScheduleWeekView
         weekLabel="02/15/26 - 02/21/26"
         days={fullWeek}
         totalHours={56}
@@ -42,9 +41,9 @@ export default function Schedule() {
         <View style={styles.buttonContainer}>
           <Button title="View Full Schedule" onPress={handleFullSchedule} />
         </View>
-      </View> */}
+      </View>
 
-      <View style={{ flex: 1, justifyContent: 'center' }}>
+      {/* <View style={{ flex: 1, justifyContent: 'center' }}>
         <ScheduleDaySummaryCard
           dateLabel="02/15/26"
           dayLabel="Today"
@@ -53,7 +52,7 @@ export default function Schedule() {
           totalHours={8}
           barColor={Colors.surfaceTertiary}
         />
-      </View>
+      </View> */}
     </Screen>
   );
 }
