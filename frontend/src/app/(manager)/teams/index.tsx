@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 
 export default function Teams() {
   return (
-    <Screen centered>
+    <Screen insetTop>
       <Text>This is the Teams Screen!</Text>
     </Screen>
   );

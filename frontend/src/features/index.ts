@@ -1,3 +1,4 @@
 export * from './availability';
-export * from './schedule';
 export * from './requests';
+export * from './schedule';
+export * from './teams';
