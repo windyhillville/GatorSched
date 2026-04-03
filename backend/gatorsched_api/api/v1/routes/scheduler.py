@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
-from gatorsched_api.schemas.scheduler import (
+from gatorsched_api.schemas.features.scheduler import (
     GenerateScheduleRequest,
     GenerateScheduleResponse,
 )

@@ -1,20 +1,31 @@
-import { Colors } from '@/styles';
+import { Colors, SIZES } from '@/styles';
 import { Image } from 'expo-image';
 import { StyleSheet, Text, View } from 'react-native';
 
+type AvatarSize = 'small' | 'medium' | 'large';
+
 type AvatarProps = {
-  img?: any;
+  img: string | null;
   name?: string;
-  size?: number;
-  backgroundColor?: string;
+  size?: AvatarSize;
+  color: string | null;
+};
+
+const sizeMap = {
+  small: SIZES.avatar.small,
+  medium: SIZES.avatar.medium,
+  large: SIZES.avatar.large,
 };
 
 export function Avatar({
   img,
   name,
-  size = 90, // default size
-  backgroundColor = Colors.brandPrimary, // default background color
+  size, // default size
+  color,
 }: AvatarProps) {
+  const resolvedSize = sizeMap[size ?? 'medium'];
+  const resolvedBackgroundColor = color ?? Colors.brandPrimary;
+
   const initials = name
     ? name
         .split(' ')
@@ -26,11 +37,11 @@ export function Avatar({
   if (img) {
     return (
       <Image
-        source={img}
+        source={{ uri: img }}
         style={{
-          width: size,
-          height: size,
-          borderRadius: size / 2,
+          width: resolvedSize,
+          height: resolvedSize,
+          borderRadius: resolvedSize / 2,
         }}
         contentFit="cover"
       />
@@ -42,14 +53,14 @@ export function Avatar({
       style={[
         styles.fallback,
         {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          backgroundColor,
+          width: resolvedSize,
+          height: resolvedSize,
+          borderRadius: resolvedSize / 2,
+          backgroundColor: resolvedBackgroundColor,
         },
       ]}
     >
-      <Text style={{ fontSize: size * 0.4 }}>{initials}</Text>
+      <Text style={{ fontSize: resolvedSize * 0.4 }}>{initials}</Text>
     </View>
   );
 }

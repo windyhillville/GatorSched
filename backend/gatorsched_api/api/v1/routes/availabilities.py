@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.availability import Availability
-from gatorsched_api.schemas.availability import AvailabilityCreate, AvailabilityRead
+from gatorsched_api.schemas.entities.availability import AvailabilityCreate, AvailabilityRead
 
 router = APIRouter(tags=["availabilities"])
 

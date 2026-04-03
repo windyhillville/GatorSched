@@ -9,6 +9,7 @@ from gatorsched_api.db.base import Base
 
 if TYPE_CHECKING:
     from .employee import Employee
+    from .shift import Shift
 
 
 class Role(Base):
@@ -22,3 +23,4 @@ class Role(Base):
 
     # Relationship
     employees: Mapped[list[Employee]] = relationship("Employee", back_populates="role")
+    shifts: Mapped[list[Shift]] = relationship("Shift", back_populates="role")

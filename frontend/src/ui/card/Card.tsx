@@ -16,6 +16,7 @@ export function Card({ style, wrapperStyle, children }: CardProps) {
 
 const styles = StyleSheet.create({
   shadowWrapper: {
+    width: '100%',
     backgroundColor: Colors.baseWhite,
     borderRadius: 60,
     ...Platform.select({
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
     }),
   },
   container: {
+    width: '100%',
     overflow: 'hidden',
     backgroundColor: Colors.baseWhite,
     borderWidth: 1,

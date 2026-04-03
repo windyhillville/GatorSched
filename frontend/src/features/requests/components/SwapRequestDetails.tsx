@@ -1,6 +1,6 @@
+import { PersonData } from '@/features/types';
 import { Button } from '@/ui';
 import { Platform, StyleSheet, View } from 'react-native';
-import { PersonData } from '../../types';
 import { ShiftSummary } from './ShiftSummary';
 
 export type SwapRequestPurpose = 'swap-in' | 'swap-out';

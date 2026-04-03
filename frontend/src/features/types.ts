@@ -1,6 +1,5 @@
 export type PersonData = {
   name: string;
-  pfpImg?: any;
-  pfpSize?: number;
-  pfpColor?: string;
+  avatarUrl: string | null;
+  color: string | null;
 };

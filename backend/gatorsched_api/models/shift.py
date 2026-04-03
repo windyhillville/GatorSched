@@ -31,7 +31,7 @@ class Shift(Base):
     role_id: Mapped[int] = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)
 
     # Relationship to the Role & ScheduleAssignment
-    role: Mapped[Role] = relationship("Role")
+    role: Mapped[Role] = relationship("Role", back_populates="shifts")
     assignments: Mapped[list[ScheduleAssignment]] = relationship(
         "ScheduleAssignment", back_populates="shift"
     )

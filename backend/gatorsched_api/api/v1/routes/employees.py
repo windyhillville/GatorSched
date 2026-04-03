@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.employee import Employee
-from gatorsched_api.schemas.employee import EmployeeCreate, EmployeeRead
+from gatorsched_api.schemas.entities.employee import EmployeeCreate, EmployeeRead
 
 router = APIRouter(tags=["employees"])
 

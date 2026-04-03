@@ -1,6 +1,6 @@
+import { PersonData } from '@/features/types';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet } from 'react-native';
-import { PersonData } from '../../types';
 import { CallOutRequestDetails, CallOutRequestPurpose } from './CallOutRequestDetails';
 
 type CallOutRequestCardProps = {
@@ -18,7 +18,10 @@ export function CallOutRequestCard({ purpose, user, expanded, onToggle }: CallOu
         <CallOutRequestDetails purpose={purpose} user={user} />
       ) : (
         <Pressable onPress={onToggle} style={styles.pressable}>
-          <ExpandableCardHeader title={user.name} avatar={<Avatar name={user.name} />} />
+          <ExpandableCardHeader
+            title={user.name}
+            avatar={<Avatar name={user.name} img={user.avatarUrl} color={user.color} />}
+          />
         </Pressable>
       )}
     </Card>
