@@ -7,16 +7,14 @@ from gatorsched_api.models.employee import Employee
 
 # from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.schemas.scheduler import GenerateScheduleResponse, RoleGroup, ScheduledShift
+from gatorsched_api.schemas.features.scheduler import (
+    GenerateScheduleResponse,
+    RoleGroup,
+    ScheduledShift,
+)
+from gatorsched_api.services.time_formatting import format_time_label
 
 # from gatorsched_api.models.role import Role
-
-
-def format_time_label(t: time) -> str:
-    if t.minute == 0:
-        return t.strftime("%I %p").lstrip("0")
-    return t.strftime("%I:%M %p").lstrip("0")
-
 
 ## NOTE: Temporary fix until we add a "color" attribute to our Employee entity
 EMPLOYEE_COLORS = {

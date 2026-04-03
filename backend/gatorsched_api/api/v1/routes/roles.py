@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.role import Role
-from gatorsched_api.schemas.role import RoleCreate, RoleRead
+from gatorsched_api.schemas.entities.role import RoleCreate, RoleRead
 
 router = APIRouter(tags=["roles"])
 

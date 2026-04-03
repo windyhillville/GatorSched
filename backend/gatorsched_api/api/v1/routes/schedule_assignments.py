@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
-from gatorsched_api.schemas.schedule_assignment import (
+from gatorsched_api.schemas.entities.schedule_assignment import (
     ScheduleAssignmentCreate,
     ScheduleAssignmentRead,
 )

@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.schemas.shift import ShiftCreate, ShiftRead
+from gatorsched_api.schemas.entities.shift import ShiftCreate, ShiftRead
 
 router = APIRouter(tags=["shifts"])
 

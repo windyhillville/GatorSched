@@ -8,6 +8,7 @@ from .routes.schedule_assignments import router as schedule_assignments_router
 from .routes.scheduler import router as scheduler_router
 from .routes.shifts import router as shifts_router
 from .routes.swap_requests import router as swap_requests_router
+from .routes.teams import router as teams_router
 
 api_router = APIRouter()
 
@@ -19,3 +20,4 @@ api_router.include_router(availabilities_router)
 api_router.include_router(schedule_assignments_router)
 api_router.include_router(swap_requests_router)
 api_router.include_router(scheduler_router)
+api_router.include_router(teams_router)
