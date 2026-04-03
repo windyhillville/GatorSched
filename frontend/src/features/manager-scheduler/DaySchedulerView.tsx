@@ -1,20 +1,21 @@
+import { RoleGroup } from '@/services';
 import { AccordionSection, DateNavigator } from '@/ui';
 import { FlatList, StyleSheet, View } from 'react-native';
 import { EmployeeShiftRow } from './components';
 
-type ShiftItem = {
-  id: string;
-  employeeName: string;
-  avatarUri?: string;
-  startLabel: string;
-  endLabel: string;
-  color: string;
-};
+// type ShiftItem = {
+//   id: string;
+//   employeeName: string;
+//   avatarUri?: string;
+//   startLabel: string;
+//   endLabel: string;
+//   color: string;
+// };
 
-export type RoleGroup = {
-  role: string;
-  shifts: ShiftItem[];
-};
+// export type RoleGroup = {
+//   role: string;
+//   shifts: ShiftItem[];
+// };
 
 type DaySchedulerViewProps = {
   dateLabel: string;

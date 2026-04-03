@@ -1,6 +1,6 @@
+import { PersonData } from '@/features/types';
 import { Avatar, DayIcon } from '@/ui';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
-import { PersonData } from '../../types';
 
 type ShiftSummaryProps = {
   user: PersonData;
@@ -10,12 +10,7 @@ type ShiftSummaryProps = {
 export function ShiftSummary({ user, textStyle }: ShiftSummaryProps) {
   return (
     <View style={styles.shiftWrapper}>
-      <Avatar
-        name={user.name}
-        img={user.pfpImg}
-        size={user.pfpSize}
-        backgroundColor={user.pfpColor}
-      />
+      <Avatar name={user.name} img={user.avatarUrl} color={user.color} />
       <Text style={[styles.text, textStyle]}>{user.name}</Text>
       <DayIcon day="Su" timeRange="9 AM - 5 PM" size="small" />
     </View>

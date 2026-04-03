@@ -1,6 +1,6 @@
+import { PersonData } from '@/features/types';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet } from 'react-native';
-import { PersonData } from '../../types';
 import { SwapRequestDetails, SwapRequestPurpose } from './SwapRequestDetails';
 
 type SwapRequestCardProps = {
@@ -25,7 +25,10 @@ export function SwapRequestCard({
         <SwapRequestDetails purpose={purpose} fromUser={fromUser} toUser={toUser} />
       ) : (
         <Pressable onPress={onToggle} style={styles.pressable}>
-          <ExpandableCardHeader title={fromUser.name} avatar={<Avatar name={fromUser.name} />} />
+          <ExpandableCardHeader
+            title={fromUser.name}
+            avatar={<Avatar name={fromUser.name} img={fromUser.avatarUrl} color={fromUser.color} />}
+          />
         </Pressable>
       )}
 

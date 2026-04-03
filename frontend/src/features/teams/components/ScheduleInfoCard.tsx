@@ -1,4 +1,5 @@
 import { PersonData } from '@/features/types';
+import { TeamMemberSchedule } from '@/services';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet } from 'react-native';
 import { ScheduleInfoDetails } from './ScheduleInfoDetails';
@@ -7,6 +8,7 @@ type ScheduleInfoCardProps = {
   user: PersonData;
   totalHours: number;
   expanded: boolean;
+  weeklySchedule: TeamMemberSchedule[];
   onToggle: () => void;
   //   onViewSchedule: () => void;
   //   onSelectDay: () => void;
@@ -15,6 +17,7 @@ export function ScheduleInfoCard({
   user,
   totalHours,
   expanded,
+  weeklySchedule,
   onToggle,
   //   onViewSchedule,
   //   onSelectDay,
@@ -22,12 +25,16 @@ export function ScheduleInfoCard({
   return (
     <Card>
       <Pressable onPress={onToggle} style={styles.pressable}>
-        <ExpandableCardHeader title={user.name} avatar={<Avatar name={user.name} />} />
+        <ExpandableCardHeader
+          title={user.name}
+          avatar={<Avatar name={user.name} img={user.avatarUrl} color={user.color} />}
+          trailingSpace="compact"
+        />
       </Pressable>
       {expanded && (
         <ScheduleInfoDetails
-          name={user.name}
           totalHours={totalHours}
+          weeklySchedule={weeklySchedule}
           //   onViewSchedule={onViewSchedule}
           //   onSelectDay={onSelectDay}
         />

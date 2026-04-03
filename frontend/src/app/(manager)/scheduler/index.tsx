@@ -1,5 +1,5 @@
-import { DaySchedulerView, RoleGroup, SchedulerEmptyState } from '@/features/manager-scheduler';
-import { generateSchedule } from '@/services/scheduler';
+import { DaySchedulerView, SchedulerEmptyState } from '@/features';
+import { generateSchedule, RoleGroup } from '@/services';
 import { Header, Screen } from '@/ui';
 import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';

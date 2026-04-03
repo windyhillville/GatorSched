@@ -5,6 +5,7 @@ type ExpandableCardHeaderProps = {
   avatar?: React.ReactNode;
   icon?: React.ReactNode;
   textStyle?: StyleProp<TextStyle>;
+  trailingSpace?: 'standard' | 'compact';
 };
 
 export function ExpandableCardHeader({
@@ -12,6 +13,7 @@ export function ExpandableCardHeader({
   avatar,
   icon,
   textStyle,
+  trailingSpace = 'standard',
 }: ExpandableCardHeaderProps) {
   return (
     // <Pressable onPress={onToggle} style={styles.pressable}>
@@ -22,10 +24,14 @@ export function ExpandableCardHeader({
       </View>
       {/* Employee Name */}
       <View style={styles.nameWrapper}>
-        <Text style={[styles.text, textStyle]}>{title}</Text>
+        <Text style={[styles.text, textStyle]} numberOfLines={1}>
+          {title}
+        </Text>
       </View>
       {/* Icon/Spacer */}
-      <View style={styles.iconWrapper}>{icon}</View>
+      <View style={[styles.iconWrapper, trailingSpace === 'compact' && styles.iconWrapperCompact]}>
+        {icon}
+      </View>
     </View>
     // </Pressable>
   );
@@ -51,6 +57,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     width: 96,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   nameWrapper: {
     flex: 1,
@@ -64,5 +71,8 @@ const styles = StyleSheet.create({
     width: 96,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconWrapperCompact: {
+    width: 60,
   },
 });
