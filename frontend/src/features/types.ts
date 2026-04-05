@@ -3,3 +3,8 @@ export type PersonData = {
   avatarUrl: string | null;
   color: string | null;
 };
+
+export type ShiftData = {
+  day: string;
+  timeRange: string;
+};

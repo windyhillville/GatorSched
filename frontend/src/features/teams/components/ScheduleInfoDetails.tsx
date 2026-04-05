@@ -1,3 +1,4 @@
+import { getDayLabelFromIsoDate } from '@/features/utils';
 import { TeamMemberSchedule } from '@/services';
 import { Button, DayGrid, DayItem } from '@/ui';
 import { Platform, StyleSheet, Text, View } from 'react-native';
@@ -18,12 +19,6 @@ type ScheduleInfoDetailsProps = {
   // onViewSchedule: () => void;
   // onSelectDay: () => void;
 };
-
-function getDayLabelFromIsoDate(isoDate: string): string {
-  const date = new Date(`${isoDate}T00:00:00`);
-  const labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  return labels[date.getDay()];
-}
 
 function toDayItems(schedule: TeamMemberSchedule[]): DayItem[] {
   return schedule.map((item) => ({

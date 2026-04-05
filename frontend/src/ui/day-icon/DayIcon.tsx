@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   smallIcon: {
-    minWidth: 47,
-    minHeight: 47,
+    // Original value was 47
+    minWidth: 50,
+    minHeight: 50,
   },
   largeIcon: {
     minWidth: 77,

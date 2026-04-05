@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.db.deps import get_db
 from gatorsched_api.models.swap_request import SwapRequest
-from gatorsched_api.schemas.swap_request import SwapRequestCreate, SwapRequestRead
+from gatorsched_api.schemas.entities.swap_request import SwapRequestCreate, SwapRequestRead
 
 router = APIRouter(tags=["swap_requests"])
 
@@ -12,7 +12,10 @@ router = APIRouter(tags=["swap_requests"])
 @router.get("/swap_requests", response_model=list[SwapRequestRead])
 def list_swap_requests(db: Session = Depends(get_db)) -> list[SwapRequestRead]:
     stmt = select(SwapRequest).options(
-        joinedload(SwapRequest.requester), joinedload(SwapRequest.assignment)
+        joinedload(SwapRequest.requester),
+        joinedload(SwapRequest.cover_employee),
+        joinedload(SwapRequest.requester_assignment),
+        joinedload(SwapRequest.cover_assignment),
     )
     return db.scalars(stmt).all()
     # swap_requests = db.query(SwapRequest)
