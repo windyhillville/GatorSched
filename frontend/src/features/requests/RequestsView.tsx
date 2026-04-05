@@ -63,10 +63,10 @@ export function RequestsView({
                     }}
                     expanded={expandedCards[request.id] ?? false}
                     onToggle={() => onToggleCard(request.id)}
-                    purpose={section.title == 'Incoming' ? 'swap-in' : 'swap-out'}
+                    purpose={section.title === 'Incoming' ? 'swap-in' : 'swap-out'}
                   />
                 ) : (
-                  <Text>Other Request Types...</Text>
+                  <Text key={request.id}>Other Request Types...</Text>
                 ),
               )}
             </View>
