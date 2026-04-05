@@ -1,11 +1,14 @@
 from pydantic import BaseModel, ConfigDict
 
+from ...models.swap_request import SwapRequestStatus
+
 
 class SwapRequestBase(BaseModel):
-    status: str = "pending"
+    status: SwapRequestStatus = SwapRequestStatus.pending
     requester_id: int
-    cover_id: int | None = None
-    schedule_assignment_id: int
+    cover_id: int
+    requester_assignment_id: int
+    cover_assignment_id: int
 
 
 class SwapRequestCreate(SwapRequestBase):

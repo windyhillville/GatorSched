@@ -1,42 +1,71 @@
-import { CallOutRequestCard, SwapRequestCard } from '@/features';
+import { RequestSection, RequestsView } from '@/features';
+import { getEmployeeRequests } from '@/services';
 import { Header, Screen } from '@/ui';
-import { Platform, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Platform, StyleSheet } from 'react-native';
 
 export default function Requests() {
-  function handleCardToggle() {}
+  const [sections, setSections] = useState<RequestSection[]>([]);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const viewerId = '1';
+
+  useEffect(() => {
+    async function fetchRequests() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const requests = await getEmployeeRequests(viewerId);
+        const sections: RequestSection[] = [
+          {
+            title: 'Incoming',
+            requests: requests.incoming,
+          },
+          {
+            title: 'Outgoing',
+            requests: requests.outgoing,
+          },
+        ];
+        setSections(sections);
+
+        const initialExpandedState = Object.fromEntries(
+          sections.map((section) => [section.title, true]),
+        );
+        setExpandedSections(initialExpandedState);
+      } catch (err) {
+        setError('Failed to load requests');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchRequests();
+  }, [viewerId]);
+
   return (
     <Screen insetTop>
       <Header title="Requests" style={styles.header} />
-      <View style={styles.cardWrapper}>
-        <View style={styles.cardContainer}>
-          {/* <RequestCard purpose="callout-out" user={{ name: 'John Doe', pfpImg: JohnDoe }} /> */}
-          {/* <RequestCard
-            purpose="swap-in"
-            user={{ name: 'Jane Smith', pfpColor: 'rgba(251, 191, 36, 1)' }}
-            other={{ name: 'John Doe', pfpImg: JohnDoe }}
-          /> */}
-          {/* <ScheduleInfoCard
-            user={{ name: 'Joe Bo', avatarUrl: null, color: "#d48eda" }}
-            expanded={false}
-            totalHours={56}
-            onToggle={handleCardToggle}
-          /> */}
-          <SwapRequestCard
-            purpose="swap-in"
-            fromUser={{ name: 'Joe Smo', avatarUrl: null, color: '#9598c3' }}
-            toUser={{ name: 'Johnny Roe', avatarUrl: null, color: '#a859c7' }}
-            expanded={false}
-            onToggle={handleCardToggle}
-          />
-          <CallOutRequestCard
-            purpose="callout-in"
-            user={{ name: 'Roe Moe', avatarUrl: null, color: '#68c174' }}
-            expanded={false}
-            onToggle={handleCardToggle}
-          />
-          {/* <RequestCard purpose="info" user={{ name: 'Jim Bo', pfpColor: 'rgba(40, 167, 69, 1)' }} /> */}
-        </View>
-      </View>
+      <RequestsView
+        sections={sections}
+        expandedSections={expandedSections}
+        expandedCards={expandedCards}
+        onToggleSection={(title) =>
+          setExpandedSections((prev) => ({
+            ...prev,
+            [title]: !(prev[title] ?? false),
+          }))
+        }
+        onToggleCard={(id) =>
+          setExpandedCards((prev) => ({
+            ...prev,
+            [id]: !(prev[id] ?? false),
+          }))
+        }
+      />
     </Screen>
   );
 }

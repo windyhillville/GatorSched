@@ -7,14 +7,14 @@ from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.role import Role
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.models.swap_request import SwapRequest  # noqa: F401
+from gatorsched_api.models.swap_request import SwapRequest, SwapRequestStatus
 
 
 def seed():
     init_db()
     db = SessionLocal()
 
-    print("Seeding scheduler + teams demo data...")
+    print("Seeding scheduler + teams + requests demo data...")
 
     # ---------- Roles ----------
     server_role = Role(name="Server", description="Front of house server")
@@ -263,26 +263,62 @@ def seed():
         db.refresh(s)
 
     # ---------- Schedule Assignments ----------
-    # Intentionally leave Johnny with no assignments this week
     assignments = [
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[0].id),  # Sun server
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[1].id),  # Sun server
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[2].id),  # Sun server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[3].id),  # Sun cook
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[4].id),  # Sun cook
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[5].id),  # Mon server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[6].id),  # Mon cook
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[7].id),  # Tue server
-        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[8].id),  # Tue cook
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[9].id),  # Wed server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[10].id),  # Wed cook
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[11].id),  # Thu server
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[12].id),  # Fri server
-        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[13].id),  # Fri cook
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[14].id),  # Sat server
+        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[0].id),  # 0: Ben - Sun server
+        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[1].id),  # 1: Dom - Sun server
+        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[2].id),  # 2: Dan - Sun server
+        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[3].id),  # 3: Ron - Sun cook
+        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[4].id),  # 4: Ron - Sun cook
+        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[5].id),  # 5: Ben - Mon server
+        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[6].id),  # 6: Ron - Mon cook
+        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[7].id),  # 7: Dom - Tue server
+        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[8].id),  # 8: Johnny - Tue cook
+        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[9].id),  # 9: Ben - Wed server
+        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[10].id),  # 10: Ron - Wed cook
+        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[11].id),  # 11: Dan - Thu server
+        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[12].id),  # 12: Dom - Fri server
+        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[13].id),  # 13: Johnny - Fri cook
+        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[14].id),  # 14: Dan - Sat server
     ]
 
     db.add_all(assignments)
+    db.commit()
+
+    for assignment in assignments:
+        db.refresh(assignment)
+
+    # ---------- Swap Requests ----------
+    swap_requests = [
+        # Ben requests a swap with Dom
+        # Ben offers his Monday server shift, Dom offers his Tuesday server shift
+        SwapRequest(
+            requester_id=ben.id,
+            cover_id=dom.id,
+            requester_assignment_id=assignments[5].id,
+            cover_assignment_id=assignments[7].id,
+            status=SwapRequestStatus.pending,
+        ),
+        # Dan requests a swap with Ben
+        # Dan offers his Thursday server shift, Ben offers his Wednesday server shift
+        SwapRequest(
+            requester_id=dan.id,
+            cover_id=ben.id,
+            requester_assignment_id=assignments[11].id,
+            cover_assignment_id=assignments[9].id,
+            status=SwapRequestStatus.pending,
+        ),
+        # Johnny requests a swap with Ron
+        # Johnny offers his Friday cook shift, Ron offers his Wednesday cook shift
+        SwapRequest(
+            requester_id=johnny.id,
+            cover_id=ron.id,
+            requester_assignment_id=assignments[13].id,
+            cover_assignment_id=assignments[10].id,
+            status=SwapRequestStatus.pending,
+        ),
+    ]
+
+    db.add_all(swap_requests)
     db.commit()
 
     print("Seed complete!")

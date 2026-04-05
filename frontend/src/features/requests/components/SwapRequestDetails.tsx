@@ -1,4 +1,4 @@
-import { PersonData } from '@/features/types';
+import { PersonData, ShiftData } from '@/features/types';
 import { Button } from '@/ui';
 import { Platform, StyleSheet, View } from 'react-native';
 import { ShiftSummary } from './ShiftSummary';
@@ -9,17 +9,25 @@ type SwapRequestDetailsProps = {
   purpose: SwapRequestPurpose;
   fromUser: PersonData;
   toUser: PersonData;
+  fromShift: ShiftData;
+  toShift: ShiftData;
 };
 
-export function SwapRequestDetails({ purpose, fromUser, toUser }: SwapRequestDetailsProps) {
+export function SwapRequestDetails({
+  purpose,
+  fromUser,
+  toUser,
+  fromShift,
+  toShift,
+}: SwapRequestDetailsProps) {
   return (
     <View style={styles.container}>
       <View style={styles.multishiftWrapper}>
-        <ShiftSummary user={fromUser} />
+        <ShiftSummary user={fromUser} shift={fromShift} />
 
         <View style={styles.multishiftSpacer} />
 
-        <ShiftSummary user={toUser} />
+        <ShiftSummary user={toUser} shift={toShift} />
       </View>
       <View style={styles.buttonWrapper}>
         <View style={styles.buttonContainer}>
