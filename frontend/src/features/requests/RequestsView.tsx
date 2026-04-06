@@ -1,7 +1,7 @@
 import { EmployeeRequestCard } from '@/services';
 import { AccordionSection } from '@/ui';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { getDayLabelFromIsoDate } from '../utils';
+import { getShortDayLabelFromIsoDate } from '../utils';
 import { SwapRequestCard } from './components';
 
 export type RequestSection = {
@@ -54,11 +54,11 @@ export function RequestsView({
                       color: request.coverEmployee.color,
                     }}
                     fromShift={{
-                      day: getDayLabelFromIsoDate(request.requesterShift.day),
+                      day: getShortDayLabelFromIsoDate(request.requesterShift.day),
                       timeRange: request.requesterShift.timeRange,
                     }}
                     toShift={{
-                      day: getDayLabelFromIsoDate(request.coverShift.day),
+                      day: getShortDayLabelFromIsoDate(request.coverShift.day),
                       timeRange: request.coverShift.timeRange,
                     }}
                     expanded={expandedCards[request.id] ?? false}

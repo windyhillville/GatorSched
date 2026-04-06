@@ -3,19 +3,14 @@ import { StyleSheet, View } from 'react-native';
 
 type AvailabilityWeekViewProps = {
   days: DayItem[];
-  selectedDayKey?: string;
-  onDayPress: (day: DayItem) => void;
+  onDayPress: (dayKey: string) => void;
 };
-export function AvailabilityWeekView({
-  days,
-  selectedDayKey,
-  onDayPress,
-}: AvailabilityWeekViewProps) {
+export function AvailabilityWeekView({ days, onDayPress }: AvailabilityWeekViewProps) {
   return (
     <View style={styles.content}>
       <View style={styles.spacer} />
 
-      <DayGrid days={days} selectedKey={selectedDayKey} onDayPress={onDayPress} size="large" />
+      <DayGrid days={days} onDayPress={onDayPress} size="large" />
 
       <View style={styles.spacer} />
     </View>

@@ -1,2 +1,2 @@
-export * from './ScheduleDaySummaryCard';
+export * from './components';
 export * from './ScheduleWeekView';
