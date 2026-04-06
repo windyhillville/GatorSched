@@ -5,18 +5,16 @@ type ScheduleWeekViewProps = {
   weekLabel: string;
   days: DayItem[];
   totalHours: number;
-  selectedDayKey?: string;
 
   onPreviousWeek: () => void;
   onNextWeek: () => void;
-  onDayPress: (day: DayItem) => void;
+  onDayPress: (dayKey: string) => void;
 };
 
 export function ScheduleWeekView({
   weekLabel,
   days,
   totalHours,
-  selectedDayKey,
   onPreviousWeek,
   onNextWeek,
   onDayPress,
@@ -24,12 +22,11 @@ export function ScheduleWeekView({
   return (
     <View style={styles.outerContainer}>
       <View style={styles.content}>
-        {/* <Header title="Schedule" /> */}
         <View style={styles.spacer} />
 
         <DateNavigator label={weekLabel} onPrevious={onPreviousWeek} onNext={onNextWeek} />
 
-        <DayGrid days={days} selectedKey={selectedDayKey} onDayPress={onDayPress} />
+        <DayGrid days={days} onDayPress={onDayPress} />
 
         <Text style={styles.totalHours}>{`${totalHours} Hrs`}</Text>
 

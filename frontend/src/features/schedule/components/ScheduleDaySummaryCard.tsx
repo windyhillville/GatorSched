@@ -9,6 +9,8 @@ type ScheduleDaySummaryCardProps = {
   toTime: string;
   totalHours: number;
   barColor: string;
+  onPreviousDay: () => void;
+  onNextDay: () => void;
 };
 
 export function ScheduleDaySummaryCard({
@@ -18,10 +20,15 @@ export function ScheduleDaySummaryCard({
   toTime,
   totalHours,
   barColor,
+  onPreviousDay,
+  onNextDay,
 }: ScheduleDaySummaryCardProps) {
   return (
     <View style={styles.container}>
-      <DateNavigator label={dateLabel} />
+      {/* <Chevron direction="left" /> */}
+
+      {/* <View style={styles.summaryContent}> */}
+      <DateNavigator label={dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
 
       <View style={[styles.cardContainer, { borderColor: Colors.buttonDefaultBorder }]}>
         <View style={styles.topRow}>
@@ -45,6 +52,7 @@ export function ScheduleDaySummaryCard({
           <Button title="Request Call Out" />
         </View>
       </View>
+      {/* </View> */}
     </View>
   );
 }
