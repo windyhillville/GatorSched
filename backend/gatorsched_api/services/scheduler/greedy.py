@@ -4,6 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from gatorsched_api.models.employee import Employee
+from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 
 # from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.shift import Shift
@@ -48,59 +49,83 @@ def generate_schedule_for_date(db: Session, target_date: date) -> GenerateSchedu
     )
     shifts = db.scalars(shift_stmt).unique().all()
 
-    groups_by_role: dict[str, list[ScheduledShift]] = {}
-    previous_shift: dict[int, time] = {}
-    assignment_counts: dict[int, int] = {}
+    try:
+        if shifts:
+            shift_ids = [s.id for s in shifts]
+            existing = db.scalars(
+                select(ScheduleAssignment)
+                .where(ScheduleAssignment.shift_id.in_(shift_ids))
+            ).all()
+            for assignment in existing:
+                db.delete(assignment)
+            db.flush()
 
-    for shift in shifts:
-        print(f"\nProcessing shift {shift.role.name} {shift.start_time}-{shift.end_time}")
+        groups_by_role: dict[str, list[ScheduledShift]] = {}
+        previous_shift: dict[int, time] = {}
+        assignment_counts: dict[int, int] = {}
 
-        eligible_employees = [
-            e
-            for e in employees
-            if e.role == shift.role
-            and any(
-                a.day_of_week == shift.date.weekday()
-                and a.start_time <= shift.start_time
-                and a.end_time >= shift.end_time
-                for a in e.availabilities
-            )
-        ]
+        for shift in shifts:
+            print(f"\nProcessing shift {shift.role.name} {shift.start_time}-{shift.end_time}")
 
-        eligible_employees.sort(key=lambda e: (assignment_counts.get(e.id, 0), e.name))
+            eligible_employees = [
+                e
+                for e in employees
+                if e.role == shift.role
+                and any(
+                    a.day_of_week == shift.date.weekday()
+                    and a.start_time <= shift.start_time
+                    and a.end_time >= shift.end_time
+                    for a in e.availabilities
+                )
+            ]
 
-        print(f"Eligible employees: {[e.name for e in eligible_employees]}")
+            eligible_employees.sort(key=lambda e: (assignment_counts.get(e.id, 0), e.name))
 
-        assigned_count = 0
+            print(f"Eligible employees: {[e.name for e in eligible_employees]}")
 
-        for employee in eligible_employees:
-            if assigned_count >= shift.min_staff_req:
-                break
+            assigned_count = 0
 
-            if employee.id in previous_shift:
-                prev_end = previous_shift[employee.id]
-                if shift.start_time < prev_end:
-                    continue
+            for employee in eligible_employees:
+                if assigned_count >= shift.min_staff_req:
+                    break
 
-            scheduled_shift = ScheduledShift(
-                id=str(employee.id),
-                employeeName=employee.name,
-                startLabel=format_time_label(shift.start_time),
-                endLabel=format_time_label(shift.end_time),
-                color=get_employee_color(employee),
-            )
+                if employee.id in previous_shift:
+                    prev_end = previous_shift[employee.id]
+                    if shift.start_time < prev_end:
+                        continue
 
-            role_name = shift.role.name
-            if role_name not in groups_by_role:
-                groups_by_role[role_name] = []
+                db.add(
+                    ScheduleAssignment(
+                            employee_id=employee.id,
+                            shift_id=shift.id,
+                            status="assigned",
+                    )
+                )
 
-            groups_by_role[role_name].append(scheduled_shift)
+                scheduled_shift = ScheduledShift(
+                    id=str(employee.id),
+                    employeeName=employee.name,
+                    startLabel=format_time_label(shift.start_time),
+                    endLabel=format_time_label(shift.end_time),
+                    color=get_employee_color(employee),
+                )
 
-            previous_shift[employee.id] = shift.end_time
-            assignment_counts[employee.id] = assignment_counts.get(employee.id, 0) + 1
-            assigned_count += 1
+                role_name = shift.role.name
+                if role_name not in groups_by_role:
+                    groups_by_role[role_name] = []
 
-            print(f"Assigned {employee.name}")
+                groups_by_role[role_name].append(scheduled_shift)
+
+                previous_shift[employee.id] = shift.end_time
+                assignment_counts[employee.id] = assignment_counts.get(employee.id, 0) + 1
+                assigned_count += 1
+
+                print(f"Assigned {employee.name}")
+
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
 
     groups = [
         RoleGroup(role=role_name, shifts=scheduled_shifts)
