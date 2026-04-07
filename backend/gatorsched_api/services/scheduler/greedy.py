@@ -53,8 +53,7 @@ def generate_schedule_for_date(db: Session, target_date: date) -> GenerateSchedu
         if shifts:
             shift_ids = [s.id for s in shifts]
             existing = db.scalars(
-                select(ScheduleAssignment)
-                .where(ScheduleAssignment.shift_id.in_(shift_ids))
+                select(ScheduleAssignment).where(ScheduleAssignment.shift_id.in_(shift_ids))
             ).all()
             for assignment in existing:
                 db.delete(assignment)
@@ -96,9 +95,9 @@ def generate_schedule_for_date(db: Session, target_date: date) -> GenerateSchedu
 
                 db.add(
                     ScheduleAssignment(
-                            employee_id=employee.id,
-                            shift_id=shift.id,
-                            status="assigned",
+                        employee_id=employee.id,
+                        shift_id=shift.id,
+                        status="assigned",
                     )
                 )
 
