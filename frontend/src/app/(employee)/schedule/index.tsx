@@ -37,7 +37,7 @@ type ScheduleWeekData = {
 };
 
 export default function Schedule() {
-  const [selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle] =
+  const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
   const selectedDay = fullWeek.find((d) => d.key === selectedDayKey) ?? null;
 

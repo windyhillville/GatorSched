@@ -15,7 +15,7 @@ const fullWeek: DayItem[] = [
 ];
 
 export default function Availability() {
-  const [selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle] =
+  const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
   const selectedDay = fullWeek.find((d) => d.key === selectedDayKey) ?? null;
 

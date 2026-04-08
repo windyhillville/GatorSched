@@ -35,5 +35,5 @@ export function useDaySelectionTransition() {
     ],
   }));
 
-  return [selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle] as const;
+  return { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } as const;
 }
