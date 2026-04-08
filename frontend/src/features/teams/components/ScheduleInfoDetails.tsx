@@ -1,4 +1,4 @@
-import { getDayLabelFromIsoDate } from '@/features/utils';
+import { getShortDayLabelFromIsoDate } from '@/features/utils';
 import { TeamMemberSchedule } from '@/services';
 import { Button, DayGrid, DayItem } from '@/ui';
 import { Platform, StyleSheet, Text, View } from 'react-native';
@@ -23,7 +23,7 @@ type ScheduleInfoDetailsProps = {
 function toDayItems(schedule: TeamMemberSchedule[]): DayItem[] {
   return schedule.map((item) => ({
     key: item.id,
-    label: getDayLabelFromIsoDate(item.day),
+    label: getShortDayLabelFromIsoDate(item.day),
     timeRange: item.timeRange,
   }));
 }
