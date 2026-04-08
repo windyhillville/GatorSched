@@ -11,7 +11,6 @@ from gatorsched_api.schemas.features.employee_schedule import (
     DaySummary,
     EmployeeScheduleResponse,
 )
-
 from gatorsched_api.services.time_formatting import (
     format_time_label,
     format_time_range,
@@ -32,11 +31,15 @@ DAY_LONG_LABELS = [
     "Saturday",
 ]
 
-def _day_index(d:date) -> int:
+
+def _day_index(d: date) -> int:
     # Converts Python weekday to Sunday first index
     return (d.weekday() + 1) % 7
 
-def get_employee_schedule(db: Session, viewer_id: int, week_start: date | None = None) -> EmployeeScheduleResponse:
+
+def get_employee_schedule(
+    db: Session, viewer_id: int, week_start: date | None = None
+) -> EmployeeScheduleResponse:
     employee = db.scalars(select(Employee).where(Employee.id == viewer_id)).one()
 
     reference_date = week_start or date.today()
@@ -54,9 +57,7 @@ def get_employee_schedule(db: Session, viewer_id: int, week_start: date | None =
     )
     assignments = db.scalars(stmt).all()
 
-    by_day: dict[int, ScheduleAssignment] = {
-        _day_index(a.shift.date): a for a in assignments
-    }
+    by_day: dict[int, ScheduleAssignment] = {_day_index(a.shift.date): a for a in assignments}
 
     schedule: list[DayItem] = []
     total_hours = 0
@@ -82,19 +83,19 @@ def get_employee_schedule(db: Session, viewer_id: int, week_start: date | None =
                 shiftHours=0,
             )
             time_range = "Off"
-        schedule.append(DayItem(
-            key=DAY_KEYS[i],
-            shortLabel=DAY_SHORT_LABELS[i],
-            timeRange=time_range,
-            summary=summary,
-        ))
+        schedule.append(
+            DayItem(
+                key=DAY_KEYS[i],
+                shortLabel=DAY_SHORT_LABELS[i],
+                timeRange=time_range,
+                summary=summary,
+            )
+        )
 
     return EmployeeScheduleResponse(
         id=str(employee.id),
-        color="", # Need to figure out what color we want to do for this or make it based on a static list.
+        color="",  # Need to figure out what color we want to do for this or make it based on a static list.
         weekLabel=format_week_label(start_of_week, end_of_week),
         totalHours=total_hours,
         schedule=schedule,
     )
-
-

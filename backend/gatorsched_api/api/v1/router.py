@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from .routes.employee.requests import router as requests_router
+from .routes.employee.schedule import router as employee_schedule_router
 from .routes.employee.scheduler import router as scheduler_router
 from .routes.employee.teams import router as teams_router
 from .routes.entities.availabilities import router as availabilities_router
@@ -10,7 +11,6 @@ from .routes.entities.roles import router as roles_router
 from .routes.entities.schedule_assignments import router as schedule_assignments_router
 from .routes.entities.shifts import router as shifts_router
 from .routes.entities.swap_requests import router as swap_requests_router
-from .routes.employee.schedule import router as employee_schedule_router
 
 api_router = APIRouter()
 
