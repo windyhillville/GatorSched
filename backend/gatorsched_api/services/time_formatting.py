@@ -26,3 +26,18 @@ def get_shift_duration_hours(start_time: time, end_time: time) -> float:
         end_date += timedelta(days=1)
 
     return (end_date - start_date).total_seconds() / 3600
+
+
+def get_sunday_week_bounds(d: date) -> tuple[date, date]:
+    days_since_sunday = (d.weekday() + 1) % 7
+    start_of_week = d - timedelta(days=days_since_sunday)
+    end_of_week = start_of_week + timedelta(days=6)
+    return start_of_week, end_of_week
+
+
+def format_short_date(d: date) -> str:
+    return d.strftime("%m/%d/%y")
+
+
+def format_week_label(start: date, end: date) -> str:
+    return f"{format_short_date(start)} - {format_short_date(end)}"
