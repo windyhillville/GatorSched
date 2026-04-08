@@ -1,9 +1,10 @@
-import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
 type ExpandableCardHeaderProps = {
   title: string;
   avatar?: React.ReactNode;
   icon?: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   trailingSpace?: 'standard' | 'compact';
 };
@@ -12,12 +13,13 @@ export function ExpandableCardHeader({
   title,
   avatar,
   icon,
+  style,
   textStyle,
   trailingSpace = 'standard',
 }: ExpandableCardHeaderProps) {
   return (
     // <Pressable onPress={onToggle} style={styles.pressable}>
-    <View style={styles.row}>
+    <View style={[styles.row, style]}>
       <View style={styles.avatarWrapper}>
         {/* Placeholder for profile picture */}
         {avatar}
@@ -52,6 +54,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
+    // paddingHorizontal: 8,
+    // paddingVertical: 8,
   },
   avatarWrapper: {
     // flex: 1,
