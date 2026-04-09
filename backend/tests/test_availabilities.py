@@ -14,6 +14,7 @@ def test_availability_returns_one_after_insert(client, db_session, cashier_role)
     employee = Employee(
         name="Ben Davidson",
         email="ben44@example.com",
+        color="#456785",
         access_level=AccessLevel.manager,
         is_active=True,
         role_id=cashier_role,
@@ -47,6 +48,7 @@ def test_create_availability(client, db_session, cashier_role):
     employee = Employee(
         name="John Smith",
         email="john3@example.com",
+        color="#343434",
         access_level=AccessLevel.employee,
         is_active=True,
         role_id=cashier_role,

@@ -10,7 +10,7 @@ class RequestPerson(BaseModel):
     id: str
     name: str
     avatarUrl: str | None = None
-    color: str | None = None
+    color: str
 
 
 class RequestShiftSummary(BaseModel):

@@ -1,4 +1,4 @@
-import { PersonData } from '@/features/types';
+import { PersonData, ShiftData } from '@/features/types';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet } from 'react-native';
 import { CallOutRequestDetails, CallOutRequestPurpose } from './CallOutRequestDetails';
@@ -6,16 +6,23 @@ import { CallOutRequestDetails, CallOutRequestPurpose } from './CallOutRequestDe
 type CallOutRequestCardProps = {
   purpose: CallOutRequestPurpose;
   user: PersonData;
+  shift: ShiftData;
   expanded: boolean;
   onToggle: () => void;
 };
 
-export function CallOutRequestCard({ purpose, user, expanded, onToggle }: CallOutRequestCardProps) {
+export function CallOutRequestCard({
+  purpose,
+  user,
+  shift,
+  expanded,
+  onToggle,
+}: CallOutRequestCardProps) {
   return (
     <Card>
       {/* Temporary conditional rendering - will need to animate in future */}
       {expanded ? (
-        <CallOutRequestDetails purpose={purpose} user={user} />
+        <CallOutRequestDetails purpose={purpose} user={user} shift={shift} />
       ) : (
         <Pressable onPress={onToggle} style={styles.pressable}>
           <ExpandableCardHeader

@@ -10,6 +10,7 @@ def create_employee(db_session, role_id: int, name: str, email: str) -> Employee
     employee = Employee(
         name=name,
         email=email,
+        color="#343456",
         access_level=AccessLevel.employee,
         is_active=True,
         role_id=role_id,

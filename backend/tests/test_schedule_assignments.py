@@ -15,6 +15,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session, cashi
     employee = Employee(
         name="Ben Davidson",
         email="ben11@example.com",
+        color="#454567",
         access_level=AccessLevel.manager,
         is_active=True,
         role_id=cashier_role,
@@ -59,6 +60,7 @@ def test_create_schedule_assignment(client, db_session, cashier_role):
     employee = Employee(
         name="John Smith",
         email="john@example.com",
+        color="#454567",
         access_level=AccessLevel.employee,
         is_active=True,
         role_id=cashier_role,

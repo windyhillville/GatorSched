@@ -1,9 +1,10 @@
-import { DateNavigator, DayGrid, DayItem } from '@/ui';
+import { EmployeeShift } from '@/services';
+import { DateNavigator, DayGrid } from '@/ui';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
 type ScheduleWeekViewProps = {
   weekLabel: string;
-  days: DayItem[];
+  employeeShifts: EmployeeShift[];
   totalHours: number;
 
   onPreviousWeek: () => void;
@@ -13,7 +14,7 @@ type ScheduleWeekViewProps = {
 
 export function ScheduleWeekView({
   weekLabel,
-  days,
+  employeeShifts,
   totalHours,
   onPreviousWeek,
   onNextWeek,
@@ -26,7 +27,14 @@ export function ScheduleWeekView({
 
         <DateNavigator label={weekLabel} onPrevious={onPreviousWeek} onNext={onNextWeek} />
 
-        <DayGrid days={days} onDayPress={onDayPress} />
+        <DayGrid
+          days={employeeShifts.map((shift) => ({
+            key: shift.key,
+            label: shift.shortLabel,
+            timeRange: shift.timeRange,
+          }))}
+          onDayPress={onDayPress}
+        />
 
         <Text style={styles.totalHours}>{`${totalHours} Hrs`}</Text>
 

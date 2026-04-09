@@ -9,3 +9,8 @@ export function getLongDayLabelFromIsoDate(isoDate: string): string {
   const labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return labels[date.getDay()];
 }
+
+export function isToday(isoDateString: string, todayDate: Date): boolean {
+  const todayISO = todayDate.toISOString().split('T')[0];
+  return isoDateString === todayISO;
+}

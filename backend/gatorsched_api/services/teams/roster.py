@@ -13,15 +13,16 @@ from gatorsched_api.schemas.features.teams import (
     TeamMemberSchedule,
     TeamsResponse,
 )
-from gatorsched_api.services.time_formatting import (
+from gatorsched_api.services.datetime_formatting import (
     format_time_range,
     get_shift_duration_hours,
-    get_week_bounds,
+    get_sunday_week_bounds,
 )
 
 
 def get_roster(db: Session, target_date: date) -> TeamsResponse:
-    start_of_week, end_of_week = get_week_bounds(target_date)
+    ## NOTE: changed from get_week_bounds() -> get_sunday_week_bounds()
+    start_of_week, end_of_week = get_sunday_week_bounds(target_date)
 
     employee_stmt = (
         select(Employee)
