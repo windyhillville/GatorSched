@@ -11,6 +11,7 @@ def test_employees_returns_one_after_insert(client, db_session, cashier_role):
     employee = Employee(
         name="Ben Davidson",
         email="ben@example.com",
+        color="#456754",
         phone="123-456-7890",
         max_weekly_hours=40,
         access_level=AccessLevel.manager,
@@ -38,6 +39,7 @@ def test_create_employee(client, cashier_role):
     payload = {
         "name": "Johnny Boy",
         "email": "johnny@example.com",
+        "color": "#343456",
         "phone": "098-765-4321",
         "max_weekly_hours": 40,
         "access_level": "employee",

@@ -1,25 +1,20 @@
+import { EmployeeShiftSummary } from '@/services';
 import { Colors } from '@/styles';
 import { Button, DateNavigator, DurationBar } from '@/ui';
 import { StyleSheet, Text, View } from 'react-native';
 
 type ScheduleDaySummaryCardProps = {
-  dateLabel: string;
-  dayLabel: string;
-  fromTime: string;
-  toTime: string;
-  totalHours: number;
+  summary: EmployeeShiftSummary;
   barColor: string;
+  isToday: boolean;
   onPreviousDay: () => void;
   onNextDay: () => void;
 };
 
 export function ScheduleDaySummaryCard({
-  dateLabel,
-  dayLabel,
-  fromTime,
-  toTime,
-  totalHours,
+  summary,
   barColor,
+  isToday,
   onPreviousDay,
   onNextDay,
 }: ScheduleDaySummaryCardProps) {
@@ -28,13 +23,13 @@ export function ScheduleDaySummaryCard({
       {/* <Chevron direction="left" /> */}
 
       {/* <View style={styles.summaryContent}> */}
-      <DateNavigator label={dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
+      <DateNavigator label={summary.dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
 
       <View style={[styles.cardContainer, { borderColor: Colors.buttonDefaultBorder }]}>
         <View style={styles.topRow}>
-          <Text style={styles.cardText}>{fromTime}</Text>
-          <Text style={styles.cardText}>{dayLabel}</Text>
-          <Text style={styles.cardText}>{toTime}</Text>
+          <Text style={styles.cardText}>{summary.fromTime}</Text>
+          <Text style={styles.cardText}>{isToday ? 'Today' : summary.longLabel}</Text>
+          <Text style={styles.cardText}>{summary.toTime}</Text>
         </View>
 
         <View style={styles.barContainer}>
@@ -42,7 +37,7 @@ export function ScheduleDaySummaryCard({
         </View>
       </View>
 
-      <Text style={styles.totalHours}>{`${totalHours} Hrs`}</Text>
+      <Text style={styles.totalHours}>{`${summary.shiftHours} Hrs`}</Text>
 
       <View style={styles.buttonRow}>
         <View style={styles.buttonWrapper}>

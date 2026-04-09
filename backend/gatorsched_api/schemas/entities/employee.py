@@ -9,7 +9,7 @@ class EmployeeBase(BaseModel):
     name: str
     email: EmailStr
     phone: str | None = None
-    color: str | None = None
+    color: str
     avatar_url: str | None = None
     max_weekly_hours: int | None = None
     access_level: AccessLevel = AccessLevel.employee

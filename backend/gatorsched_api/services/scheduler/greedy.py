@@ -13,7 +13,7 @@ from gatorsched_api.schemas.features.scheduler import (
     RoleGroup,
     ScheduledShift,
 )
-from gatorsched_api.services.time_formatting import format_time_label
+from gatorsched_api.services.datetime_formatting import format_time_label
 
 # from gatorsched_api.models.role import Role
 

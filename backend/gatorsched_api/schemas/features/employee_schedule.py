@@ -1,18 +1,20 @@
 from pydantic import BaseModel
 
 
-class DaySummary(BaseModel):
+class EmployeeShiftSummary(BaseModel):
     fromTime: str
     toTime: str
     longLabel: str
+    dateLabel: str
     shiftHours: float
 
 
-class DayItem(BaseModel):
+class EmployeeShift(BaseModel):
     key: str
     shortLabel: str
     timeRange: str
-    summary: DaySummary
+    isoDate: str
+    summary: EmployeeShiftSummary
 
 
 class EmployeeScheduleResponse(BaseModel):
@@ -20,4 +22,4 @@ class EmployeeScheduleResponse(BaseModel):
     color: str
     weekLabel: str
     totalHours: float
-    schedule: list[DayItem]
+    schedule: list[EmployeeShift]

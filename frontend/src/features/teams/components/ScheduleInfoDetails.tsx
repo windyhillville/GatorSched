@@ -1,6 +1,6 @@
 import { getShortDayLabelFromIsoDate } from '@/features/utils';
 import { TeamMemberSchedule } from '@/services';
-import { Button, DayGrid, DayItem } from '@/ui';
+import { Button, DayGrid } from '@/ui';
 import { Platform, StyleSheet, Text, View } from 'react-native';
 
 // const dummyDays: DayItem[] = [
@@ -20,13 +20,13 @@ type ScheduleInfoDetailsProps = {
   // onSelectDay: () => void;
 };
 
-function toDayItems(schedule: TeamMemberSchedule[]): DayItem[] {
-  return schedule.map((item) => ({
-    key: item.id,
-    label: getShortDayLabelFromIsoDate(item.day),
-    timeRange: item.timeRange,
-  }));
-}
+// export function toDayItems(schedule: TeamMemberSchedule[]): DayItem[] {
+//   return schedule.map((item) => ({
+//     key: item.id,
+//     label: getShortDayLabelFromIsoDate(item.day),
+//     timeRange: item.timeRange,
+//   }));
+// }
 
 export function ScheduleInfoDetails({
   totalHours,
@@ -39,7 +39,11 @@ export function ScheduleInfoDetails({
     <View style={styles.container}>
       <View style={styles.dayGridWrapper}>
         <DayGrid
-          days={toDayItems(weeklySchedule)}
+          days={weeklySchedule.map((item) => ({
+            key: item.id,
+            label: getShortDayLabelFromIsoDate(item.day),
+            timeRange: item.timeRange,
+          }))}
           size="small"
           onDayPress={(d) => console.log(d)}
         />

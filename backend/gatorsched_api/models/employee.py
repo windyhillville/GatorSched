@@ -32,7 +32,7 @@ class Employee(Base):
 
     phone: Mapped[str | None] = mapped_column(String(32), nullable=True)
 
-    color: Mapped[str | None] = mapped_column(String(16), nullable=True)
+    color: Mapped[str] = mapped_column(String(16), nullable=False)
 
     avatar_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 

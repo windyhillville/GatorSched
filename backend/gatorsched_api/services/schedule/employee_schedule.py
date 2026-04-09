@@ -7,34 +7,21 @@ from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.schemas.features.employee_schedule import (
-    DayItem,
-    DaySummary,
     EmployeeScheduleResponse,
+    EmployeeShift,
+    EmployeeShiftSummary,
 )
-from gatorsched_api.services.time_formatting import (
+from gatorsched_api.services.datetime_formatting import (
+    format_short_date,
     format_time_label,
     format_time_range,
     format_week_label,
+    get_day_key,
+    get_long_day_label,
     get_shift_duration_hours,
+    get_short_day_label,
     get_sunday_week_bounds,
 )
-
-DAY_KEYS = ["sun", "mon", "tue", "wed", "thur", "fri", "sat"]
-DAY_SHORT_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"]
-DAY_LONG_LABELS = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-]
-
-
-def _day_index(d: date) -> int:
-    # Converts Python weekday to Sunday first index
-    return (d.weekday() + 1) % 7
 
 
 def get_employee_schedule(
@@ -54,47 +41,37 @@ def get_employee_schedule(
             Shift.date <= end_of_week,
         )
         .options(joinedload(ScheduleAssignment.shift))
+        .order_by(Shift.date, Shift.start_time)
     )
     assignments = db.scalars(stmt).all()
 
-    by_day: dict[int, ScheduleAssignment] = {_day_index(a.shift.date): a for a in assignments}
-
-    schedule: list[DayItem] = []
+    schedule: list[EmployeeShift] = []
     total_hours = 0
 
-    for i in range(7):
-        assignment = by_day.get(i)
-        if assignment is not None:
-            shift = assignment.shift
-            hours = get_shift_duration_hours(shift.start_time, shift.end_time)
-            total_hours += hours
-            summary = DaySummary(
-                fromTime=format_time_label(shift.start_time),
-                toTime=format_time_label(shift.end_time),
-                longLabel=DAY_LONG_LABELS[i],
-                shiftHours=hours,
-            )
-            time_range = format_time_range(shift.start_time, shift.end_time)
-        else:
-            summary = DaySummary(
-                fromTime="",
-                toTime="",
-                longLabel=DAY_LONG_LABELS[i],
-                shiftHours=0,
-            )
-            time_range = "Off"
+    for assignment in assignments:
+        hours = get_shift_duration_hours(assignment.shift.start_time, assignment.shift.end_time)
+        total_hours += hours
+        summary = EmployeeShiftSummary(
+            fromTime=format_time_label(assignment.shift.start_time),
+            toTime=format_time_label(assignment.shift.end_time),
+            longLabel=get_long_day_label(assignment.shift.date),
+            dateLabel=format_short_date(assignment.shift.date),
+            shiftHours=hours,
+        )
+
         schedule.append(
-            DayItem(
-                key=DAY_KEYS[i],
-                shortLabel=DAY_SHORT_LABELS[i],
-                timeRange=time_range,
+            EmployeeShift(
+                key=get_day_key(assignment.shift.date),
+                shortLabel=get_short_day_label(assignment.shift.date),
+                timeRange=format_time_range(assignment.shift.start_time, assignment.shift.end_time),
+                isoDate=assignment.shift.date.isoformat(),
                 summary=summary,
             )
         )
 
     return EmployeeScheduleResponse(
         id=str(employee.id),
-        color="",  # Need to figure out what color we want to do for this or make it based on a static list.
+        color=employee.color,
         weekLabel=format_week_label(start_of_week, end_of_week),
         totalHours=total_hours,
         schedule=schedule,

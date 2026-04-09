@@ -1,4 +1,4 @@
-import { PersonData } from '@/features/types';
+import { PersonData, ShiftData } from '@/features/types';
 import { Button } from '@/ui';
 import { Platform, StyleSheet, View } from 'react-native';
 import { ShiftSummary } from './ShiftSummary';
@@ -8,12 +8,13 @@ export type CallOutRequestPurpose = 'callout-in' | 'callout-out';
 type CallOutRequestDetailsProps = {
   purpose: CallOutRequestPurpose;
   user: PersonData;
+  shift: ShiftData;
 };
 
-export function CallOutRequestDetails({ purpose, user }: CallOutRequestDetailsProps) {
+export function CallOutRequestDetails({ purpose, user, shift }: CallOutRequestDetailsProps) {
   return (
     <View style={styles.container}>
-      <ShiftSummary user={user} textStyle={{ fontSize: 22 }} />
+      <ShiftSummary user={user} shift={shift} textStyle={{ fontSize: 22 }} />
       <View style={styles.buttonWrapper}>
         <View style={styles.buttonContainer}>
           {purpose === 'callout-in' ? (

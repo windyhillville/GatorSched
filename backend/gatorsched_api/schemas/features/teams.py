@@ -13,7 +13,7 @@ class TeamMemberCard(BaseModel):
     id: str
     name: str
     role: str
-    color: str | None = None
+    color: str
     avatarUrl: str | None = None
     totalHours: float
     schedule: list[TeamMemberSchedule]

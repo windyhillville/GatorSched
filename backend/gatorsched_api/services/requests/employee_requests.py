@@ -9,7 +9,7 @@ from gatorsched_api.schemas.features.employee_requests import (
     RequestPerson,
     RequestShiftSummary,
 )
-from gatorsched_api.services.time_formatting import (
+from gatorsched_api.services.datetime_formatting import (
     format_time_range,
 )
 

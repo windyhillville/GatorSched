@@ -1,7 +1,10 @@
 import { ScheduleDaySummaryCard, ScheduleWeekView } from '@/features';
-import { useDaySelectionTransition } from '@/hooks';
+import { isToday } from '@/features/utils';
+import { useDaySelectionTransition, useToday } from '@/hooks';
+import { EmployeeScheduleResponse, getEmployeeSchedule } from '@/services';
 import { Button, Chevron, DayItem, Header, Screen } from '@/ui';
-import { Platform, StyleSheet, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const fullWeek: DayItem[] = [
@@ -14,32 +17,16 @@ const fullWeek: DayItem[] = [
   { key: 'sat', label: 'Sa', timeRange: '12 PM - 8 PM' },
 ];
 
-type ScheduleDay = {
-  id: string;
-  isoDate: string; // "2026-02-15"
-  // shortLabel: string; // "Su"
-  // longLabel: string; // "Sunday"
-  // dateLabel: string; // "02/15/26"
-  fromTime: string; // "7 AM"
-  toTime: string; // "3 PM"
-  // timeRange: string; // "7 AM - 3 PM" NOTE: Format time range manually in frontend
-  totalHours: number; // 8
-  isToday: boolean;
-  // hasShift: boolean;
-};
-
-type ScheduleWeekData = {
-  // weekLabel: string;
-  weekStartIsoDate: string;
-  weekEndIsoDate: string;
-  totalHours: number;
-  days: ScheduleDay[];
-};
-
 export default function Schedule() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [scheduleInfo, setScheduleInfo] = useState<EmployeeScheduleResponse | null>(null);
+
+  const today = useToday();
+
   const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
-  const selectedDay = fullWeek.find((d) => d.key === selectedDayKey) ?? null;
+  const selectedDay = scheduleInfo?.schedule.find((d) => d.key === selectedDayKey) ?? null;
 
   const handlePrevWeek = () => {};
 
@@ -51,51 +38,74 @@ export default function Schedule() {
 
   const handleFullSchedule = () => {};
 
+  const viewerId = '1';
+  const startWeek = '2026-03-15';
+  useEffect(() => {
+    async function getSchedule() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const request = await getEmployeeSchedule(viewerId, startWeek);
+        setScheduleInfo(request);
+      } catch (err) {
+        setError('Failed to retrieve schedule.');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    getSchedule();
+  }, [viewerId, startWeek]);
+
   return (
     <Screen insetTop>
       <Header title="Schedule" />
 
-      <View style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        <Animated.View style={[{ flex: 1 }, weekFadeStyle]}>
-          <ScheduleWeekView
-            weekLabel="02/15/26 - 02/21/26"
-            days={fullWeek}
-            totalHours={56}
-            onPreviousWeek={handlePrevWeek}
-            onNextWeek={handleNextWeek}
-            onDayPress={(dayKey) => setSelectedDayKey(dayKey)}
-          />
+      {scheduleInfo ? (
+        <View style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+          <Animated.View style={[{ flex: 1 }, weekFadeStyle]}>
+            <ScheduleWeekView
+              weekLabel={scheduleInfo.weekLabel}
+              employeeShifts={scheduleInfo.schedule}
+              totalHours={scheduleInfo.totalHours}
+              onPreviousWeek={handlePrevWeek}
+              onNextWeek={handleNextWeek}
+              onDayPress={(dayKey) => setSelectedDayKey(dayKey)}
+            />
 
-          <View style={styles.buttonWrapper}>
-            <View style={styles.buttonContainer}>
-              <Button title="View Full Schedule" onPress={handleFullSchedule} />
-            </View>
-          </View>
-        </Animated.View>
-
-        {selectedDay && (
-          <Animated.View style={[StyleSheet.absoluteFillObject, styles.overlay, detailFadeStyle]}>
-            <View style={styles.summaryContainer}>
-              <View style={styles.topRow}>
-                <Chevron direction="left" size={28} onPress={() => setSelectedDayKey(null)} />
+            <View style={styles.buttonWrapper}>
+              <View style={styles.buttonContainer}>
+                <Button title="View Full Schedule" onPress={handleFullSchedule} />
               </View>
-              <View style={styles.middleRow}>
-                <ScheduleDaySummaryCard
-                  dateLabel="02/15/26"
-                  dayLabel="Today"
-                  fromTime="7 AM"
-                  toTime="3 PM"
-                  totalHours={8}
-                  barColor={'#ccc'}
-                  onNextDay={handleNextDay}
-                  onPreviousDay={handlePrevDay}
-                />
-              </View>
-              <View style={styles.bottomRow} />
             </View>
           </Animated.View>
-        )}
-      </View>
+
+          {selectedDay && (
+            <Animated.View style={[StyleSheet.absoluteFillObject, styles.overlay, detailFadeStyle]}>
+              <View style={styles.summaryContainer}>
+                <View style={styles.topRow}>
+                  <Chevron direction="left" size={28} onPress={() => setSelectedDayKey(null)} />
+                </View>
+                <View style={styles.middleRow}>
+                  <ScheduleDaySummaryCard
+                    summary={selectedDay.summary}
+                    barColor={scheduleInfo.color}
+                    isToday={isToday(selectedDay.isoDate, today)}
+                    onNextDay={handleNextDay}
+                    onPreviousDay={handlePrevDay}
+                  />
+                </View>
+                <View style={styles.bottomRow} />
+              </View>
+            </Animated.View>
+          )}
+        </View>
+      ) : (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      )}
     </Screen>
   );
 }
@@ -139,5 +149,10 @@ const styles = StyleSheet.create({
     height: 75,
     // backgroundColor: 'red',
     // flex: 1,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
