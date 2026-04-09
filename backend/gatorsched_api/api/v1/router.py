@@ -11,6 +11,8 @@ from .routes.entities.roles import router as roles_router
 from .routes.entities.schedule_assignments import router as schedule_assignments_router
 from .routes.entities.shifts import router as shifts_router
 from .routes.entities.swap_requests import router as swap_requests_router
+from .routes.entities.callout_requests import router as callout_requests_router
+from .routes.entities.pickup_requests import router as pickup_requests_router
 
 api_router = APIRouter()
 
@@ -25,3 +27,5 @@ api_router.include_router(scheduler_router)
 api_router.include_router(teams_router)
 api_router.include_router(requests_router)
 api_router.include_router(employee_schedule_router)
+api_router.include_router(callout_requests_router)
+api_router.include_router(pickup_requests_router)
