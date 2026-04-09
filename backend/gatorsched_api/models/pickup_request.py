@@ -36,12 +36,8 @@ class PickUpRequest(Base):
     # Foreign keys
     employee_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
 
-    shift_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("shifts.id"), nullable=False
-    )
+    shift_id: Mapped[int] = mapped_column(Integer, ForeignKey("shifts.id"), nullable=False)
 
     # Relationships
     employee: Mapped[Employee] = relationship("Employee", foreign_keys=[employee_id])
-    shift: Mapped[Shift] = relationship(
-        "Shift", foreign_keys=[shift_id]
-    )
+    shift: Mapped[Shift] = relationship("Shift", foreign_keys=[shift_id])

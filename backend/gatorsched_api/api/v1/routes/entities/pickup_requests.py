@@ -19,7 +19,9 @@ def list_pickup_requests(db: Session = Depends(get_db)) -> list[PickUpRequestRea
 
 
 @router.post("/pickup_requests", response_model=PickUpRequestRead, status_code=201)
-def create_pickup_request(request_in: PickUpRequestCreate, db: Session = Depends(get_db)) -> PickUpRequest:
+def create_pickup_request(
+    request_in: PickUpRequestCreate, db: Session = Depends(get_db)
+) -> PickUpRequest:
     pickup_request = PickUpRequest(**request_in.model_dump())
     db.add(pickup_request)
     db.commit()

@@ -19,7 +19,9 @@ def list_callout_requests(db: Session = Depends(get_db)) -> list[CallOutRequestR
 
 
 @router.post("/callout_requests", response_model=CallOutRequestRead, status_code=201)
-def create_callout_request(request_in: CallOutRequestCreate, db: Session = Depends(get_db)) -> CallOutRequest:
+def create_callout_request(
+    request_in: CallOutRequestCreate, db: Session = Depends(get_db)
+) -> CallOutRequest:
     callout_request = CallOutRequest(**request_in.model_dump())
     db.add(callout_request)
     db.commit()
