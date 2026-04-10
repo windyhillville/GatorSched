@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from .routes.employee.availability import router as employee_availabilities_router
 from .routes.employee.requests import router as requests_router
 from .routes.employee.schedule import router as employee_schedule_router
 from .routes.employee.scheduler import router as scheduler_router
@@ -29,3 +30,4 @@ api_router.include_router(requests_router)
 api_router.include_router(employee_schedule_router)
 api_router.include_router(callout_requests_router)
 api_router.include_router(pickup_requests_router)
+api_router.include_router(employee_availabilities_router)

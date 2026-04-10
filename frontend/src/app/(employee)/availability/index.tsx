@@ -1,27 +1,38 @@
 import { AvailabilityDayEditorCard, AvailabilityWeekView } from '@/features';
 import { useDaySelectionTransition } from '@/hooks';
-import { Button, DayItem, Header, Screen } from '@/ui';
+import { EmployeeAvailability, getAvailabilities } from '@/services';
+import { Button, Header, Screen } from '@/ui';
+import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
-const fullWeek: DayItem[] = [
-  { key: 'sun', label: 'Su', timeRange: '7 AM - 3 PM' },
-  { key: 'mon', label: 'Mo', timeRange: '9 AM - 5 PM' },
-  { key: 'tue', label: 'Tu', timeRange: '9 AM - 5 PM' },
-  { key: 'wed', label: 'We', timeRange: '9 AM - 5 PM' },
-  { key: 'thur', label: 'Th', timeRange: '9 AM - 5 PM' },
-  { key: 'fri', label: 'Fr', timeRange: '6 PM - 2 AM' },
-  { key: 'sat', label: 'Sa', timeRange: '12 PM - 8 PM' },
-];
-
 export default function Availability() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [availabilityInfo, setAvailabilityInfo] = useState<EmployeeAvailability[]>([]);
   const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
-  const selectedDay = fullWeek.find((d) => d.key === selectedDayKey) ?? null;
+  const selectedDay = availabilityInfo.find((d) => d.key === selectedDayKey) ?? null;
 
-  const handleDayPress = () => {};
+  useEffect(() => {
+    async function fetchAvailabilities() {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        const request = await getAvailabilities('1');
+        setAvailabilityInfo(request.availabilities);
+      } catch (err) {
+        setError('Failed to retrieve availabilities.');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchAvailabilities();
+  }, []);
+
   const handleRequestTimeOff = () => {};
-  const handleOnBack = () => {};
   const handleOnConfirm = () => {};
 
   return (
@@ -30,7 +41,11 @@ export default function Availability() {
       <View style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
         <Animated.View style={[styles.weekContent, weekFadeStyle]}>
           <AvailabilityWeekView
-            days={fullWeek}
+            days={availabilityInfo.map((a) => ({
+              key: a.key,
+              label: a.shortLabel,
+              timeRange: a.timeRange,
+            }))}
             onDayPress={(dayKey) => setSelectedDayKey(dayKey)}
           />
           <View style={styles.buttonWrapper}>
@@ -46,13 +61,13 @@ export default function Availability() {
               <View style={styles.topRow} />
               <View style={styles.cardWrapper}>
                 <AvailabilityDayEditorCard
-                  dayLabel="Monday"
-                  startHour="07"
-                  startMinute="30"
-                  startPeriod="AM"
-                  endHour="09"
-                  endMinute="00"
-                  endPeriod="PM"
+                  dayLabel={selectedDay.longLabel}
+                  startHour={selectedDay.timeWindow.startHour}
+                  startMinute={selectedDay.timeWindow.startMinute}
+                  startPeriod={selectedDay.timeWindow.startTimePeriod}
+                  endHour={selectedDay.timeWindow.endHour}
+                  endMinute={selectedDay.timeWindow.endMinute}
+                  endPeriod={selectedDay.timeWindow.endTimePeriod}
                   onBack={() => setSelectedDayKey(null)}
                   onConfirm={handleOnConfirm}
                 />
