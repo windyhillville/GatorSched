@@ -9,3 +9,4 @@ export * from './day-icon';
 export * from './duration-bar';
 export * from './header';
 export * from './layout';
+export * from './toggle';

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import time
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, ForeignKey, Integer, Time
+from sqlalchemy import ForeignKey, Integer, Time
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gatorsched_api.db.base import Base
@@ -30,7 +30,7 @@ class Availability(Base):
     # Relationship back to Employee
     employee: Mapped[Employee] = relationship("Employee", back_populates="availabilities")
 
-    __table_args__ = (
-        # Ensures start time is actually before end time
-        CheckConstraint("start_time < end_time", name="check_start_before_end"),
-    )
+    # __table_args__ = (
+    # Ensures start time is actually before end time
+    #     CheckConstraint("start_time < end_time", name="check_start_before_end"),
+    # )

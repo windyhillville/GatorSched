@@ -14,11 +14,18 @@ import { ITEM_SIZE, ROWS_ABOVE_SELECTED, VIEWPORT_HEIGHT } from './constants';
 type TimeColumnProps = {
   values: string[];
   selectedValue?: string;
+  isAvailable?: boolean;
   onSelectValue?: (value: string) => void;
   style?: StyleProp<ViewStyle>;
 };
 
-export function TimeColumn({ values, selectedValue, onSelectValue, style }: TimeColumnProps) {
+export function TimeColumn({
+  values,
+  selectedValue,
+  isAvailable,
+  onSelectValue,
+  style,
+}: TimeColumnProps) {
   const flatListRef = useRef<FlatList<string>>(null);
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -71,6 +78,7 @@ export function TimeColumn({ values, selectedValue, onSelectValue, style }: Time
           offset: ITEM_SIZE * index,
           index,
         })}
+        scrollEnabled={!!isAvailable}
       />
     </View>
   );

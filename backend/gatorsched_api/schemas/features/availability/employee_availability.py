@@ -18,6 +18,7 @@ class EmployeeAvailability(BaseModel):
     longLabel: str
     timeRange: str
     timeWindow: ShiftTimeSpan
+    isAvailable: bool
 
 
 class EmployeeAvailabilityResponse(BaseModel):

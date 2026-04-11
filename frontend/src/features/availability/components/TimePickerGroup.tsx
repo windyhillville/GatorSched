@@ -11,6 +11,7 @@ type TimePickerGroupProps = {
   hour: string;
   minute: string;
   period: 'AM' | 'PM';
+  isAvailable?: boolean;
   onHourSelect?: (value: string) => void;
   onMinuteSelect?: (value: string) => void;
   onPeriodSelect?: (value: 'AM' | 'PM') => void;
@@ -20,6 +21,7 @@ export function TimePickerGroup({
   hour,
   minute,
   period,
+  isAvailable,
   onHourSelect,
   onMinuteSelect,
   onPeriodSelect,
@@ -30,16 +32,27 @@ export function TimePickerGroup({
       <View style={styles.groupWrapper}>
         <View style={styles.selectedRowOverlay} />
         <View style={styles.group}>
-          <TimeColumn values={hours} selectedValue={hour} onSelectValue={onHourSelect} />
+          <TimeColumn
+            values={hours}
+            selectedValue={hour}
+            onSelectValue={onHourSelect}
+            isAvailable={isAvailable}
+          />
 
           <View style={styles.separatorWrapper}>
             <Text style={styles.separator}>:</Text>
           </View>
-          <TimeColumn values={minutes} selectedValue={minute} onSelectValue={onMinuteSelect} />
+          <TimeColumn
+            values={minutes}
+            selectedValue={minute}
+            onSelectValue={onMinuteSelect}
+            isAvailable={isAvailable}
+          />
           <TimeColumn
             values={periods}
             selectedValue={period}
             onSelectValue={(value) => onPeriodSelect?.(value as 'AM' | 'PM')}
+            isAvailable={isAvailable}
           />
         </View>
       </View>

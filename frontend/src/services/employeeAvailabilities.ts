@@ -15,6 +15,7 @@ export type EmployeeAvailability = {
   longLabel: string;
   timeRange: string;
   timeWindow: ShiftTimeSpan;
+  isAvailable: boolean;
 };
 
 export type EmployeeAvailabilityResponse = {
