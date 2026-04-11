@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from gatorsched_api.models.availability import Availability
-from gatorsched_api.schemas.features.availability.employee_availability import (
+from gatorsched_api.schemas.employee.availability.employee_availability import (
     EmployeeAvailability,
     EmployeeAvailabilityResponse,
 )

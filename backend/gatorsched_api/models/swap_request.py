@@ -1,24 +1,17 @@
 from __future__ import annotations
 
-from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Enum as SAEnum
-from sqlalchemy import ForeignKey, Integer, String
+from sqlalchemy import ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from gatorsched_api.db.base import Base
+from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 
 if TYPE_CHECKING:
     from .employee import Employee
     from .schedule_assignment import ScheduleAssignment
-
-
-class SwapRequestStatus(StrEnum):
-    pending = "pending"
-    accepted = "accepted"
-    rejected = "rejected"
-    cancelled = "cancelled"
 
 
 class SwapRequest(Base):
@@ -26,24 +19,26 @@ class SwapRequest(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
-    status: Mapped[str] = mapped_column(
-        String(32),
-        SAEnum(SwapRequestStatus, name="swap_request_status", native_enum=False),
+    employee_status: Mapped[EmployeeRequestStatus] = mapped_column(
+        SAEnum(EmployeeRequestStatus, name="employee_request_status", native_enum=False),
         nullable=False,
-        default=SwapRequestStatus.pending,
+        default=EmployeeRequestStatus.pending,
     )
 
+    manager_status: Mapped[ManagerRequestStatus] = mapped_column(
+        SAEnum(ManagerRequestStatus, name="manager_request_status", native_enum=False),
+        nullable=False,
+        default=ManagerRequestStatus.not_sent,
+    )
     # Foreign keys
     requester_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
 
-    cover_id: Mapped[int | None] = mapped_column(
-        Integer, ForeignKey("employees.id"), nullable=False
-    )
+    cover_id: Mapped[int] = mapped_column(Integer, ForeignKey("employees.id"), nullable=False)
 
     requester_assignment_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("schedule_assignments.id"), nullable=False
     )
-    cover_assignment_id: Mapped[int | None] = mapped_column(
+    cover_assignment_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("schedule_assignments.id"), nullable=False
     )
 

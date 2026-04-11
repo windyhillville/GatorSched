@@ -1,45 +1,38 @@
-import { EmployeeRequestCard } from '@/services';
+import { ManagerRequestCardGroup } from '@/services';
 import { AccordionSection } from '@/ui';
 import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { getShortDayLabelFromIsoDate } from '../utils';
-import { SwapRequestCard } from './components';
+import { SwapRequestCard } from '../employee-requests';
 
-export type RequestSection = {
-  title: 'Incoming' | 'Outgoing';
-  requests: EmployeeRequestCard[];
-};
-
-type RequestsViewProps = {
-  sections: RequestSection[];
+type ManagerRequestsViewProps = {
+  groups: ManagerRequestCardGroup[];
   expandedSections: Record<string, boolean>;
   expandedCards: Record<string, boolean>;
-  onToggleSection: (title: string) => void;
+  onToggleSection: (role: string) => void;
   onToggleCard: (id: string) => void;
 };
 
-export function RequestsView({
-  sections,
+export function ManagerRequestsView({
+  groups,
   expandedSections,
   expandedCards,
   onToggleSection,
   onToggleCard,
-}: RequestsViewProps) {
+}: ManagerRequestsViewProps) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={sections}
-        extraData={{ expandedSections, expandedCards }}
-        keyExtractor={(section) => section.title}
+        data={groups}
+        keyExtractor={(group) => group.role}
         contentContainerStyle={styles.listContent}
         ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
-        renderItem={({ item: section }) => (
+        renderItem={({ item: group }) => (
           <AccordionSection
-            title={section.title}
-            expanded={expandedSections[section.title] ?? false}
-            onToggle={() => onToggleSection(section.title)}
+            title={group.role}
+            expanded={expandedSections[group.role] ?? false}
+            onToggle={() => onToggleSection(group.role)}
           >
             <View style={styles.cardsContainer}>
-              {section.requests.map((request) =>
+              {group.requests.map((request) =>
                 request.type === 'swap' ? (
                   <SwapRequestCard
                     key={request.id}
@@ -48,22 +41,22 @@ export function RequestsView({
                       avatarUrl: request.requester.avatarUrl,
                       color: request.requester.color,
                     }}
+                    fromShift={{
+                      day: request.requesterShift.dayLabel,
+                      timeRange: request.requesterShift.timeRange,
+                    }}
                     toUser={{
                       name: request.coverEmployee.name,
                       avatarUrl: request.coverEmployee.avatarUrl,
                       color: request.coverEmployee.color,
                     }}
-                    fromShift={{
-                      day: getShortDayLabelFromIsoDate(request.requesterShift.day),
-                      timeRange: request.requesterShift.timeRange,
-                    }}
                     toShift={{
-                      day: getShortDayLabelFromIsoDate(request.coverShift.day),
+                      day: request.coverShift.dayLabel,
                       timeRange: request.coverShift.timeRange,
                     }}
                     expanded={expandedCards[request.id] ?? false}
                     onToggle={() => onToggleCard(request.id)}
-                    purpose={section.title === 'Incoming' ? 'swap-in' : 'swap-out'}
+                    purpose="manager-approval"
                   />
                 ) : (
                   <Text key={request.id}>Other Request Types...</Text>

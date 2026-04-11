@@ -1,5 +1,6 @@
 import { PersonData, ShiftData } from '@/features/types';
 import { Avatar, DayIcon } from '@/ui';
+import React from 'react';
 import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
 
 type ShiftSummaryProps = {
@@ -8,7 +9,7 @@ type ShiftSummaryProps = {
   textStyle?: StyleProp<TextStyle>;
 };
 
-export function ShiftSummary({ user, shift, textStyle }: ShiftSummaryProps) {
+function ShiftSummary({ user, shift, textStyle }: ShiftSummaryProps) {
   return (
     <View style={styles.shiftWrapper}>
       <Avatar name={user.name} img={user.avatarUrl} color={user.color} />
@@ -17,6 +18,10 @@ export function ShiftSummary({ user, shift, textStyle }: ShiftSummaryProps) {
     </View>
   );
 }
+
+const MemoizedShiftSummary = React.memo(ShiftSummary);
+
+export { MemoizedShiftSummary as ShiftSummary };
 
 const styles = StyleSheet.create({
   shiftWrapper: {

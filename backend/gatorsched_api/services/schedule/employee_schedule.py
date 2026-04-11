@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session, joinedload
 from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.schemas.features.employee_schedule import (
+from gatorsched_api.schemas.employee.schedule.employee_schedule import (
     EmployeeScheduleResponse,
     EmployeeShift,
     EmployeeShiftSummary,

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
-from gatorsched_api.schemas.features.employee_schedule import EmployeeScheduleResponse
+from gatorsched_api.schemas.employee.schedule.employee_schedule import EmployeeScheduleResponse
 from gatorsched_api.services.schedule.employee_schedule import get_employee_schedule
 
 router = APIRouter(tags=["employee_schedule"])

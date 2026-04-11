@@ -8,7 +8,7 @@ from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 
 # from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.schemas.features.scheduler import (
+from gatorsched_api.schemas.manager.scheduler.scheduler import (
     GenerateScheduleResponse,
     RoleGroup,
     ScheduledShift,

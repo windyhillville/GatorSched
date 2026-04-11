@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.schemas.features.teams import (
+from gatorsched_api.schemas.manager.teams.teams import (
     TeamGroup,
     TeamMemberCard,
     TeamMemberSchedule,

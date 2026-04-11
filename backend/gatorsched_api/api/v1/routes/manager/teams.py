@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
-from gatorsched_api.schemas.features.teams import TeamsResponse
+from gatorsched_api.schemas.manager.teams.teams import TeamsResponse
 from gatorsched_api.services.teams.roster import get_roster
 
 router = APIRouter(tags=["teams"])
