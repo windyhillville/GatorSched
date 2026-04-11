@@ -1,4 +1,5 @@
-import { API_BASE } from './apiConfig';
+import { API_BASE } from '../apiConfig';
+import { EmployeeAvailability } from './types';
 
 export type SetEmployeeAvailabilityRequest = {
   isAvailable: boolean;
@@ -8,24 +9,6 @@ export type SetEmployeeAvailabilityRequest = {
   endHour: string | null;
   endMinute: string | null;
   endTimePeriod: 'AM' | 'PM' | null;
-};
-
-type ShiftTimeSpan = {
-  startHour: string;
-  startMinute: string;
-  startTimePeriod: 'AM' | 'PM';
-  endHour: string;
-  endMinute: string;
-  endTimePeriod: 'AM' | 'PM';
-};
-
-export type EmployeeAvailability = {
-  key: string;
-  shortLabel: string;
-  longLabel: string;
-  timeRange: string;
-  timeWindow: ShiftTimeSpan;
-  isAvailable: boolean;
 };
 
 export type SetEmployeeAvailabilityResponse = {

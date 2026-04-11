@@ -1,22 +1,5 @@
-import { API_BASE } from './apiConfig';
-
-type ShiftTimeSpan = {
-  startHour: string;
-  startMinute: string;
-  startTimePeriod: 'AM' | 'PM';
-  endHour: string;
-  endMinute: string;
-  endTimePeriod: 'AM' | 'PM';
-};
-
-export type EmployeeAvailability = {
-  key: string;
-  shortLabel: string;
-  longLabel: string;
-  timeRange: string;
-  timeWindow: ShiftTimeSpan;
-  isAvailable: boolean;
-};
+import { API_BASE } from '../apiConfig';
+import { EmployeeAvailability } from './types';
 
 export type EmployeeAvailabilityResponse = {
   id: string;
