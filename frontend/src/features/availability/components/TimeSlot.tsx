@@ -26,6 +26,7 @@ export function TimeSlot({
   if (onPress) {
     content = <Pressable onPress={onPress}>{content}</Pressable>;
   }
+
   return content;
 }
 

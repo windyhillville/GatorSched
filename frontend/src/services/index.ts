@@ -1,4 +1,4 @@
-export * from './employeeAvailabilities';
+export * from './availability';
 export * from './employeeRequests';
 export * from './employeeSchedule';
 export * from './scheduler';

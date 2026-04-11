@@ -1,10 +1,10 @@
 import { Colors } from '@/styles';
 import { Button, Chevron } from '@/ui';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { TimePickerGroup } from './TimePickerGroup';
 
-type TimeValue = {
+export type TimeValue = {
   hour: string;
   minute: string;
   period: 'AM' | 'PM';
@@ -18,6 +18,8 @@ type AvailabilityDayEditorCardProps = {
   endHour: string;
   endMinute: string;
   endPeriod: 'AM' | 'PM';
+  headerRight?: React.ReactNode;
+  isAvailable?: boolean;
   onBack?: () => void;
   onConfirm?: (payload: { start: TimeValue; end: TimeValue }) => void;
 };
@@ -30,6 +32,8 @@ export function AvailabilityDayEditorCard({
   endHour,
   endMinute,
   endPeriod,
+  headerRight,
+  isAvailable,
   onBack,
   onConfirm,
 }: AvailabilityDayEditorCardProps) {
@@ -51,10 +55,10 @@ export function AvailabilityDayEditorCard({
         <View style={styles.centerSlot}>
           <Text style={styles.dayLabel}>{dayLabel}</Text>
         </View>
-        <View style={styles.rightSlot} />
+        <View style={styles.rightSlot}>{headerRight}</View>
       </View>
 
-      <View style={styles.pickerRow}>
+      <View style={[styles.pickerRow, !isAvailable && styles.unavailable]}>
         <TimePickerGroup
           columnLabel="Start"
           hour={startTime.hour}
@@ -63,6 +67,7 @@ export function AvailabilityDayEditorCard({
           onHourSelect={(value) => setStartTime((prev) => ({ ...prev, hour: value }))}
           onMinuteSelect={(value) => setStartTime((prev) => ({ ...prev, minute: value }))}
           onPeriodSelect={(value) => setStartTime((prev) => ({ ...prev, period: value }))}
+          isAvailable={isAvailable}
         />
         <TimePickerGroup
           columnLabel="End"
@@ -72,13 +77,14 @@ export function AvailabilityDayEditorCard({
           onHourSelect={(value) => setEndTime((prev) => ({ ...prev, hour: value }))}
           onMinuteSelect={(value) => setEndTime((prev) => ({ ...prev, minute: value }))}
           onPeriodSelect={(value) => setEndTime((prev) => ({ ...prev, period: value }))}
+          isAvailable={isAvailable}
         />
       </View>
 
       <View style={styles.buttonWrapper}>
         <View style={styles.buttonContainer}>
           <Button
-            title="Confirm"
+            title={isAvailable ? 'Save Availability' : 'Save as Unavailable'}
             shape="rounded"
             color="default"
             onPress={() => onConfirm?.({ start: startTime, end: endTime })}
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   leftSlot: {
-    width: 40,
+    width: 55,
     alignItems: 'flex-start',
     justifyContent: 'center',
   },
@@ -117,7 +123,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   rightSlot: {
-    width: 40,
+    width: 55,
   },
   pickerRow: {
     flexDirection: 'row',
@@ -131,5 +137,8 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     maxWidth: 260,
+  },
+  unavailable: {
+    opacity: 0.5,
   },
 });

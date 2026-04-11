@@ -1,10 +1,25 @@
-import { AvailabilityDayEditorCard, AvailabilityWeekView } from '@/features';
+import {
+  AvailabilityDayEditorCard,
+  AvailabilityToggle,
+  AvailabilityWeekView,
+  TimeValue,
+} from '@/features';
 import { useDaySelectionTransition } from '@/hooks';
-import { EmployeeAvailability, getAvailabilities } from '@/services';
+import { EmployeeAvailability, getAvailabilities, setAvailability } from '@/services';
 import { Button, Header, Screen } from '@/ui';
 import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
+
+const week: Record<string, number> = {
+  Mon: 0,
+  Tue: 1,
+  Wed: 2,
+  Thu: 3,
+  Fri: 4,
+  Sat: 5,
+  Sun: 6,
+};
 
 export default function Availability() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +28,7 @@ export default function Availability() {
   const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
   const selectedDay = availabilityInfo.find((d) => d.key === selectedDayKey) ?? null;
+  const [isToggled, setIsToggled] = useState(false);
 
   useEffect(() => {
     async function fetchAvailabilities() {
@@ -32,8 +48,42 @@ export default function Availability() {
     fetchAvailabilities();
   }, []);
 
+  useEffect(() => {
+    setIsToggled(selectedDay?.isAvailable ?? false);
+  }, [selectedDay]);
+
   const handleRequestTimeOff = () => {};
-  const handleOnConfirm = () => {};
+
+  const handleOnConfirm = async (payload: { start: TimeValue; end: TimeValue }) => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      if (selectedDay !== null) {
+        const response = await setAvailability(
+          week[selectedDay.key],
+          {
+            startHour: payload.start.hour,
+            startMinute: payload.start.minute,
+            startTimePeriod: payload.start.period,
+            endHour: payload.end.hour,
+            endMinute: payload.end.minute,
+            endTimePeriod: payload.end.period,
+            isAvailable: isToggled,
+          },
+          '1',
+        );
+        setAvailabilityInfo((prev) =>
+          prev.map((day) => (day.key === response.availability.key ? response.availability : day)),
+        );
+        setSelectedDayKey(null);
+      }
+    } catch (err) {
+      setError('Failed to set availability.');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Screen insetTop>
@@ -68,6 +118,14 @@ export default function Availability() {
                   endHour={selectedDay.timeWindow.endHour}
                   endMinute={selectedDay.timeWindow.endMinute}
                   endPeriod={selectedDay.timeWindow.endTimePeriod}
+                  headerRight={
+                    <AvailabilityToggle
+                      isToggled={isToggled}
+                      size={20}
+                      onToggle={() => setIsToggled((prev) => !prev)}
+                    />
+                  }
+                  isAvailable={isToggled}
                   onBack={() => setSelectedDayKey(null)}
                   onConfirm={handleOnConfirm}
                 />

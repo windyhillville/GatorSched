@@ -4,6 +4,7 @@ from .routes.employee.availability import router as employee_availabilities_rout
 from .routes.employee.requests import router as requests_router
 from .routes.employee.schedule import router as employee_schedule_router
 from .routes.employee.scheduler import router as scheduler_router
+from .routes.employee.set_availability import router as set_availability_router
 from .routes.employee.teams import router as teams_router
 from .routes.entities.availabilities import router as availabilities_router
 from .routes.entities.callout_requests import router as callout_requests_router
@@ -31,3 +32,4 @@ api_router.include_router(employee_schedule_router)
 api_router.include_router(callout_requests_router)
 api_router.include_router(pickup_requests_router)
 api_router.include_router(employee_availabilities_router)
+api_router.include_router(set_availability_router)
