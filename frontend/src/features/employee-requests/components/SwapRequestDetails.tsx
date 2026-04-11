@@ -1,9 +1,10 @@
 import { PersonData, ShiftData } from '@/features/types';
 import { Button } from '@/ui';
+import React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import { ShiftSummary } from './ShiftSummary';
 
-export type SwapRequestPurpose = 'swap-in' | 'swap-out';
+export type SwapRequestPurpose = 'swap-in' | 'swap-out' | 'manager-approval';
 
 type SwapRequestDetailsProps = {
   purpose: SwapRequestPurpose;
@@ -13,7 +14,7 @@ type SwapRequestDetailsProps = {
   toShift: ShiftData;
 };
 
-export function SwapRequestDetails({
+function SwapRequestDetails({
   purpose,
   fromUser,
   toUser,
@@ -36,6 +37,11 @@ export function SwapRequestDetails({
               <Button title="Accept" onPress={() => {}} shape="rounded" color="accept" />
               <Button title="Decline" onPress={() => {}} shape="rounded" color="reject" />
             </>
+          ) : purpose === 'manager-approval' ? (
+            <>
+              <Button title="Approve" onPress={() => {}} shape="rounded" color="accept" />
+              <Button title="Reject" onPress={() => {}} shape="rounded" color="reject" />
+            </>
           ) : (
             <>
               <Button title="Cancel" onPress={() => {}} shape="rounded" color="reject" />
@@ -46,6 +52,10 @@ export function SwapRequestDetails({
     </View>
   );
 }
+
+const MemoiozedSwapRequestDetails = React.memo(SwapRequestDetails);
+
+export { MemoiozedSwapRequestDetails as SwapRequestDetails };
 
 const styles = StyleSheet.create({
   container: {

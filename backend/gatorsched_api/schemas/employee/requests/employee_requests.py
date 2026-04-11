@@ -1,9 +1,10 @@
-from datetime import date
 from typing import Literal
 
 from pydantic import BaseModel
 
-from ...models.swap_request import SwapRequestStatus
+from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
+
+RequestType = Literal["swap", "callout", "pickup"]
 
 
 class RequestPerson(BaseModel):
@@ -14,17 +15,18 @@ class RequestPerson(BaseModel):
 
 
 class RequestShiftSummary(BaseModel):
-    day: date
+    dayLabel: str
     timeRange: str
 
 
 class EmployeeRequestCardBase(BaseModel):
     id: str
-    status: SwapRequestStatus
+    employee_status: EmployeeRequestStatus
+    manager_status: ManagerRequestStatus
 
 
 class EmployeeSwapRequestCard(EmployeeRequestCardBase):
-    type: Literal["swap"] = "swap"
+    type: RequestType = "swap"
     requester: RequestPerson
     requesterShift: RequestShiftSummary
     coverEmployee: RequestPerson

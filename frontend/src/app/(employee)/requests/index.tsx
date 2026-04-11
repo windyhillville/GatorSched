@@ -1,4 +1,4 @@
-import { RequestSection, RequestsView } from '@/features';
+import { EmployeeRequestsView, RequestSection } from '@/features';
 import { getEmployeeRequests } from '@/services';
 import { Header, Screen } from '@/ui';
 import { useEffect, useState } from 'react';
@@ -14,7 +14,7 @@ export default function Requests() {
   const viewerId = '1';
 
   useEffect(() => {
-    async function fetchRequests() {
+    async function fetchEmployeeRequests() {
       try {
         setIsLoading(true);
         setError(null);
@@ -37,19 +37,19 @@ export default function Requests() {
         );
         setExpandedSections(initialExpandedState);
       } catch (err) {
-        setError('Failed to load requests');
+        setError('Failed to load employee requests');
         console.error(err);
       } finally {
         setIsLoading(false);
       }
     }
-    fetchRequests();
+    fetchEmployeeRequests();
   }, [viewerId]);
 
   return (
     <Screen insetTop>
       <Header title="Requests" style={styles.header} />
-      <RequestsView
+      <EmployeeRequestsView
         sections={sections}
         expandedSections={expandedSections}
         expandedCards={expandedCards}

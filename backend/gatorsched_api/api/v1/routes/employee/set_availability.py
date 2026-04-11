@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from gatorsched_api.db.deps import get_db
-from gatorsched_api.schemas.features.availability.set_employee_availability import (
+from gatorsched_api.schemas.employee.availability.set_employee_availability import (
     SetEmployeeAvailabilityRequest,
     SetEmployeeAvailabilityResponse,
 )

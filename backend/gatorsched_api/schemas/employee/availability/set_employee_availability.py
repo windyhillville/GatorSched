@@ -3,7 +3,7 @@ from typing import Literal
 
 from pydantic import BaseModel, model_validator
 
-from gatorsched_api.schemas.features.availability.employee_availability import (
+from gatorsched_api.schemas.employee.availability.employee_availability import (
     EmployeeAvailability,
 )
 

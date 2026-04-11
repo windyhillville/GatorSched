@@ -4,6 +4,7 @@ from gatorsched_api.models.employee import AccessLevel, Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.models.swap_request import SwapRequest
+from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 
 
 def create_employee(db_session, role_id: int, name: str, email: str) -> Employee:
@@ -68,7 +69,8 @@ def test_swap_requests_returns_one_after_insert(client, db_session, cashier_role
         cover_id=cover.id,
         requester_assignment_id=requester_assignment.id,
         cover_assignment_id=cover_assignment.id,
-        status="pending",
+        employee_status=EmployeeRequestStatus.pending,
+        manager_status=ManagerRequestStatus.not_sent,
     )
 
     db_session.add(swap)
@@ -86,7 +88,8 @@ def test_swap_requests_returns_one_after_insert(client, db_session, cashier_role
     assert request["cover_id"] == cover.id
     assert request["requester_assignment_id"] == requester_assignment.id
     assert request["cover_assignment_id"] == cover_assignment.id
-    assert request["status"] == "pending"
+    assert request["employee_status"] == EmployeeRequestStatus.pending
+    assert request["manager_status"] == ManagerRequestStatus.not_sent
 
 
 def test_create_swap_request(client, db_session, cashier_role):
@@ -104,7 +107,8 @@ def test_create_swap_request(client, db_session, cashier_role):
         "cover_id": cover.id,
         "requester_assignment_id": requester_assignment.id,
         "cover_assignment_id": cover_assignment.id,
-        "status": "pending",
+        "employee_status": EmployeeRequestStatus.pending,
+        "manager_status": ManagerRequestStatus.not_sent,
     }
 
     create = client.post("/api/v1/swap_requests", json=payload)
@@ -127,4 +131,5 @@ def test_create_swap_request(client, db_session, cashier_role):
     assert swap is not None
     assert swap["requester_assignment_id"] == payload["requester_assignment_id"]
     assert swap["cover_assignment_id"] == payload["cover_assignment_id"]
-    assert swap["status"] == "pending"
+    assert swap["employee_status"] == EmployeeRequestStatus.pending
+    assert swap["manager_status"] == ManagerRequestStatus.not_sent
