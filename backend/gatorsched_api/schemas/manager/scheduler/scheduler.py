@@ -19,6 +19,7 @@ class RoleGroup(BaseModel):
     role: str
     shifts: list[ScheduledShift]
 
+
 class DaySchedule(BaseModel):
     date: date
     dayLabel: str

@@ -11,9 +11,10 @@ from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.models.swap_request import SwapRequest
 from gatorsched_api.schemas.manager.scheduler.scheduler import (
+    DaySchedule,
     GenerateScheduleResponse,
     RoleGroup,
-    ScheduledShift, DaySchedule,
+    ScheduledShift,
 )
 from gatorsched_api.services.datetime_formatting import format_time_label, get_shift_duration_hours
 
@@ -62,16 +63,14 @@ def generate_schedule_for_week(db: Session, date: date) -> GenerateScheduleRespo
             assignment_ids = [a.id for a in existing]
             if assignment_ids:
                 for sr in db.scalars(
-                        select(SwapRequest).where(
-                            SwapRequest.requester_assignment_id.in_(assignment_ids)
-                            | SwapRequest.cover_assignment_id.in_(assignment_ids)
-                        )
-                    ).all():
-                        db.delete(sr)
-                for cr in db.scalars(
-                    select(CallOutRequest).where(
-                        CallOutRequest.assignment_id.in_(assignment_ids)
+                    select(SwapRequest).where(
+                        SwapRequest.requester_assignment_id.in_(assignment_ids)
+                        | SwapRequest.cover_assignment_id.in_(assignment_ids)
                     )
+                ).all():
+                    db.delete(sr)
+                for cr in db.scalars(
+                    select(CallOutRequest).where(CallOutRequest.assignment_id.in_(assignment_ids))
                 ).all():
                     db.delete(cr)
 
@@ -117,7 +116,7 @@ def generate_schedule_for_week(db: Session, date: date) -> GenerateScheduleRespo
                     break
 
                 if employee.max_weekly_hours is not None:
-                    if hours_assigned.get(employee.id,0) + shift_hours > employee.max_weekly_hours:
+                    if hours_assigned.get(employee.id, 0) + shift_hours > employee.max_weekly_hours:
                         continue
 
                 if employee.id in previous_shift:
@@ -170,7 +169,7 @@ def generate_schedule_for_week(db: Session, date: date) -> GenerateScheduleRespo
             groups=[
                 RoleGroup(role=role_name, shifts=shift_list)
                 for role_name, shift_list in roles.items()
-            ]
+            ],
         )
         for d, roles in sorted(days_by_date.items())
     ]
