@@ -34,9 +34,9 @@ def get_employee_color(employee: Employee) -> str:
     return EMPLOYEE_COLORS.get(employee.name, "lightblue")
 
 
-def generate_schedule_for_week(db: Session, date: date) -> GenerateScheduleResponse:
+def generate_schedule_for_week(db: Session, week_start: date) -> GenerateScheduleResponse:
     print("SCHEDULER FUNCTION EXECUTED")
-    week_end = date + timedelta(days=6)
+    week_end = week_start + timedelta(days=6)
     employeeStmt = (
         select(Employee)
         .where(Employee.is_active)
@@ -47,7 +47,7 @@ def generate_schedule_for_week(db: Session, date: date) -> GenerateScheduleRespo
     employees = db.scalars(employeeStmt).unique().all()
     shift_stmt = (
         select(Shift)
-        .where(Shift.date >= date, Shift.date <= week_end)
+        .where(Shift.date >= week_start, Shift.date <= week_end)
         .options(joinedload(Shift.role))
         .order_by(Shift.date, Shift.start_time)
     )
