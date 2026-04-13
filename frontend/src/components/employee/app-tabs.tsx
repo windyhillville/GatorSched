@@ -5,16 +5,16 @@ export default function AppTabs() {
     <Tabs>
       <TabSlot />
       <TabList>
-        <TabTrigger name="schedule" href="/schedule">
+        <TabTrigger name="schedule" href="/(employee)/schedule">
           Schedule
         </TabTrigger>
-        <TabTrigger name="availability" href="/availability">
+        <TabTrigger name="availability" href="/(employee)/availability">
           Availability
         </TabTrigger>
-        <TabTrigger name="requests" href="/requests">
+        <TabTrigger name="requests" href="/(employee)/requests">
           Requests
         </TabTrigger>
-        <TabTrigger name="profile" href="/profile">
+        <TabTrigger name="profile" href="/(employee)/profile">
           Profile
         </TabTrigger>
       </TabList>
