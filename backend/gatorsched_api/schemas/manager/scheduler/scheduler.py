@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 
 class GenerateScheduleRequest(BaseModel):
-    date: date
+    week_start: date
 
 
 class ScheduledShift(BaseModel):
@@ -19,6 +19,11 @@ class RoleGroup(BaseModel):
     role: str
     shifts: list[ScheduledShift]
 
+class DaySchedule(BaseModel):
+    date: date
+    dayLabel: str
+    groups: list[RoleGroup]
+
 
 class GenerateScheduleResponse(BaseModel):
-    groups: list[RoleGroup]
+    days: list[DaySchedule]
