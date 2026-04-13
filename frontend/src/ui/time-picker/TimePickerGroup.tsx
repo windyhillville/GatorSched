@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { TimeColumn } from './TimeColumn';
-import { ITEM_SIZE, ROWS_ABOVE_SELECTED, SLOT_HEIGHT } from './constants';
+import { getTimePickerMetrics } from './metrics';
 
 const hours = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 const minutes = ['00', '15', '30', '45'];
@@ -12,6 +12,7 @@ type TimePickerGroupProps = {
   minute: string;
   period: 'AM' | 'PM';
   isAvailable?: boolean;
+  compact?: boolean;
   onHourSelect?: (value: string) => void;
   onMinuteSelect?: (value: string) => void;
   onPeriodSelect?: (value: 'AM' | 'PM') => void;
@@ -22,18 +23,28 @@ export function TimePickerGroup({
   minute,
   period,
   isAvailable,
+  compact,
   onHourSelect,
   onMinuteSelect,
   onPeriodSelect,
 }: TimePickerGroupProps) {
+  const { slotHeight, itemSize, rowsAboveSelected } = getTimePickerMetrics(
+    compact ? 'compact' : 'regular',
+  );
   return (
     <View style={styles.container}>
       <Text style={styles.columnHeaderText}>{columnLabel}</Text>
       <View style={styles.groupWrapper}>
-        <View style={styles.selectedRowOverlay} />
+        <View
+          style={[
+            styles.selectedRowOverlay,
+            { top: rowsAboveSelected * itemSize + (itemSize - slotHeight) / 2, height: slotHeight },
+          ]}
+        />
         <View style={styles.group}>
           <TimeColumn
             values={hours}
+            compact={compact}
             selectedValue={hour}
             onSelectValue={onHourSelect}
             isAvailable={isAvailable}
@@ -44,12 +55,14 @@ export function TimePickerGroup({
           </View>
           <TimeColumn
             values={minutes}
+            compact={compact}
             selectedValue={minute}
             onSelectValue={onMinuteSelect}
             isAvailable={isAvailable}
           />
           <TimeColumn
             values={periods}
+            compact={compact}
             selectedValue={period}
             onSelectValue={(value) => onPeriodSelect?.(value as 'AM' | 'PM')}
             isAvailable={isAvailable}
@@ -77,8 +90,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 6,
     right: 6,
-    top: ROWS_ABOVE_SELECTED * ITEM_SIZE + (ITEM_SIZE - SLOT_HEIGHT) / 2,
-    height: SLOT_HEIGHT,
+    // top: ROWS_ABOVE_SELECTED * ITEM_SIZE + (ITEM_SIZE - SLOT_HEIGHT) / 2,
+    // height: SLOT_HEIGHT,
     backgroundColor: '#cfe9ff50',
     borderRadius: 6,
     pointerEvents: 'none',

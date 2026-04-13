@@ -9,10 +9,11 @@ import {
   ViewStyle,
 } from 'react-native';
 import { TimeSlot } from './TimeSlot';
-import { ITEM_SIZE, ROWS_ABOVE_SELECTED, VIEWPORT_HEIGHT } from './constants';
+import { getTimePickerMetrics } from './metrics';
 
 type TimeColumnProps = {
   values: string[];
+  compact?: boolean;
   selectedValue?: string;
   isAvailable?: boolean;
   onSelectValue?: (value: string) => void;
@@ -21,16 +22,21 @@ type TimeColumnProps = {
 
 export function TimeColumn({
   values,
+  compact,
   selectedValue,
   isAvailable,
   onSelectValue,
   style,
 }: TimeColumnProps) {
+  const { itemSize, rowsAboveSelected, viewportHeight } = getTimePickerMetrics(
+    compact ? 'compact' : 'regular',
+  );
+
   const flatListRef = useRef<FlatList<string>>(null);
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const offsetY = event.nativeEvent.contentOffset.y;
-    const selectedIndex = Math.round(offsetY / ITEM_SIZE);
+    const selectedIndex = Math.round(offsetY / itemSize);
     const value = values[selectedIndex];
 
     if (value && onSelectValue) {
@@ -38,7 +44,7 @@ export function TimeColumn({
     }
 
     flatListRef.current?.scrollToOffset({
-      offset: selectedIndex * ITEM_SIZE,
+      offset: selectedIndex * itemSize,
       animated: true,
     });
   };
@@ -48,34 +54,37 @@ export function TimeColumn({
     const clampedIndex = Math.max(0, selectedIndex);
 
     flatListRef.current?.scrollToOffset({
-      offset: clampedIndex * ITEM_SIZE,
+      offset: clampedIndex * itemSize,
       animated: false,
     });
   }, [selectedValue, values]);
 
   return (
-    <View style={[styles.viewport, style]}>
+    <View style={[styles.viewport, { height: viewportHeight }, style]}>
       <FlatList
         ref={flatListRef}
         data={values}
         keyExtractor={(item, index) => item ?? `empty-${index}`}
         renderItem={({ item }) => {
           return (
-            <View style={styles.itemContainer}>
-              <TimeSlot timeLabel={item} selected={item === selectedValue} />
+            <View style={[styles.itemContainer, { height: itemSize }]}>
+              <TimeSlot timeLabel={item} compact={compact} selected={item === selectedValue} />
             </View>
           );
         }}
         showsVerticalScrollIndicator={false}
-        snapToInterval={ITEM_SIZE}
+        snapToInterval={itemSize}
         decelerationRate="fast"
         nestedScrollEnabled
         onMomentumScrollEnd={handleScrollEnd}
         // onScrollEndDrag={handleScrollEnd}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[
+          styles.contentContainer,
+          { paddingTop: rowsAboveSelected * itemSize, paddingBottom: rowsAboveSelected * itemSize },
+        ]}
         getItemLayout={(_, index) => ({
-          length: ITEM_SIZE,
-          offset: ITEM_SIZE * index,
+          length: itemSize,
+          offset: itemSize * index,
           index,
         })}
         scrollEnabled={!!isAvailable}
@@ -86,16 +95,16 @@ export function TimeColumn({
 
 const styles = StyleSheet.create({
   viewport: {
-    height: VIEWPORT_HEIGHT,
+    // height: VIEWPORT_HEIGHT,
     overflow: 'hidden',
   },
   itemContainer: {
-    height: ITEM_SIZE,
+    // height: ITEM_SIZE,
     justifyContent: 'center',
     alignItems: 'center',
   },
   contentContainer: {
-    paddingTop: ROWS_ABOVE_SELECTED * ITEM_SIZE,
-    paddingBottom: ROWS_ABOVE_SELECTED * ITEM_SIZE,
+    // paddingTop: ROWS_ABOVE_SELECTED * ITEM_SIZE,
+    // paddingBottom: ROWS_ABOVE_SELECTED * ITEM_SIZE,
   },
 });

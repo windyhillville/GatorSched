@@ -12,11 +12,11 @@ def format_time_range(start: time, end: time) -> str:
 
 
 # NOTE: keeping just in case we revert back to Monday as the start of a week
-def get_week_bounds(start_date: date) -> tuple[date, date]:
-    start_of_week = start_date - timedelta(days=start_date.weekday())
-    end_of_week = start_of_week + timedelta(days=6)
+# def get_week_bounds(start_date: date) -> tuple[date, date]:
+#     start_of_week = start_date - timedelta(days=start_date.weekday())
+#     end_of_week = start_of_week + timedelta(days=6)
 
-    return start_of_week, end_of_week
+#     return start_of_week, end_of_week
 
 
 def get_shift_duration_hours(start_time: time, end_time: time) -> float:

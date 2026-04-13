@@ -1,14 +1,8 @@
 import { Colors } from '@/styles';
-import { Button, Chevron } from '@/ui';
+import { Button, Chevron, TimePickerGroup } from '@/ui';
+import { TimeValue } from '@/ui/time-picker/types';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { TimePickerGroup } from './TimePickerGroup';
-
-export type TimeValue = {
-  hour: string;
-  minute: string;
-  period: 'AM' | 'PM';
-};
+import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
 
 type AvailabilityDayEditorCardProps = {
   dayLabel: string;
@@ -22,6 +16,7 @@ type AvailabilityDayEditorCardProps = {
   isAvailable?: boolean;
   onBack?: () => void;
   onConfirm?: (payload: { start: TimeValue; end: TimeValue }) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function AvailabilityDayEditorCard({
@@ -33,9 +28,10 @@ export function AvailabilityDayEditorCard({
   endMinute,
   endPeriod,
   headerRight,
-  isAvailable,
+  isAvailable = true,
   onBack,
   onConfirm,
+  style,
 }: AvailabilityDayEditorCardProps) {
   const [startTime, setStartTime] = useState<TimeValue>({
     hour: startHour,
@@ -49,9 +45,10 @@ export function AvailabilityDayEditorCard({
     period: endPeriod,
   });
   return (
-    <View style={styles.cardContainer}>
+    <View style={[styles.cardContainer, style]}>
       <View style={styles.topRow}>
         <Chevron direction="left" onPress={onBack} style={styles.leftSlot} />
+
         <View style={styles.centerSlot}>
           <Text style={styles.dayLabel}>{dayLabel}</Text>
         </View>
@@ -68,6 +65,7 @@ export function AvailabilityDayEditorCard({
           onMinuteSelect={(value) => setStartTime((prev) => ({ ...prev, minute: value }))}
           onPeriodSelect={(value) => setStartTime((prev) => ({ ...prev, period: value }))}
           isAvailable={isAvailable}
+          compact={false}
         />
         <TimePickerGroup
           columnLabel="End"

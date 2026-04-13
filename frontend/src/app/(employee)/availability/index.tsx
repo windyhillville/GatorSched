@@ -1,12 +1,8 @@
-import {
-  AvailabilityDayEditorCard,
-  AvailabilityToggle,
-  AvailabilityWeekView,
-  TimeValue,
-} from '@/features';
+import { AvailabilityDayEditorCard, AvailabilityToggle, AvailabilityWeekView } from '@/features';
 import { useDaySelectionTransition } from '@/hooks';
 import { EmployeeAvailability, getAvailabilities, setAvailability } from '@/services';
 import { Button, Header, Screen } from '@/ui';
+import { TimeValue } from '@/ui/time-picker/types';
 import { useEffect, useState } from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';

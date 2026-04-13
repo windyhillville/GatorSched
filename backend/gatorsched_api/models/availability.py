@@ -18,7 +18,7 @@ class Availability(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
 
     day_of_week: Mapped[int] = mapped_column(Integer, nullable=False)
-    # Monday = 0, Tuesday = 1 ... Sunday = 6
+    # Sunday = 0, Monday = 1 ... Saturday = 6
 
     start_time: Mapped[time] = mapped_column(Time, nullable=False)
 
