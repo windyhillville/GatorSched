@@ -2,17 +2,18 @@ import { Platform, StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-na
 
 type HeaderProps = {
   title: string;
+  type?: 'large' | 'medium' | 'small';
   left?: React.ReactNode;
   right?: React.ReactNode;
   style?: StyleProp<ViewStyle>;
 };
 
-export function Header({ title, left, right, style }: HeaderProps) {
+export function Header({ title, type = 'large', left, right, style }: HeaderProps) {
   return (
     <View style={[styles.container, style]}>
       <View style={styles.side}>{left}</View>
       <View style={styles.center}>
-        <Text style={styles.text} numberOfLines={1}>
+        <Text style={styles[`${type}Text`]} numberOfLines={1}>
           {title}
         </Text>
       </View>
@@ -48,8 +49,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
+  largeText: {
     fontSize: 36,
+    lineHeight: 40,
+    textAlign: 'center',
+    flexShrink: 1,
+  },
+  mediumText: {
+    fontSize: 24,
+    lineHeight: 40,
+    textAlign: 'center',
+    flexShrink: 1,
+  },
+  smallText: {
+    fontSize: 20,
     lineHeight: 40,
     textAlign: 'center',
     flexShrink: 1,

@@ -1,8 +1,9 @@
 import { Pressable, StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { SLOT_HEIGHT } from './constants';
+import { getTimePickerMetrics } from './metrics';
 
 type TimeSlotProps = {
   timeLabel: string;
+  compact?: boolean;
   selected?: boolean;
   onPress?: () => void;
   style?: StyleProp<ViewStyle>;
@@ -11,13 +12,16 @@ type TimeSlotProps = {
 
 export function TimeSlot({
   timeLabel,
+  compact,
   selected = false,
   onPress,
   style,
   textStyle,
 }: TimeSlotProps) {
+  const { slotHeight } = getTimePickerMetrics(compact ? 'compact' : 'regular');
+
   let content = (
-    <View style={styles.timeSlot}>
+    <View style={[styles.timeSlot, { height: slotHeight }]}>
       <Text style={[styles.timeText, selected ? styles.selectedText : undefined, textStyle]}>
         {timeLabel}
       </Text>
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 4,
     width: 44,
-    height: SLOT_HEIGHT,
+    // height: SLOT_HEIGHT,
   },
   timeText: {
     fontSize: 14,

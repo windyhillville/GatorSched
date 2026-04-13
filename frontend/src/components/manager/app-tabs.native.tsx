@@ -12,6 +12,11 @@ export default function AppTabs() {
       ? require('@/assets/images/tabIcons/ios/teams.png')
       : require('@/assets/images/tabIcons/android/teams.png');
 
+  const shiftsIcon =
+    Platform.OS === 'ios'
+      ? require('@/assets/images/tabIcons/ios/shifts.png')
+      : require('@/assets/images/tabIcons/android/shifts.png');
+
   const requestsIcon =
     Platform.OS === 'ios'
       ? require('@/assets/images/tabIcons/ios/requests.png')
@@ -30,6 +35,10 @@ export default function AppTabs() {
       <NativeTabs.Trigger name="teams">
         <NativeTabs.Trigger.Label>Teams</NativeTabs.Trigger.Label>
         <NativeTabs.Trigger.Icon src={teamsIcon} />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="shifts">
+        <NativeTabs.Trigger.Label>Shifts</NativeTabs.Trigger.Label>
+        <NativeTabs.Trigger.Icon src={shiftsIcon} />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="requests">
         <NativeTabs.Trigger.Label>Requests</NativeTabs.Trigger.Label>
