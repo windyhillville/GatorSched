@@ -1,5 +1,12 @@
 import { ShiftEditForm, ShiftInformation, ShiftsView } from '@/features';
-import { editShift, EditShiftRequest, getShifts, RoleInfo, ShiftsGroup } from '@/services';
+import {
+  createShift,
+  editShift,
+  EditShiftRequest,
+  getShifts,
+  RoleInfo,
+  ShiftsGroup,
+} from '@/services';
 import { Header, Screen } from '@/ui';
 import { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
@@ -11,6 +18,7 @@ export default function Shifts() {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   const [selectedShiftId, setSelectedShiftId] = useState<string | undefined>();
+  const [createRole, setCreateRole] = useState<RoleInfo | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,10 +52,15 @@ export default function Shifts() {
       setIsLoading(true);
       setError(null);
 
-      await editShift(payload, shiftId);
+      if (selectedShiftId) {
+        await editShift(payload, shiftId);
+      } else {
+        await createShift(payload);
+      }
 
       const data = await getShifts(date);
       setGroups(data.groups);
+      setRoles(data.roles);
 
       const initialExpandedSections = Object.fromEntries(
         data.groups.map((group) => [group.role, true]),
@@ -61,6 +74,7 @@ export default function Shifts() {
 
       setIsModalPressed(false);
       setSelectedShiftId(undefined);
+      setCreateRole(null);
     } catch (err) {
       setError('Failed to edit shift');
       console.error(err);
@@ -86,6 +100,23 @@ export default function Shifts() {
       }
     : null;
 
+  const createShiftInfo: ShiftInformation | null = createRole
+    ? {
+        id: 'new-shift',
+        dayKey: 'Sun',
+        shortDayLabel: 'Su',
+        longDayLabel: 'Sunday',
+        startTime: { hour: '09', minute: '00', period: 'AM' },
+        endTime: { hour: '05', minute: '00', period: 'PM' },
+        staffingRequirement: '1',
+        roleId: createRole.id,
+        roleName: createRole.name,
+        roleColor: createRole.color,
+      }
+    : null;
+
+  const modalShiftInfo = selectedShiftInfo ?? createShiftInfo;
+
   return (
     <Screen insetTop>
       <Header title={'Shifts'} />
@@ -110,18 +141,27 @@ export default function Shifts() {
           setSelectedShiftId(shiftId);
           setIsModalPressed(true);
         }}
+        onAddShift={(roleName: string) => {
+          const matchedRole = roles.find((role) => role.name === roleName);
+          if (!matchedRole) return;
+
+          setSelectedShiftId(undefined);
+          setCreateRole(matchedRole);
+          setIsModalPressed(true);
+        }}
       />
-      {isModalPressed && selectedShiftInfo && (
+      {isModalPressed && modalShiftInfo && (
         <ShiftEditForm
-          key={selectedShiftInfo.id}
+          key={selectedShiftId ?? `create-${createRole?.id ?? 'none'}`}
           rolesInfo={roles}
           editButtonPressed={isModalPressed}
-          shiftInfo={selectedShiftInfo}
+          shiftInfo={modalShiftInfo}
           targetDate={date}
           onSaveAllChanges={handleSaveAllChanges}
           onExit={() => {
             setIsModalPressed(false);
             setSelectedShiftId(undefined);
+            setCreateRole(null);
           }}
         />
       )}

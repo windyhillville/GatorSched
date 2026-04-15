@@ -15,6 +15,7 @@ from .routes.entities.shifts import router as shifts_router
 from .routes.entities.swap_requests import router as swap_requests_router
 from .routes.manager.requests import router as manager_requests_router
 from .routes.manager.scheduler import router as scheduler_router
+from .routes.manager.shifts.create_shift import router as create_shift_router
 from .routes.manager.shifts.edit_shift import router as edit_shift_router
 from .routes.manager.shifts.render_shifts import router as render_shifts_router
 from .routes.manager.teams import router as teams_router
@@ -39,3 +40,4 @@ api_router.include_router(set_availability_router)
 api_router.include_router(manager_requests_router)
 api_router.include_router(render_shifts_router)
 api_router.include_router(edit_shift_router)
+api_router.include_router(create_shift_router)

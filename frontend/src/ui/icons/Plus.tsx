@@ -3,7 +3,6 @@ import { StyleProp, ViewStyle } from 'react-native';
 
 type PlusSignProps = {
   size?: number;
-  onSelect?: () => void;
   style?: StyleProp<ViewStyle>;
 };
 

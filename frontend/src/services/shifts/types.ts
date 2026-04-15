@@ -17,3 +17,27 @@ export type TimeRange = {
   hour: string;
   period: 'AM' | 'PM';
 };
+
+export type EditShiftRequest = {
+  date: string;
+  startTime: TimeRange;
+  endTime: TimeRange;
+  staffingRequirement: number;
+  roleId: string;
+};
+
+export type EditedShift = {
+  id: string;
+  date: string;
+  dayKey: string;
+  shortDayLabel: string;
+  longDayLabel: string;
+  startTime: TimeRange;
+  endTime: TimeRange;
+  staffingRequirement: number;
+  roleId: string;
+  roleName: string;
+  roleColor: string;
+  fromTime: string;
+  toTime: string;
+};
