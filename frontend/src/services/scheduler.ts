@@ -19,7 +19,7 @@ export async function generateSchedule(date: string): Promise<RoleGroup[]> {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ date }),
+    body: JSON.stringify({ week_start: date }),
   });
 
   if (!res.ok) {
@@ -28,5 +28,5 @@ export async function generateSchedule(date: string): Promise<RoleGroup[]> {
 
   const data = await res.json();
 
-  return data.groups;
+  return data.days[0].groups;
 }

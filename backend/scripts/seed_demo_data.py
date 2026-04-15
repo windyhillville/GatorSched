@@ -7,8 +7,6 @@ from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.role import Role
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
-from gatorsched_api.models.swap_request import SwapRequest
-from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 
 
 def seed():
@@ -288,59 +286,59 @@ def seed():
     for assignment in assignments:
         db.refresh(assignment)
 
-    # ---------- Swap Requests ----------
-    swap_requests = [
-        # EMPLOYEE QUEUE EXAMPLES
-        # Ben requests a swap with Dom -> still waiting on Dom
-        SwapRequest(
-            requester_id=ben.id,
-            cover_id=dom.id,
-            requester_assignment_id=assignments[5].id,  # Ben - Mon server
-            cover_assignment_id=assignments[7].id,  # Dom - Tue server
-            employee_status=EmployeeRequestStatus.pending,
-            manager_status=ManagerRequestStatus.not_sent,
-        ),
-        # Dan requests a swap with Ben -> still waiting on Ben
-        SwapRequest(
-            requester_id=dan.id,
-            cover_id=ben.id,
-            requester_assignment_id=assignments[11].id,  # Dan - Thu server
-            cover_assignment_id=assignments[9].id,  # Ben - Wed server
-            employee_status=EmployeeRequestStatus.pending,
-            manager_status=ManagerRequestStatus.not_sent,
-        ),
-        # MANAGER QUEUE EXAMPLES
-        # Johnny and Ron already agreed -> waiting on manager
-        SwapRequest(
-            requester_id=johnny.id,
-            cover_id=ron.id,
-            requester_assignment_id=assignments[13].id,  # Johnny - Fri cook
-            cover_assignment_id=assignments[10].id,  # Ron - Wed cook
-            employee_status=EmployeeRequestStatus.accepted,
-            manager_status=ManagerRequestStatus.pending,
-        ),
-        # Dom and Dan already agreed -> waiting on manager
-        SwapRequest(
-            requester_id=dom.id,
-            cover_id=dan.id,
-            requester_assignment_id=assignments[12].id,  # Dom - Fri server
-            cover_assignment_id=assignments[14].id,  # Dan - Sat server
-            employee_status=EmployeeRequestStatus.accepted,
-            manager_status=ManagerRequestStatus.pending,
-        ),
-        # Ben and Dom already agreed -> waiting on manager
-        SwapRequest(
-            requester_id=ben.id,
-            cover_id=dom.id,
-            requester_assignment_id=assignments[0].id,  # Ben - Sun server
-            cover_assignment_id=assignments[1].id,  # Dom - Sun server
-            employee_status=EmployeeRequestStatus.accepted,
-            manager_status=ManagerRequestStatus.pending,
-        ),
-    ]
-
-    db.add_all(swap_requests)
-    db.commit()
+    # # ---------- Swap Requests ----------
+    # swap_requests = [
+    #     # EMPLOYEE QUEUE EXAMPLES
+    #     # Ben requests a swap with Dom -> still waiting on Dom
+    #     SwapRequest(
+    #         requester_id=ben.id,
+    #         cover_id=dom.id,
+    #         requester_assignment_id=assignments[5].id,  # Ben - Mon server
+    #         cover_assignment_id=assignments[7].id,  # Dom - Tue server
+    #         employee_status=EmployeeRequestStatus.pending,
+    #         manager_status=ManagerRequestStatus.not_sent,
+    #     ),
+    #     # Dan requests a swap with Ben -> still waiting on Ben
+    #     SwapRequest(
+    #         requester_id=dan.id,
+    #         cover_id=ben.id,
+    #         requester_assignment_id=assignments[11].id,  # Dan - Thu server
+    #         cover_assignment_id=assignments[9].id,  # Ben - Wed server
+    #         employee_status=EmployeeRequestStatus.pending,
+    #         manager_status=ManagerRequestStatus.not_sent,
+    #     ),
+    #     # MANAGER QUEUE EXAMPLES
+    #     # Johnny and Ron already agreed -> waiting on manager
+    #     SwapRequest(
+    #         requester_id=johnny.id,
+    #         cover_id=ron.id,
+    #         requester_assignment_id=assignments[13].id,  # Johnny - Fri cook
+    #         cover_assignment_id=assignments[10].id,  # Ron - Wed cook
+    #         employee_status=EmployeeRequestStatus.accepted,
+    #         manager_status=ManagerRequestStatus.pending,
+    #     ),
+    #     # Dom and Dan already agreed -> waiting on manager
+    #     SwapRequest(
+    #         requester_id=dom.id,
+    #         cover_id=dan.id,
+    #         requester_assignment_id=assignments[12].id,  # Dom - Fri server
+    #         cover_assignment_id=assignments[14].id,  # Dan - Sat server
+    #         employee_status=EmployeeRequestStatus.accepted,
+    #         manager_status=ManagerRequestStatus.pending,
+    #     ),
+    #     # Ben and Dom already agreed -> waiting on manager
+    #     SwapRequest(
+    #         requester_id=ben.id,
+    #         cover_id=dom.id,
+    #         requester_assignment_id=assignments[0].id,  # Ben - Sun server
+    #         cover_assignment_id=assignments[1].id,  # Dom - Sun server
+    #         employee_status=EmployeeRequestStatus.accepted,
+    #         manager_status=ManagerRequestStatus.pending,
+    #     ),
+    # ]
+    #
+    # db.add_all(swap_requests)
+    # db.commit()
 
     print("Seed complete!")
     db.close()
