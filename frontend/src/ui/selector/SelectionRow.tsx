@@ -1,21 +1,25 @@
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 type SelectionRowProps<T> = {
   data: T[];
+  disabled?: boolean;
   keyExtractor: (item: T) => string;
   isSelected: (item: T) => boolean;
   onPressItem: (item: T) => void;
   renderItemContent: (item: T, selected: boolean) => React.ReactNode;
   extraData?: unknown;
+  contentContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export function SelectionRow<T>({
   data,
+  disabled = false,
   keyExtractor,
   isSelected,
   onPressItem,
   renderItemContent,
   extraData,
+  contentContainerStyle,
 }: SelectionRowProps<T>) {
   return (
     <View style={styles.listContainer}>
@@ -26,14 +30,18 @@ export function SelectionRow<T>({
         renderItem={({ item }) => {
           const selected = isSelected(item);
           return (
-            <Pressable onPress={() => onPressItem(item)} style={styles.itemPressable}>
+            <Pressable
+              onPress={() => onPressItem(item)}
+              style={styles.itemPressable}
+              disabled={disabled}
+            >
               {renderItemContent(item, selected)}
             </Pressable>
           );
         }}
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.contentContainer}
+        contentContainerStyle={[styles.contentContainer, contentContainerStyle]}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
       />
     </View>

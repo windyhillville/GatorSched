@@ -19,6 +19,8 @@ class Role(Base):
 
     name: Mapped[str] = mapped_column(String(120), unique=True, index=True, nullable=False)
 
+    color: Mapped[str] = mapped_column(String(16), nullable=False)
+
     description: Mapped[str] = mapped_column(String(255), nullable=False)
 
     # Relationship

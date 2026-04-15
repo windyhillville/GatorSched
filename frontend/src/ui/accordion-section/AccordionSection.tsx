@@ -5,6 +5,7 @@ type AccordionSectionProps = {
   title: string;
   expanded: boolean;
   onToggle: () => void;
+  onTapRight?: () => void;
   children?: React.ReactNode;
   right?: React.ReactNode;
 };
@@ -13,6 +14,7 @@ export function AccordionSection({
   title,
   expanded,
   onToggle,
+  onTapRight,
   children,
   right,
 }: AccordionSectionProps) {
@@ -26,8 +28,14 @@ export function AccordionSection({
           >
             <Chevron direction="down" size={16} />
           </View>
-          {right}
         </Pressable>
+        {right ? (
+          <Pressable style={styles.rightIcon} onPress={onTapRight} hitSlop={8}>
+            {right}
+          </Pressable>
+        ) : (
+          <View />
+        )}
       </View>
 
       {expanded && <View style={styles.childrenWrapper}>{children}</View>}
@@ -42,6 +50,9 @@ const styles = StyleSheet.create({
   },
   topRow: {
     paddingHorizontal: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // paddingRight: 24,
   },
   pressable: {
     flexDirection: 'row',
@@ -58,5 +69,13 @@ const styles = StyleSheet.create({
   childrenWrapper: {
     alignItems: 'center',
     gap: 12,
+  },
+  rightIcon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 35,
+    width: 35,
+    borderRadius: 17.5,
+    borderWidth: 1,
   },
 });

@@ -16,8 +16,8 @@ def seed():
     print("Seeding scheduler + teams + requests demo data...")
 
     # ---------- Roles ----------
-    server_role = Role(name="Server", description="Front of house server")
-    cook_role = Role(name="Cook", description="Back of house cook")
+    server_role = Role(name="Server", color="#2BE0BC", description="Front of house server")
+    cook_role = Role(name="Cook", color="#E02B55", description="Back of house cook")
 
     db.add_all([server_role, cook_role])
     db.commit()
@@ -81,7 +81,7 @@ def seed():
         db.refresh(e)
 
     # ---------- Availabilities ----------
-    # Monday = 0 ... Sunday = 6
+    # Sunday = 0 ... Saturday = 6
     availabilities = [
         # Benjamin Davidson (Server)
         Availability(
