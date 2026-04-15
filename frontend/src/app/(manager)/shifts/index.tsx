@@ -8,7 +8,8 @@ import {
   ShiftsGroup,
 } from '@/services';
 import { Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 export default function Shifts() {
@@ -24,7 +25,7 @@ export default function Shifts() {
 
   const date = '2026-03-15';
   useEffect(() => {
-    async function fetchRoster() {
+    async function fetchShifts() {
       try {
         setIsLoading(true);
         setError(null);
@@ -44,8 +45,48 @@ export default function Shifts() {
         setIsLoading(false);
       }
     }
-    fetchRoster();
+    fetchShifts();
   }, [date]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      async function fetchShifts() {
+        try {
+          setIsLoading(true);
+          setError(null);
+
+          const data = await getShifts(date);
+
+          if (isActive) {
+            setGroups(data.groups);
+            setRoles(data.roles);
+
+            const initialExpandedState = Object.fromEntries(
+              data.groups.map((group) => [group.role, true]),
+            );
+            setExpandedSections(initialExpandedState);
+          }
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to load roster');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
+      }
+
+      fetchShifts();
+
+      return () => {
+        isActive = false; // Prevents state updates after navigating away
+      };
+    }, [date]), // Refetches if the user changes the date while on the screen
+  );
 
   async function handleSaveAllChanges(payload: EditShiftRequest, shiftId: string) {
     try {
