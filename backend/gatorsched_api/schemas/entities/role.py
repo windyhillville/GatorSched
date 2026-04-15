@@ -3,6 +3,7 @@ from pydantic import BaseModel, ConfigDict
 
 class RoleBase(BaseModel):
     name: str
+    color: str
     description: str
 
 

@@ -77,6 +77,7 @@ def cashier_role(db_session):
     if not role:
         role = Role(
             name="Cashier",
+            color="#C5E02B",
             description="Handles checkout.",
         )
         db_session.add(role)

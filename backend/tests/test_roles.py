@@ -8,7 +8,7 @@ def test_roles_returns_200(client):
 
 
 def test_roles_returns_one_after_insert(client, db_session):
-    role = Role(name="Stocker", description="Stocks shelves.")
+    role = Role(name="Stocker", color="#8F2BE0", description="Stocks shelves.")
 
     db_session.add(role)
     db_session.commit()
@@ -28,6 +28,7 @@ def test_roles_returns_one_after_insert(client, db_session):
 def test_create_role(client):
     payload = {
         "name": "Manager",
+        "color": "#3D2BE0",
         "description": "Manages the store.",
     }
 
@@ -45,4 +46,5 @@ def test_create_role(client):
     role = next((r for r in get_data if r["name"] == payload["name"]), None)
 
     assert role is not None
+    assert role["color"] == payload["color"]
     assert role["description"] == payload["description"]

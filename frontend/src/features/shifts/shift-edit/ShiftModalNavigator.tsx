@@ -4,7 +4,7 @@ import StaffingIcon from '@/assets/images/icons/staffing.svg';
 import TimeIcon from '@/assets/images/icons/time.svg';
 import { ShiftNavIcon } from '@/ui';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { ActiveViewOption } from './ShiftsDetailsForm';
+import { ActiveViewOption } from './ShiftEditForm';
 
 type ShiftModalNavigatorProps = {
   selectedIcon: ActiveViewOption;

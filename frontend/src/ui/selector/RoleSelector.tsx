@@ -1,16 +1,11 @@
+import { RoleInfo } from '@/services';
 import { StyleSheet, View } from 'react-native';
 import { Avatar } from '../avatar';
 import { SelectionRow } from './SelectionRow';
 // import { SIZES } from '@/styles';
 
-type RoleOption = {
-  id: string;
-  label: string;
-  color: string;
-};
-
 type RoleSelectorProps = {
-  roles: RoleOption[];
+  roles: RoleInfo[];
   selectionType?: 'single' | 'multiple';
   selectedId?: string; // will need to add multiple selection option
   selectedIds?: Record<string, boolean>;
@@ -64,7 +59,7 @@ export function RoleSelector({
           }}
         >
           <Avatar
-            label={role.label}
+            label={role.name}
             color={'#ffffff'}
             borderColor={role.color}
             size={'verySmall'}

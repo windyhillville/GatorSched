@@ -3,13 +3,14 @@ import { Platform, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 interface CardProps {
   wrapperStyle?: StyleProp<ViewStyle>;
+  borderRadius?: number;
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 }
-export function Card({ style, wrapperStyle, children }: CardProps) {
+export function Card({ style, borderRadius = 60, wrapperStyle, children }: CardProps) {
   return (
-    <View style={[styles.shadowWrapper, wrapperStyle]}>
-      <View style={[styles.container, style]}>{children}</View>
+    <View style={[styles.shadowWrapper, { borderRadius }, wrapperStyle]}>
+      <View style={[styles.container, { borderRadius }, style]}>{children}</View>
     </View>
   );
 }
