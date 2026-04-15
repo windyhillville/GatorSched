@@ -1,7 +1,8 @@
 import { TeamsView } from '@/features';
 import { getRoster, TeamGroup } from '@/services';
 import { Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Teams() {
   const [groups, setGroups] = useState<TeamGroup[]>([]);
@@ -10,7 +11,7 @@ export default function Teams() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const date = '2026-03-16';
+  const date = '2026-03-15';
   useEffect(() => {
     async function fetchRoster() {
       try {
@@ -31,6 +32,44 @@ export default function Teams() {
     }
     fetchRoster();
   }, [date]);
+
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true; // Prevents state updates if component unmounts
+
+      async function fetchRoster() {
+        try {
+          setIsLoading(true);
+          setError(null);
+
+          const data = await getRoster(date);
+
+          if (isActive) {
+            setGroups(data);
+            const initialExpandedState = Object.fromEntries(
+              data.map((group) => [group.role, true]),
+            );
+            setExpandedSections(initialExpandedState);
+          }
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to load roster');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
+      }
+
+      fetchRoster();
+
+      return () => {
+        isActive = false;
+      };
+    }, [date]),
+  );
 
   return (
     <Screen insetTop>

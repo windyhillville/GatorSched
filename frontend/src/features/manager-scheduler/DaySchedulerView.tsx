@@ -56,13 +56,15 @@ export function DaySchedulerView({
             onToggle={() => onToggleSection(group.role)}
           >
             {group.shifts.map((shift) => (
-              <EmployeeShiftRow
-                key={shift.id}
-                name={shift.employeeName}
-                startLabel={shift.startLabel}
-                endLabel={shift.endLabel}
-                color={shift.color}
-              />
+              <View key={shift.id} style={{ paddingHorizontal: 12 }}>
+                <EmployeeShiftRow
+                  key={shift.id}
+                  name={shift.employeeName}
+                  startLabel={shift.startLabel}
+                  endLabel={shift.endLabel}
+                  color={shift.color}
+                />
+              </View>
             ))}
           </AccordionSection>
         )}
