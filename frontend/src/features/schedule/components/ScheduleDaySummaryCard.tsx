@@ -1,6 +1,6 @@
 import { EmployeeShiftSummary } from '@/services';
 import { Colors } from '@/styles';
-import { Button, DateNavigator, DurationBar } from '@/ui';
+import { Button, DateNavigator, ShiftDurationBar } from '@/ui';
 import { StyleSheet, Text, View } from 'react-native';
 
 type ScheduleDaySummaryCardProps = {
@@ -26,7 +26,14 @@ export function ScheduleDaySummaryCard({
       <DateNavigator label={summary.dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
 
       <View style={[styles.cardContainer, { borderColor: Colors.buttonDefaultBorder }]}>
-        <View style={styles.topRow}>
+        <ShiftDurationBar
+          fromTime={summary.fromTime}
+          toTime={summary.toTime}
+          longLabel={summary.longLabel}
+          isToday={isToday}
+          barColor={barColor}
+        />
+        {/* <View style={styles.topRow}>
           <Text style={styles.cardText}>{summary.fromTime}</Text>
           <Text style={styles.cardText}>{isToday ? 'Today' : summary.longLabel}</Text>
           <Text style={styles.cardText}>{summary.toTime}</Text>
@@ -34,7 +41,7 @@ export function ScheduleDaySummaryCard({
 
         <View style={styles.barContainer}>
           <DurationBar color={barColor} />
-        </View>
+        </View> */}
       </View>
 
       <Text style={styles.totalHours}>{`${summary.shiftHours} Hrs`}</Text>
@@ -65,7 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     paddingVertical: 20,
-    gap: 20,
+    // gap: 20,
     alignItems: 'center',
   },
   topRow: {

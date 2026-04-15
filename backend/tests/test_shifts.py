@@ -13,6 +13,7 @@ def test_shifts_returns_200(client):
 def test_shifts_returns_one_after_insert(client, db_session):
     role = Role(
         name="Server",
+        color="#E06D2B",
         description="Serves food to customers.",
     )
 
@@ -46,6 +47,7 @@ def test_shifts_returns_one_after_insert(client, db_session):
 def test_create_shift(client, db_session):
     role = Role(
         name="Sales Assistant",
+        color="#2BE0E0",
         description="Helps with selling product to customers.",
     )
 

@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
   rounded: {
-    borderRadius: 12,
+    borderRadius: 10, // 12
   },
   defaultContainer: {
     borderColor: Colors.buttonDefaultBorder,
