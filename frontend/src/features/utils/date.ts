@@ -10,9 +10,14 @@ export function getLongDayLabelFromIsoDate(isoDate: string): string {
   return labels[date.getDay()];
 }
 
-export function isToday(isoDateString: string, todayDate: Date): boolean {
-  const todayISO = todayDate.toISOString().split('T')[0];
-  return isoDateString === todayISO;
+export function isToday(isoDateString: string, todayIsoString: string): boolean {
+  return isoDateString === todayIsoString;
+}
+
+export function getDayIndex(date: string | Date): number {
+  const day = typeof date === 'string' ? new Date(`${date}T00:00:00`) : new Date(date);
+
+  return day.getDay();
 }
 
 export function getDateFromDayKey(weekStart: string, dayKey: string): string {
@@ -34,4 +39,54 @@ export function getDateFromDayKey(weekStart: string, dayKey: string): string {
   result.setDate(base.getDate() + offset);
 
   return result.toISOString().split('T')[0]; // "YYYY-MM-DD"
+}
+
+export function getDateFromWeekStartAndIndex(weekStart: string, dayIndex: number): Date {
+  const base = new Date(`${weekStart}T00:00:00`);
+  const result = new Date(base);
+  result.setDate(base.getDate() + dayIndex);
+  return result;
+}
+
+export function formatDisplayDate(date: Date) {
+  return {
+    dayLabel: date.toLocaleDateString('en-US', { weekday: 'long' }),
+    dateLabel: date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }),
+  };
+}
+
+export function getWeekBoundsLabel(week: string | Date) {
+  const startOfWeek = typeof week === 'string' ? new Date(`${week}T00:00:00`) : new Date(week);
+  const endOfWeek = typeof week === 'string' ? new Date(`${week}T00:00:00`) : new Date(week);
+
+  endOfWeek.setDate(endOfWeek.getDate() + 6);
+
+  return `${startOfWeek.toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })}`;
+}
+
+export function getWeekStart(currentDate: string | Date): string {
+  const date =
+    typeof currentDate === 'string' ? new Date(`${currentDate}T00:00:00`) : new Date(currentDate);
+
+  date.setDate(date.getDate() - date.getDay());
+
+  return date.toLocaleDateString('en-CA');
+}
+
+export function getNextWeekStart(currentWeek: string | Date): string {
+  const nextWeek =
+    typeof currentWeek === 'string' ? new Date(`${currentWeek}T00:00:00`) : new Date(currentWeek);
+
+  nextWeek.setDate(nextWeek.getDate() + 7);
+
+  return nextWeek.toLocaleDateString('en-CA');
+}
+
+export function getPreviousWeekStart(currentWeek: string | Date): string {
+  const previousWeek =
+    typeof currentWeek === 'string' ? new Date(`${currentWeek}T00:00:00`) : new Date(currentWeek);
+
+  previousWeek.setDate(previousWeek.getDate() - 7);
+
+  return previousWeek.toLocaleDateString('en-CA');
 }

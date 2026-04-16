@@ -1,17 +1,25 @@
-from datetime import date, time
+from datetime import date, time, timedelta
 
 from gatorsched_api.db.init_db import init_db
 from gatorsched_api.db.session import SessionLocal
 from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.role import Role
-from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
+
+
+def get_current_week_start() -> date:
+    today = date.today()
+    # Sunday = 0 in your app's week model
+    days_since_sunday = (today.weekday() + 1) % 7
+    return today - timedelta(days=days_since_sunday)
 
 
 def seed():
     init_db()
     db = SessionLocal()
+
+    current_week_start = get_current_week_start()
 
     print("Seeding scheduler + teams + requests demo data...")
 
@@ -139,115 +147,123 @@ def seed():
     db.commit()
 
     # ---------- Shifts for target week ----------
-    # Week anchored around 2026-03-15 (Sunday)
+    # Week is anchored to the current Sunday's date
+    sun = current_week_start
+    mon = sun + timedelta(days=1)
+    tue = sun + timedelta(days=2)
+    wed = sun + timedelta(days=3)
+    thu = sun + timedelta(days=4)
+    fri = sun + timedelta(days=5)
+    sat = sun + timedelta(days=6)
+
     shifts = [
-        # Sunday 2026-03-15
+        # Sunday
         Shift(
-            date=date(2026, 3, 15),
+            date=sun,
             start_time=time(6, 0),
             end_time=time(13, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 15),
+            date=sun,
             start_time=time(11, 0),
             end_time=time(17, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 15),
+            date=sun,
             start_time=time(13, 0),
             end_time=time(20, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 15),
+            date=sun,
             start_time=time(7, 0),
             end_time=time(14, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 15),
+            date=sun,
             start_time=time(14, 0),
             end_time=time(22, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
-        # Monday 2026-03-16
+        # Monday
         Shift(
-            date=date(2026, 3, 16),
+            date=mon,
             start_time=time(9, 0),
             end_time=time(17, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 16),
+            date=mon,
             start_time=time(14, 0),
             end_time=time(22, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
-        # Tuesday 2026-03-17
+        # Tuesday
         Shift(
-            date=date(2026, 3, 17),
+            date=tue,
             start_time=time(11, 0),
             end_time=time(19, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 17),
+            date=tue,
             start_time=time(13, 0),
             end_time=time(21, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
-        # Wednesday 2026-03-18
+        # Wednesday
         Shift(
-            date=date(2026, 3, 18),
+            date=wed,
             start_time=time(10, 0),
             end_time=time(18, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 18),
+            date=wed,
             start_time=time(6, 0),
             end_time=time(14, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
-        # Thursday 2026-03-19
+        # Thursday
         Shift(
-            date=date(2026, 3, 19),
+            date=thu,
             start_time=time(8, 0),
             end_time=time(16, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
-        # Friday 2026-03-20
+        # Friday
         Shift(
-            date=date(2026, 3, 20),
+            date=fri,
             start_time=time(8, 0),
             end_time=time(16, 0),
             role_id=server_role.id,
             min_staff_req=1,
         ),
         Shift(
-            date=date(2026, 3, 20),
+            date=fri,
             start_time=time(12, 0),
             end_time=time(20, 0),
             role_id=cook_role.id,
             min_staff_req=1,
         ),
-        # Saturday 2026-03-21
+        # Saturday
         Shift(
-            date=date(2026, 3, 21),
+            date=sat,
             start_time=time(14, 0),
             end_time=time(22, 0),
             role_id=server_role.id,
@@ -262,29 +278,29 @@ def seed():
         db.refresh(s)
 
     # ---------- Schedule Assignments ----------
-    assignments = [
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[0].id),  # 0: Ben - Sun server
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[1].id),  # 1: Dom - Sun server
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[2].id),  # 2: Dan - Sun server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[3].id),  # 3: Ron - Sun cook
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[4].id),  # 4: Ron - Sun cook
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[5].id),  # 5: Ben - Mon server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[6].id),  # 6: Ron - Mon cook
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[7].id),  # 7: Dom - Tue server
-        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[8].id),  # 8: Johnny - Tue cook
-        ScheduleAssignment(employee_id=ben.id, shift_id=shifts[9].id),  # 9: Ben - Wed server
-        ScheduleAssignment(employee_id=ron.id, shift_id=shifts[10].id),  # 10: Ron - Wed cook
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[11].id),  # 11: Dan - Thu server
-        ScheduleAssignment(employee_id=dom.id, shift_id=shifts[12].id),  # 12: Dom - Fri server
-        ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[13].id),  # 13: Johnny - Fri cook
-        ScheduleAssignment(employee_id=dan.id, shift_id=shifts[14].id),  # 14: Dan - Sat server
-    ]
+    # assignments = [
+    #     ScheduleAssignment(employee_id=ben.id, shift_id=shifts[0].id),  # 0: Ben - Sun server
+    #     ScheduleAssignment(employee_id=dom.id, shift_id=shifts[1].id),  # 1: Dom - Sun server
+    #     ScheduleAssignment(employee_id=dan.id, shift_id=shifts[2].id),  # 2: Dan - Sun server
+    #     ScheduleAssignment(employee_id=ron.id, shift_id=shifts[3].id),  # 3: Ron - Sun cook
+    #     ScheduleAssignment(employee_id=ron.id, shift_id=shifts[4].id),  # 4: Ron - Sun cook
+    #     ScheduleAssignment(employee_id=ben.id, shift_id=shifts[5].id),  # 5: Ben - Mon server
+    #     ScheduleAssignment(employee_id=ron.id, shift_id=shifts[6].id),  # 6: Ron - Mon cook
+    #     ScheduleAssignment(employee_id=dom.id, shift_id=shifts[7].id),  # 7: Dom - Tue server
+    #     ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[8].id),  # 8: Johnny - Tue cook
+    #     ScheduleAssignment(employee_id=ben.id, shift_id=shifts[9].id),  # 9: Ben - Wed server
+    #     ScheduleAssignment(employee_id=ron.id, shift_id=shifts[10].id),  # 10: Ron - Wed cook
+    #     ScheduleAssignment(employee_id=dan.id, shift_id=shifts[11].id),  # 11: Dan - Thu server
+    #     ScheduleAssignment(employee_id=dom.id, shift_id=shifts[12].id),  # 12: Dom - Fri server
+    #     ScheduleAssignment(employee_id=johnny.id, shift_id=shifts[13].id),  # 13: Johnny - Fri cook
+    #     ScheduleAssignment(employee_id=dan.id, shift_id=shifts[14].id),  # 14: Dan - Sat server
+    # ]
 
-    db.add_all(assignments)
-    db.commit()
+    # db.add_all(assignments)
+    # db.commit()
 
-    for assignment in assignments:
-        db.refresh(assignment)
+    # for assignment in assignments:
+    #     db.refresh(assignment)
 
     # # ---------- Swap Requests ----------
     # swap_requests = [
@@ -336,7 +352,7 @@ def seed():
     #         manager_status=ManagerRequestStatus.pending,
     #     ),
     # ]
-    #
+
     # db.add_all(swap_requests)
     # db.commit()
 

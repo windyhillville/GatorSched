@@ -21,8 +21,8 @@ class RequestShiftSummary(BaseModel):
 
 class EmployeeRequestCardBase(BaseModel):
     id: str
-    employee_status: EmployeeRequestStatus
-    manager_status: ManagerRequestStatus
+    employeeStatus: EmployeeRequestStatus
+    managerStatus: ManagerRequestStatus
 
 
 class EmployeeSwapRequestCard(EmployeeRequestCardBase):

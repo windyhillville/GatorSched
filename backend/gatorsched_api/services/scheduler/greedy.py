@@ -133,7 +133,7 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
                 )
 
                 scheduled_shift = ScheduledShift(
-                    id=str(employee.id),
+                    employeeId=str(employee.id),
                     employeeName=employee.name,
                     startLabel=format_time_label(shift.start_time),
                     endLabel=format_time_label(shift.end_time),

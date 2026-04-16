@@ -43,6 +43,7 @@ export function DayGrid({
       {hasSecondRow && (
         <View style={styles.row}>
           {secondRow.map((d) => (
+            // FIXME: Currently duplicates keys if employee is scheduled twice in one day
             <Pressable key={d.key} onPress={() => onDayPress?.(d.key)}>
               <DayIcon
                 day={d.label}
