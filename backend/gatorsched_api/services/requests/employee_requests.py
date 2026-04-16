@@ -45,8 +45,8 @@ def get_employee_requests(db: Session, viewer_id: int) -> EmployeeRequestsRespon
     for swap in swap_requests:
         card = EmployeeSwapRequestCard(
             id=str(swap.id),
-            employee_status=swap.employee_status,
-            manager_status=swap.manager_status,
+            employeeStatus=swap.employee_status,
+            managerStatus=swap.manager_status,
             requester=RequestPerson(
                 id=str(swap.requester_id),
                 name=swap.requester.name,

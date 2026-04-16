@@ -2,7 +2,7 @@ import { TeamsView } from '@/features';
 import { getRoster, TeamGroup } from '@/services';
 import { Header, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function Teams() {
   const [groups, setGroups] = useState<TeamGroup[]>([]);
@@ -12,30 +12,9 @@ export default function Teams() {
   const [error, setError] = useState<string | null>(null);
 
   const date = '2026-03-15';
-  useEffect(() => {
-    async function fetchRoster() {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const data = await getRoster(date);
-        setGroups(data);
-
-        const initialExpandedState = Object.fromEntries(data.map((group) => [group.role, true]));
-        setExpandedSections(initialExpandedState);
-      } catch (err) {
-        setError('Failed to load roster');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchRoster();
-  }, [date]);
-
   useFocusEffect(
     useCallback(() => {
-      let isActive = true; // Prevents state updates if component unmounts
+      let isActive = true;
 
       async function fetchRoster() {
         try {

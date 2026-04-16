@@ -1,7 +1,7 @@
-import { API_BASE } from './apiConfig';
+import { API_BASE } from '../apiConfig';
 
 export type ScheduledShift = {
-  id: string;
+  employeeId: string;
   employeeName: string;
   startLabel: string;
   endLabel: string;
@@ -13,7 +13,17 @@ export type RoleGroup = {
   shifts: ScheduledShift[];
 };
 
-export async function generateSchedule(date: string): Promise<RoleGroup[]> {
+export type DaySchedule = {
+  date: Date;
+  dayLabel: string;
+  groups: RoleGroup[];
+};
+
+export type GenerateScheduleResponse = {
+  days: DaySchedule[];
+};
+
+export async function generateSchedule(date: string): Promise<GenerateScheduleResponse> {
   const res = await fetch(`${API_BASE}/scheduler/generate`, {
     method: 'POST',
     headers: {
@@ -26,7 +36,5 @@ export async function generateSchedule(date: string): Promise<RoleGroup[]> {
     throw new Error('Failed to generate schedule');
   }
 
-  const data = await res.json();
-
-  return data.days[0].groups;
+  return await res.json();
 }

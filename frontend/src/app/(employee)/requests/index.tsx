@@ -1,7 +1,8 @@
 import { EmployeeRequestsView, RequestSection } from '@/features';
 import { getEmployeeRequests } from '@/services';
 import { Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { Platform, StyleSheet } from 'react-native';
 
 export default function Requests() {
@@ -13,38 +14,53 @@ export default function Requests() {
 
   const viewerId = '1';
 
-  useEffect(() => {
-    async function fetchEmployeeRequests() {
-      try {
-        setIsLoading(true);
-        setError(null);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      async function fetchEmployeeRequests() {
+        try {
+          setIsLoading(true);
+          setError(null);
 
-        const requests = await getEmployeeRequests(viewerId);
-        const sections: RequestSection[] = [
-          {
-            title: 'Incoming',
-            requests: requests.incoming,
-          },
-          {
-            title: 'Outgoing',
-            requests: requests.outgoing,
-          },
-        ];
-        setSections(sections);
+          const requests = await getEmployeeRequests(viewerId);
 
-        const initialExpandedState = Object.fromEntries(
-          sections.map((section) => [section.title, true]),
-        );
-        setExpandedSections(initialExpandedState);
-      } catch (err) {
-        setError('Failed to load employee requests');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+          if (isActive) {
+            const sections: RequestSection[] = [
+              {
+                title: 'Incoming',
+                requests: requests.incoming,
+              },
+              {
+                title: 'Outgoing',
+                requests: requests.outgoing,
+              },
+            ];
+            setSections(sections);
+
+            const initialExpandedState = Object.fromEntries(
+              sections.map((section) => [section.title, true]),
+            );
+            setExpandedSections(initialExpandedState);
+          }
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to load employee requests');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
       }
-    }
-    fetchEmployeeRequests();
-  }, [viewerId]);
+
+      fetchEmployeeRequests();
+
+      return () => {
+        isActive = false;
+      };
+    }, [viewerId]),
+  );
 
   return (
     <Screen insetTop>

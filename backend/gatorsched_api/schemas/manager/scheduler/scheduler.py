@@ -8,7 +8,7 @@ class GenerateScheduleRequest(BaseModel):
 
 
 class ScheduledShift(BaseModel):
-    id: str
+    employeeId: str
     employeeName: str
     startLabel: str
     endLabel: str

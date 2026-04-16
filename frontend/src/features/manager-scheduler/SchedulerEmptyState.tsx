@@ -2,10 +2,12 @@ import { Button, DateNavigator } from '@/ui';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 type SchedulerEmptyStateProps = {
-  dayLabel: string;
+  dayLabel?: string;
   dateLabel: string;
   isLoading: boolean;
   onGenerateSchedule: () => void;
+  onPreviousWeek?: () => void;
+  onNextWeek?: () => void;
 };
 
 export function SchedulerEmptyState({
@@ -13,10 +15,17 @@ export function SchedulerEmptyState({
   dateLabel,
   isLoading,
   onGenerateSchedule,
+  onPreviousWeek,
+  onNextWeek,
 }: SchedulerEmptyStateProps) {
   return (
     <View style={styles.emptyContainer}>
-      <DateNavigator label={dayLabel} subLabel={dateLabel} />
+      <DateNavigator
+        label={dateLabel}
+        // subLabel={dateLabel}
+        onPrevious={onPreviousWeek}
+        onNext={onNextWeek}
+      />
       <View style={styles.textBlock}>
         <Text style={styles.emptyTitle}>No Schedule Yet</Text>
         <Text style={styles.emptySubtitle}>

@@ -9,7 +9,7 @@ import {
 } from '@/services';
 import { Header, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 export default function Shifts() {
@@ -24,30 +24,6 @@ export default function Shifts() {
   const [error, setError] = useState<string | null>(null);
 
   const date = '2026-03-15';
-  useEffect(() => {
-    async function fetchShifts() {
-      try {
-        setIsLoading(true);
-        setError(null);
-
-        const data = await getShifts(date);
-        setGroups(data.groups);
-        setRoles(data.roles);
-
-        const initialExpandedState = Object.fromEntries(
-          data.groups.map((group) => [group.role, true]),
-        );
-        setExpandedSections(initialExpandedState);
-      } catch (err) {
-        setError('Failed to load roster');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    fetchShifts();
-  }, [date]);
-
   useFocusEffect(
     useCallback(() => {
       let isActive = true;

@@ -1,7 +1,8 @@
 import { ManagerRequestsView } from '@/features';
 import { getManagerRequests, ManagerRequestCardGroup } from '@/services';
 import { Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 
 export default function Requests() {
   const [groups, setGroups] = useState<ManagerRequestCardGroup[]>([]);
@@ -10,26 +11,43 @@ export default function Requests() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    async function fetchManagerRequests() {
-      try {
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      async function fetchManagerRequests() {
         setIsLoading(true);
         setError(null);
 
-        const groups = await getManagerRequests();
-        setGroups(groups);
+        try {
+          const groups = await getManagerRequests();
 
-        const initialExpandedState = Object.fromEntries(groups.map((group) => [group.role, true]));
-        setExpandedSections(initialExpandedState);
-      } catch (err) {
-        setError('Failed to load manager requests');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+          if (isActive) {
+            setGroups(groups);
+            const initialExpandedState = Object.fromEntries(
+              groups.map((group) => [group.role, true]),
+            );
+            setExpandedSections(initialExpandedState);
+          }
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to load manager requests');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
       }
-    }
-    fetchManagerRequests();
-  }, []);
+
+      fetchManagerRequests();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   return (
     <Screen insetTop>

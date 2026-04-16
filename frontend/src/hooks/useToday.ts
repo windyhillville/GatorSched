@@ -1,13 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { AppState } from 'react-native';
 
 export const useToday = () => {
-  const [today, setToday] = useState(new Date());
+  const [today, setToday] = useState(new Date().toLocaleDateString('en-CA'));
 
-  useEffect(() => {
-    // Optional: We can update 'today' every minute or at midnight
-    const timer = setInterval(() => setToday(new Date()), 60000);
-    return () => clearInterval(timer);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const subscription = AppState.addEventListener('change', (nextAppState) => {
+        if (nextAppState == 'active') {
+          setToday(new Date().toLocaleDateString('en-CA'));
+        }
+      });
+      return () => subscription.remove();
+    }, []),
+  );
 
   return today;
 };
