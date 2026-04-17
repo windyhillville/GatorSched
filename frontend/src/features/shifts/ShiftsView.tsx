@@ -1,6 +1,6 @@
 import { ShiftsGroup } from '@/services';
-import { AccordionSection, PlusSign } from '@/ui';
-import { FlatList, Pressable, StyleSheet, View } from 'react-native';
+import { AccordionSection } from '@/ui';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { ShiftCard } from './card';
 
 type ShiftsViewProps = {
@@ -10,7 +10,6 @@ type ShiftsViewProps = {
   onToggleSection: (role: string) => void;
   onToggleCard: (id: string) => void;
   onEditShift: (shiftId: string) => void;
-  onAddShift: (roleName: string) => void;
 };
 
 export function ShiftsView({
@@ -20,7 +19,6 @@ export function ShiftsView({
   onToggleSection,
   onToggleCard,
   onEditShift,
-  onAddShift,
 }: ShiftsViewProps) {
   return (
     <View style={styles.container}>
@@ -34,11 +32,6 @@ export function ShiftsView({
             title={group.role}
             expanded={expandedSections[group.role] ?? false}
             onToggle={() => onToggleSection(group.role)}
-            right={
-              <Pressable onPress={() => onAddShift(group.role)}>
-                <PlusSign size={25} />
-              </Pressable>
-            }
           >
             <View style={styles.cardsContainer}>
               {group.shifts.map((shift) => (
@@ -70,32 +63,6 @@ export function ShiftsView({
         )}
       />
     </View>
-
-    // <View style={styles.accordionContainer}>
-    //   <AccordionSection
-    //     title={group}
-    //     expanded={true}
-    //     onToggle={() => {}}
-    //     right={<PlusSign size={25} />}
-    //   />
-    //   <View
-    //     style={{
-    //       width: '100%',
-    //       paddingHorizontal: 12,
-    //       alignItems: 'center',
-    //       justifyContent: 'center',
-    //     }}
-    //   >
-    // <ShiftCard
-    //   fromTime={shift.fromTime}
-    //   toTime={shift.toTime}
-    //   longDayLabel={shift.longDayLabel}
-    //   roleColor={role.color}
-    //   tappedToExpand={true}
-    //   isFullyStaffed={true}
-    // />
-    //   </View>
-    // </View>
   );
 }
 
