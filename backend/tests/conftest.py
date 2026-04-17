@@ -41,6 +41,8 @@ def create_test_db() -> Generator[None, None, None]:
     from gatorsched_api.models.schedule_assignment import ScheduleAssignment  # noqa: F401
     from gatorsched_api.models.shift import Shift  # noqa: F401
     from gatorsched_api.models.swap_request import SwapRequest  # noqa: F401
+    from gatorsched_api.models.callout_request import CallOutRequest # noqa: F401
+    from gatorsched_api.models.pickup_request import  PickUpRequest # noqa: F401
 
     Base.metadata.create_all(bind=engine)
     yield
