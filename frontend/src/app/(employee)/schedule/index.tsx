@@ -1,52 +1,44 @@
-import { ScheduleDaySummaryCard, ScheduleWeekView } from '@/features';
-import { isToday } from '@/features/utils';
+import { ScheduleDaySummaryCard, ScheduleWeekView, UnscheduledDayCard } from '@/features';
+import {
+  getDateFromWeekStartAndIndex,
+  getDayIndexFromKey,
+  getMonthAndDayLabel,
+  getNextDayKey,
+  getNextWeekStart,
+  getPreviousDayKey,
+  getPreviousWeekStart,
+  getWeekBoundsLabel,
+  getWeekStart,
+  isToday,
+} from '@/features/utils';
 import { useDaySelectionTransition, useToday } from '@/hooks';
 import { EmployeeScheduleResponse, getEmployeeSchedule } from '@/services';
-import { Button, Chevron, DayItem, Header, Screen } from '@/ui';
+import { Button, Chevron, Header, Screen } from '@/ui';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
-
-const fullWeek: DayItem[] = [
-  { key: 'sun', label: 'Su', timeRange: '7 AM - 3 PM' },
-  { key: 'mon', label: 'Mo', timeRange: '9 AM - 5 PM' },
-  { key: 'tue', label: 'Tu', timeRange: '9 AM - 5 PM' },
-  { key: 'wed', label: 'We', timeRange: '9 AM - 5 PM' },
-  { key: 'thur', label: 'Th', timeRange: '9 AM - 5 PM' },
-  { key: 'fri', label: 'Fr', timeRange: '6 PM - 2 AM' },
-  { key: 'sat', label: 'Sa', timeRange: '12 PM - 8 PM' },
-];
 
 export default function Schedule() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [scheduleInfo, setScheduleInfo] = useState<EmployeeScheduleResponse | null>(null);
 
-  const today = useToday();
-
   const { selectedDayKey, setSelectedDayKey, weekFadeStyle, detailFadeStyle } =
     useDaySelectionTransition();
   const selectedDay = scheduleInfo?.schedule.find((d) => d.key === selectedDayKey) ?? null;
+  const isDetailOpen = selectedDayKey !== null;
 
-  const handlePrevWeek = () => {};
-
-  const handleNextWeek = () => {};
-
-  const handlePrevDay = () => {};
-
-  const handleNextDay = () => {};
-
-  const handleFullSchedule = () => {};
+  const today = useToday();
+  const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(today));
 
   const viewerId = '1';
-  const startWeek = '2026-03-15';
   useEffect(() => {
     async function getSchedule() {
       try {
         setIsLoading(true);
         setError(null);
 
-        const request = await getEmployeeSchedule(viewerId, startWeek);
+        const request = await getEmployeeSchedule(viewerId, currentWeekStart);
         setScheduleInfo(request);
       } catch (err) {
         setError('Failed to retrieve schedule.');
@@ -56,7 +48,37 @@ export default function Schedule() {
       }
     }
     getSchedule();
-  }, [viewerId, startWeek]);
+  }, [viewerId, currentWeekStart]);
+
+  const handleFullSchedule = () => {};
+
+  const handlePreviousDay = () => {
+    if (!selectedDayKey) return;
+
+    if (selectedDayKey === 'Sun') {
+      setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek));
+      setSelectedDayKey('Sat');
+      return;
+    }
+
+    setSelectedDayKey(getPreviousDayKey(selectedDayKey));
+  };
+
+  const handleNextDay = () => {
+    if (!selectedDayKey) return;
+
+    if (selectedDayKey === 'Sat') {
+      setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek));
+      setSelectedDayKey('Sun');
+      return;
+    }
+
+    setSelectedDayKey(getNextDayKey(selectedDayKey));
+  };
+
+  const selectedDayIndex = getDayIndexFromKey(selectedDayKey);
+  const selectedDateObj = getDateFromWeekStartAndIndex(currentWeekStart, selectedDayIndex);
+  const unscheduledDateLabel = getMonthAndDayLabel(selectedDateObj.toLocaleDateString('en-CA'));
 
   return (
     <Screen insetTop>
@@ -66,11 +88,13 @@ export default function Schedule() {
         <View style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
           <Animated.View style={[{ flex: 1 }, weekFadeStyle]}>
             <ScheduleWeekView
-              weekLabel={scheduleInfo.weekLabel}
+              weekLabel={getWeekBoundsLabel(currentWeekStart)}
               employeeShifts={scheduleInfo.schedule}
               totalHours={scheduleInfo.totalHours}
-              onPreviousWeek={handlePrevWeek}
-              onNextWeek={handleNextWeek}
+              onPreviousWeek={() =>
+                setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek))
+              }
+              onNextWeek={() => setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek))}
               onDayPress={(dayKey) => setSelectedDayKey(dayKey)}
             />
 
@@ -81,21 +105,32 @@ export default function Schedule() {
             </View>
           </Animated.View>
 
-          {selectedDay && (
+          {isDetailOpen && (
             <Animated.View style={[StyleSheet.absoluteFillObject, styles.overlay, detailFadeStyle]}>
               <View style={styles.summaryContainer}>
                 <View style={styles.topRow}>
                   <Chevron direction="left" size={28} onPress={() => setSelectedDayKey(null)} />
                 </View>
                 <View style={styles.middleRow}>
-                  <ScheduleDaySummaryCard
-                    summary={selectedDay.summary}
-                    barColor={scheduleInfo.color}
-                    isToday={isToday(selectedDay.isoDate, today)}
-                    onNextDay={handleNextDay}
-                    onPreviousDay={handlePrevDay}
-                  />
+                  {selectedDay ? (
+                    <ScheduleDaySummaryCard
+                      summary={selectedDay.summary}
+                      dateLabel={getMonthAndDayLabel(selectedDay.isoDate)}
+                      barColor={scheduleInfo.color}
+                      isToday={isToday(selectedDay.isoDate, today)}
+                      onPreviousDay={handlePreviousDay}
+                      onNextDay={handleNextDay}
+                    />
+                  ) : (
+                    <UnscheduledDayCard
+                      dateLabel={unscheduledDateLabel}
+                      isToday={isToday(selectedDateObj.toLocaleDateString('en-CA'), today)}
+                      onPreviousDay={handlePreviousDay}
+                      onNextDay={handleNextDay}
+                    />
+                  )}
                 </View>
+
                 <View style={styles.bottomRow} />
               </View>
             </Animated.View>

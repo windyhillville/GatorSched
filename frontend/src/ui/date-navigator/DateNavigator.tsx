@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
-import { Chevron } from '../chevron';
+import { SkinnyChevron } from '../chevron';
 
 type DateNavigatorProps = {
   label: string;
@@ -21,9 +21,13 @@ export function DateNavigator({ label, subLabel, onPrevious, onNext }: DateNavig
   );
   return (
     <View style={styles.container}>
-      <Chevron direction="left" onPress={onPrevious} />
-      {header}
-      <Chevron direction="right" onPress={onNext} />
+      <View style={{ width: 80, alignItems: 'center' }}>
+        <SkinnyChevron direction="left" onPress={onPrevious} />
+      </View>
+      <View style={{ flex: 1, alignItems: 'center' }}>{header}</View>
+      <View style={{ width: 80, alignItems: 'center' }}>
+        <SkinnyChevron direction="right" onPress={onNext} />
+      </View>
     </View>
   );
 }
@@ -31,7 +35,7 @@ export function DateNavigator({ label, subLabel, onPrevious, onNext }: DateNavig
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    gap: 64,
+    // gap: 64,
     alignItems: 'center',
     justifyContent: 'center',
   },

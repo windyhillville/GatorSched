@@ -5,6 +5,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 type ScheduleDaySummaryCardProps = {
   summary: EmployeeShiftSummary;
+  dateLabel: string;
   barColor: string;
   isToday: boolean;
   onPreviousDay: () => void;
@@ -13,6 +14,7 @@ type ScheduleDaySummaryCardProps = {
 
 export function ScheduleDaySummaryCard({
   summary,
+  dateLabel,
   barColor,
   isToday,
   onPreviousDay,
@@ -23,7 +25,7 @@ export function ScheduleDaySummaryCard({
       {/* <Chevron direction="left" /> */}
 
       {/* <View style={styles.summaryContent}> */}
-      <DateNavigator label={summary.dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
+      <DateNavigator label={dateLabel} onPrevious={onPreviousDay} onNext={onNextDay} />
 
       <View style={[styles.cardContainer, { borderColor: Colors.buttonDefaultBorder }]}>
         <ShiftDurationBar
@@ -48,10 +50,10 @@ export function ScheduleDaySummaryCard({
 
       <View style={styles.buttonRow}>
         <View style={styles.buttonWrapper}>
-          <Button title="Swap Out" />
+          <Button title="Swap Out" disabled={true} />
         </View>
         <View style={styles.buttonWrapper}>
-          <Button title="Request Call Out" />
+          <Button title="Request Call Out" disabled={true} />
         </View>
       </View>
       {/* </View> */}

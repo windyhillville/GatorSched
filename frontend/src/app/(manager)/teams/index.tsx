@@ -1,4 +1,13 @@
 import { TeamsView } from '@/features';
+import {
+  // formatDisplayDate,
+  // getDateFromWeekStartAndIndex,
+  // getNextWeekStart,
+  // getPreviousWeekStart,
+  // getWeekBoundsLabel,
+  getWeekStart,
+} from '@/features/utils';
+import { useToday } from '@/hooks';
 import { getRoster, TeamGroup } from '@/services';
 import { Header, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
@@ -11,7 +20,9 @@ export default function Teams() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const date = '2026-03-15';
+  const today = useToday();
+  const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(today));
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -21,7 +32,7 @@ export default function Teams() {
           setIsLoading(true);
           setError(null);
 
-          const data = await getRoster(date);
+          const data = await getRoster(currentWeekStart);
 
           if (isActive) {
             setGroups(data);
@@ -47,7 +58,7 @@ export default function Teams() {
       return () => {
         isActive = false;
       };
-    }, [date]),
+    }, [currentWeekStart]),
   );
 
   return (

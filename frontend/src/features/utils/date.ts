@@ -1,3 +1,5 @@
+const DAY_KEYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 export function getShortDayLabelFromIsoDate(isoDate: string): string {
   const date = new Date(`${isoDate}T00:00:00`);
   const labels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
@@ -64,6 +66,13 @@ export function getWeekBoundsLabel(week: string | Date) {
   return `${startOfWeek.toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })}`;
 }
 
+export function getMonthAndDayLabel(currentDay: string | Date) {
+  const currentDayFormatted =
+    typeof currentDay === 'string' ? new Date(`${currentDay}T00:00:00`) : new Date(currentDay);
+
+  return `${currentDayFormatted.toLocaleDateString('en-CA', { month: 'long', day: 'numeric' })}`;
+}
+
 export function getWeekStart(currentDate: string | Date): string {
   const date =
     typeof currentDate === 'string' ? new Date(`${currentDate}T00:00:00`) : new Date(currentDate);
@@ -89,4 +98,37 @@ export function getPreviousWeekStart(currentWeek: string | Date): string {
   previousWeek.setDate(previousWeek.getDate() - 7);
 
   return previousWeek.toLocaleDateString('en-CA');
+}
+
+export function getPreviousDay(currentDay: string | Date) {
+  const previousDay =
+    typeof currentDay === 'string' ? new Date(`${currentDay}T00:00:00`) : new Date(currentDay);
+
+  previousDay.setDate(previousDay.getDate() - 1);
+
+  return previousDay.toLocaleDateString('en-CA');
+}
+
+export function getNextDay(currentDay: string | Date) {
+  const previousDay =
+    typeof currentDay === 'string' ? new Date(`${currentDay}T00:00:00`) : new Date(currentDay);
+
+  previousDay.setDate(previousDay.getDate() + 1);
+
+  return previousDay.toLocaleDateString('en-CA');
+}
+
+export function getPreviousDayKey(dayKey: string) {
+  const index = DAY_KEYS.indexOf(dayKey);
+  return DAY_KEYS[Math.max(0, index - 1)];
+}
+
+export function getNextDayKey(dayKey: string) {
+  const index = DAY_KEYS.indexOf(dayKey);
+  return DAY_KEYS[Math.min(DAY_KEYS.length - 1, index + 1)];
+}
+
+export function getDayIndexFromKey(dayKey: string | null): number {
+  const index = DAY_KEYS.indexOf(dayKey ?? '');
+  return index >= 0 ? index : 0;
 }

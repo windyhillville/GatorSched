@@ -1,5 +1,14 @@
 import { ShiftEditForm, ShiftInformation, ShiftsView } from '@/features';
 import {
+  // formatDisplayDate,
+  // getDateFromWeekStartAndIndex,
+  getNextWeekStart,
+  getPreviousWeekStart,
+  getWeekBoundsLabel,
+  getWeekStart,
+} from '@/features/utils';
+import { useToday } from '@/hooks';
+import {
   createShift,
   editShift,
   EditShiftRequest,
@@ -7,10 +16,10 @@ import {
   RoleInfo,
   ShiftsGroup,
 } from '@/services';
-import { Header, Screen } from '@/ui';
+import { DateNavigator, Header, PlusSign, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 export default function Shifts() {
   const [isModalPressed, setIsModalPressed] = useState(false);
@@ -19,11 +28,14 @@ export default function Shifts() {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
   const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
   const [selectedShiftId, setSelectedShiftId] = useState<string | undefined>();
-  const [createRole, setCreateRole] = useState<RoleInfo | null>(null);
+  const [isCreateMode, setIsCreateMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const date = '2026-03-15';
+  const today = useToday();
+  const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(today));
+
+  // const date = '2026-03-15';
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -33,7 +45,7 @@ export default function Shifts() {
           setIsLoading(true);
           setError(null);
 
-          const data = await getShifts(date);
+          const data = await getShifts(currentWeekStart);
 
           if (isActive) {
             setGroups(data.groups);
@@ -46,7 +58,7 @@ export default function Shifts() {
           }
         } catch (err) {
           if (isActive) {
-            setError('Failed to load roster');
+            setError('Failed to load shifts');
             console.error(err);
           }
         } finally {
@@ -61,7 +73,7 @@ export default function Shifts() {
       return () => {
         isActive = false; // Prevents state updates after navigating away
       };
-    }, [date]), // Refetches if the user changes the date while on the screen
+    }, [currentWeekStart]), // Refetches if the user changes the date while on the screen
   );
 
   async function handleSaveAllChanges(payload: EditShiftRequest, shiftId: string) {
@@ -75,7 +87,7 @@ export default function Shifts() {
         await createShift(payload);
       }
 
-      const data = await getShifts(date);
+      const data = await getShifts(currentWeekStart);
       setGroups(data.groups);
       setRoles(data.roles);
 
@@ -91,9 +103,9 @@ export default function Shifts() {
 
       setIsModalPressed(false);
       setSelectedShiftId(undefined);
-      setCreateRole(null);
+      setIsCreateMode(false);
     } catch (err) {
-      setError('Failed to edit shift');
+      setError(selectedShiftId ? 'Failed to edit shift' : 'Failed to create shift');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -101,6 +113,7 @@ export default function Shifts() {
   }
 
   const rawShift = groups.flatMap((g) => g.shifts).find((s) => s.id === selectedShiftId);
+  const defaultRole = roles[0] ?? null;
 
   const selectedShiftInfo: ShiftInformation | null = rawShift
     ? {
@@ -117,27 +130,49 @@ export default function Shifts() {
       }
     : null;
 
-  const createShiftInfo: ShiftInformation | null = createRole
-    ? {
-        id: 'new-shift',
-        dayKey: 'Sun',
-        shortDayLabel: 'Su',
-        longDayLabel: 'Sunday',
-        startTime: { hour: '09', minute: '00', period: 'AM' },
-        endTime: { hour: '05', minute: '00', period: 'PM' },
-        staffingRequirement: '1',
-        roleId: createRole.id,
-        roleName: createRole.name,
-        roleColor: createRole.color,
-      }
-    : null;
+  const createShiftInfo: ShiftInformation | null =
+    isCreateMode && defaultRole
+      ? {
+          id: 'new-shift',
+          dayKey: 'Sun',
+          shortDayLabel: 'Su',
+          longDayLabel: 'Sunday',
+          startTime: { hour: '09', minute: '00', period: 'AM' },
+          endTime: { hour: '05', minute: '00', period: 'PM' },
+          staffingRequirement: '1',
+          roleId: defaultRole.id,
+          roleName: defaultRole.name,
+          roleColor: defaultRole.color,
+        }
+      : null;
 
   const modalShiftInfo = selectedShiftInfo ?? createShiftInfo;
 
   return (
     <Screen insetTop>
-      <Header title={'Shifts'} />
-      {/* VIEW IS ONLY FOR DEBUGGING */}
+      <Header
+        title={'Shifts'}
+        right={
+          <View style={{ paddingRight: 12 }}>
+            <Pressable
+              onPress={() => {
+                setSelectedShiftId(undefined);
+                setIsCreateMode(true);
+                setIsModalPressed(true);
+              }}
+            >
+              <PlusSign size={29} />
+            </Pressable>
+          </View>
+        }
+      />
+      <View style={{ paddingTop: 32 }}>
+        <DateNavigator
+          label={getWeekBoundsLabel(currentWeekStart)}
+          onPrevious={() => setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek))}
+          onNext={() => setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek))}
+        />
+      </View>
       <ShiftsView
         groups={groups}
         expandedSections={expandedSections}
@@ -155,30 +190,23 @@ export default function Shifts() {
           }))
         }
         onEditShift={(shiftId: string) => {
+          setIsCreateMode(false);
           setSelectedShiftId(shiftId);
-          setIsModalPressed(true);
-        }}
-        onAddShift={(roleName: string) => {
-          const matchedRole = roles.find((role) => role.name === roleName);
-          if (!matchedRole) return;
-
-          setSelectedShiftId(undefined);
-          setCreateRole(matchedRole);
           setIsModalPressed(true);
         }}
       />
       {isModalPressed && modalShiftInfo && (
         <ShiftEditForm
-          key={selectedShiftId ?? `create-${createRole?.id ?? 'none'}`}
+          key={selectedShiftId ?? (isCreateMode ? 'create' : 'none')}
           rolesInfo={roles}
           editButtonPressed={isModalPressed}
           shiftInfo={modalShiftInfo}
-          targetDate={date}
+          targetDate={currentWeekStart}
           onSaveAllChanges={handleSaveAllChanges}
           onExit={() => {
             setIsModalPressed(false);
             setSelectedShiftId(undefined);
-            setCreateRole(null);
+            setIsCreateMode(false);
           }}
         />
       )}
@@ -191,22 +219,4 @@ const styles = StyleSheet.create({
     marginTop: 24,
     gap: 4,
   },
-  // container: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
-  // button: {
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   height: 80,
-  //   width: 250,
-  //   backgroundColor: 'lightblue',
-  //   marginBottom: 32,
-  // },
-  // innerModalContainer: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  // },
 });
