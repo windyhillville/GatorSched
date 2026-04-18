@@ -87,3 +87,11 @@ def cashier_role(db_session):
         db_session.refresh(role)
 
     return role.id
+
+@pytest.fixture(autouse=True)
+def cleanup_db(db_session):
+    yield
+    # Cleans up all tables after each test
+    for table in reversed(Base.metadata.sorted_tables):
+        db_session.execute(table.delete())
+    db_session.commit()
