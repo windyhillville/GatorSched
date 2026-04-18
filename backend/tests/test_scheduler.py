@@ -1,13 +1,13 @@
 from datetime import date, time
 
 from gatorsched_api.models.availability import Availability
-from gatorsched_api.models.employee import Employee, AccessLevel
+from gatorsched_api.models.employee import AccessLevel, Employee
 from gatorsched_api.models.role import Role
 from gatorsched_api.models.shift import Shift
 from gatorsched_api.services.scheduler.greedy import generate_schedule_for_week
 
-
 # Helper functions
+
 
 def _create_role(db, name):
     role = Role(name=name, color="#000000", description=f"{name} role")
@@ -15,6 +15,7 @@ def _create_role(db, name):
     db.commit()
     db.refresh(role)
     return role
+
 
 def _create_employee(db, name, email, role_id, max_weekly_hours=None):
     employee = Employee(
@@ -31,6 +32,7 @@ def _create_employee(db, name, email, role_id, max_weekly_hours=None):
     db.refresh(employee)
     return employee
 
+
 def _create_availability(db, employee_id, day_of_week, start, end):
     availability = Availability(
         employee_id=employee_id,
@@ -40,6 +42,7 @@ def _create_availability(db, employee_id, day_of_week, start, end):
     )
     db.add(availability)
     db.commit()
+
 
 def _create_shift(db, shift_date, start, end, role_id, min_staff=1):
     shift = Shift(
@@ -54,7 +57,8 @@ def _create_shift(db, shift_date, start, end, role_id, min_staff=1):
     db.refresh(shift)
     return shift
 
-def test_scheduler_assigns_eligible_employee (db_session):
+
+def test_scheduler_assigns_eligible_employee(db_session):
     # Employees with matching role and availability should be assigned
     role = _create_role(db_session, "TestRole1")
     employee = _create_employee(db_session, "Bob", "bob3@test.com", role.id)
@@ -62,11 +66,12 @@ def test_scheduler_assigns_eligible_employee (db_session):
     _create_availability(db_session, employee.id, 6, time(6, 0), time(14, 0))
     _create_shift(db_session, date(2026, 4, 12), time(6, 0), time(13, 0), role.id)
 
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     assert len(result.days) == 1
     assert len(result.days[0].groups) == 1
     assert result.days[0].groups[0].shifts[0].employeeName == "Bob"
+
 
 def test_scheduler_skips_wrong_role(db_session):
     # Employee should not be assigned to shifts for a different role
@@ -76,9 +81,10 @@ def test_scheduler_skips_wrong_role(db_session):
     _create_availability(db_session, employee.id, 6, time(6, 0), time(14, 0))
     _create_shift(db_session, date(2026, 4, 12), time(6, 0), time(14, 0), role_b.id)
 
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     assert len(result.days) == 0
+
 
 def test_scheduler_skips_insufficient_availability(db_session):
     # Employees whose availability doesn't fully cover the shift should be skipped
@@ -88,9 +94,10 @@ def test_scheduler_skips_insufficient_availability(db_session):
     _create_availability(db_session, employee.id, 6, time(9, 0), time(12, 0))
     _create_shift(db_session, date(2026, 4, 12), time(9, 0), time(17, 0), role.id)
 
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     assert len(result.days) == 0
+
 
 def test_scheduler_respects_max_weekly_hours(db_session):
     # Employees should not be scheduled beyond their max weekly hours
@@ -109,15 +116,10 @@ def test_scheduler_respects_max_weekly_hours(db_session):
     _create_shift(db_session, date(2026, 4, 12), time(9, 0), time(17, 0), role.id)
     _create_shift(db_session, date(2026, 4, 13), time(9, 0), time(17, 0), role.id)
 
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     # Both shifts should be filled
-    shifts = [
-        s
-        for day in result.days
-        for group in day.groups
-        for s in group.shifts
-    ]
+    shifts = [s for day in result.days for group in day.groups for s in group.shifts]
     assert len(shifts) == 2
 
     craig_shifts = [s for s in shifts if s.employeeName == "Craig"]
@@ -125,6 +127,7 @@ def test_scheduler_respects_max_weekly_hours(db_session):
 
     ryan_shifts = [s for s in shifts if s.employeeName == "Ryan"]
     assert len(ryan_shifts) == 1
+
 
 def test_scheduler_no_multiple_shifts_per_day(db_session):
     # An employee should not be assigned to more than one shift a day
@@ -136,7 +139,7 @@ def test_scheduler_no_multiple_shifts_per_day(db_session):
     _create_shift(db_session, date(2026, 4, 12), time(7, 0), time(12, 0), role.id)
     _create_shift(db_session, date(2026, 4, 12), time(14, 0), time(20, 0), role.id)
 
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     shifts = [
         s
@@ -147,6 +150,7 @@ def test_scheduler_no_multiple_shifts_per_day(db_session):
     ]
     assert len(shifts) == 1
 
+
 def test_scheduler_delete_and_replace(db_session):
     # Running the scheduler after a schedule has already been made should replace old assignments, not duplicate them
     role = _create_role(db_session, "TestRole5")
@@ -155,8 +159,8 @@ def test_scheduler_delete_and_replace(db_session):
     _create_shift(db_session, date(2026, 4, 12), time(6, 0), time(13, 0), role.id)
 
     # Run scheduler twice
-    generate_schedule_for_week(db_session, date(2026, 4,12))
-    result = generate_schedule_for_week(db_session, date(2026, 4,12))
+    generate_schedule_for_week(db_session, date(2026, 4, 12))
+    result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
     shifts = sum(
         len(shift_list)
@@ -167,11 +171,13 @@ def test_scheduler_delete_and_replace(db_session):
 
     assert shifts == 1
 
+
 def test_scheduler_empty_week(db_session):
     # A week with no shifts should return an empty response
     result = generate_schedule_for_week(db_session, date(2050, 1, 1))
 
     assert len(result.days) == 0
+
 
 def test_scheduler_balances_hours_across_employees(db_session):
     # The scheduler should distribute shifts fairly based on hours assigned
@@ -191,12 +197,7 @@ def test_scheduler_balances_hours_across_employees(db_session):
 
     result = generate_schedule_for_week(db_session, date(2026, 4, 12))
 
-    names = [
-        s.employeeName
-        for day in result.days
-        for group in day.groups
-        for s in group.shifts
-    ]
+    names = [s.employeeName for day in result.days for group in day.groups for s in group.shifts]
 
     assert "Hank" in names
     assert "Walter" in names
