@@ -41,6 +41,8 @@ def create_test_db() -> Generator[None, None, None]:
     from gatorsched_api.models.schedule_assignment import ScheduleAssignment  # noqa: F401
     from gatorsched_api.models.shift import Shift  # noqa: F401
     from gatorsched_api.models.swap_request import SwapRequest  # noqa: F401
+    from gatorsched_api.models.callout_request import CallOutRequest  # noqa: F401
+    from gatorsched_api.models.pickup_request import PickUpRequest  # noqa: F401
 
     Base.metadata.create_all(bind=engine)
     yield
@@ -85,3 +87,12 @@ def cashier_role(db_session):
         db_session.refresh(role)
 
     return role.id
+
+
+@pytest.fixture(autouse=True)
+def cleanup_db(db_session):
+    yield
+    # Cleans up all tables after each test
+    for table in reversed(Base.metadata.sorted_tables):
+        db_session.execute(table.delete())
+    db_session.commit()

@@ -87,6 +87,7 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
         for shift in shifts:
             if shift.date != current_date:
                 previous_shift.clear()
+                assigned_today_set: set[int] = set()
                 current_date = shift.date
 
             shift_hours = get_shift_duration_hours(shift.start_time, shift.end_time)
@@ -114,6 +115,9 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
             for employee in eligible_employees:
                 if assigned_count >= shift.min_staff_req:
                     break
+
+                if employee.id in assigned_today_set:
+                    continue
 
                 if employee.max_weekly_hours is not None:
                     if hours_assigned.get(employee.id, 0) + shift_hours > employee.max_weekly_hours:
@@ -152,6 +156,7 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
                 previous_shift[employee.id] = shift.end_time
                 hours_assigned[employee.id] = hours_assigned.get(employee.id, 0) + shift_hours
                 assigned_count += 1
+                assigned_today_set.add(employee.id)
 
                 print(f"Assigned {employee.name}")
 
