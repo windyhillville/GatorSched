@@ -99,7 +99,7 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
                 for e in employees
                 if e.role == shift.role
                 and any(
-                    a.day_of_week == shift.date.weekday()
+                    a.day_of_week == ((shift.date.weekday() + 1) % 7)
                     and a.start_time <= shift.start_time
                     and a.end_time >= shift.end_time
                     for a in e.availabilities
@@ -165,12 +165,12 @@ def generate_schedule_for_week(db: Session, week_start: date) -> GenerateSchedul
         db.rollback()
         raise
 
-    DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 
     days = [
         DaySchedule(
             date=d,
-            dayLabel=DAYS[d.weekday()],
+            dayLabel=DAYS[(d.weekday() + 1) % 7],
             groups=[
                 RoleGroup(role=role_name, shifts=shift_list)
                 for role_name, shift_list in roles.items()

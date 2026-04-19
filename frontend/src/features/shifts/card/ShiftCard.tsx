@@ -18,6 +18,7 @@ type ShiftCardProps = {
   onToggle?: () => void;
   onTapDelete?: (id: string) => void;
   onEditShift: (shiftId: string) => void;
+  onManageAssignment: (shiftId: string) => void;
 };
 
 export function ShiftCard({
@@ -32,6 +33,7 @@ export function ShiftCard({
   onToggle,
   onTapDelete,
   onEditShift,
+  onManageAssignment,
 }: ShiftCardProps) {
   const { setMeasuredDetailHeight, detailStyle } = useCardSelectionTransition(expanded);
   return (
@@ -53,6 +55,7 @@ export function ShiftCard({
           avatars={assignedEmployees}
           staffingInfo={staffingInfo}
           onEditShift={onEditShift}
+          onManageAssignment={onManageAssignment}
         />
       </Animated.View>
 
@@ -66,6 +69,7 @@ export function ShiftCard({
           avatars={assignedEmployees}
           staffingInfo={staffingInfo}
           onEditShift={onEditShift}
+          onManageAssignment={onManageAssignment}
         />
       </View>
     </Card>

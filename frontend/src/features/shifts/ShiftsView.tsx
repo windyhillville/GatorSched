@@ -10,6 +10,7 @@ type ShiftsViewProps = {
   onToggleSection: (role: string) => void;
   onToggleCard: (id: string) => void;
   onEditShift: (shiftId: string) => void;
+  onManageAssignment: (shiftId: string) => void;
 };
 
 export function ShiftsView({
@@ -19,6 +20,7 @@ export function ShiftsView({
   onToggleSection,
   onToggleCard,
   onEditShift,
+  onManageAssignment,
 }: ShiftsViewProps) {
   return (
     <View style={styles.container}>
@@ -56,6 +58,7 @@ export function ShiftsView({
                   }}
                   onToggle={() => onToggleCard(shift.id)}
                   onEditShift={onEditShift}
+                  onManageAssignment={onManageAssignment}
                 />
               ))}
             </View>
