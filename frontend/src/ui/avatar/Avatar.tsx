@@ -1,8 +1,8 @@
 import { Colors, SIZES } from '@/styles';
 import { Image } from 'expo-image';
-import { StyleProp, StyleSheet, Text, TextStyle, View } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
-type AvatarSize = 'verySmall' | 'small' | 'medium' | 'large';
+export type AvatarSize = 'xxSmall' | 'xSmall' | 'small' | 'medium' | 'large';
 
 type AvatarProps = {
   img: string | null;
@@ -11,11 +11,13 @@ type AvatarProps = {
   size?: AvatarSize;
   color: string | null;
   borderColor?: string;
+  style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
 };
 
 const sizeMap = {
-  verySmall: SIZES.avatar.verySmall,
+  xxSmall: SIZES.avatar.xxSmall,
+  xSmall: SIZES.avatar.xSmall,
   small: SIZES.avatar.small,
   medium: SIZES.avatar.medium,
   large: SIZES.avatar.large,
@@ -28,6 +30,7 @@ export function Avatar({
   size, // default size
   color,
   borderColor,
+  style,
   textStyle,
 }: AvatarProps) {
   const resolvedSize = sizeMap[size ?? 'medium'];
@@ -70,6 +73,7 @@ export function Avatar({
           borderWidth: borderColor ? 1 : 0,
           borderColor,
         },
+        style,
       ]}
     >
       <Text style={[{ fontSize: resolvedSize * 0.4 }, textStyle]}>{content}</Text>

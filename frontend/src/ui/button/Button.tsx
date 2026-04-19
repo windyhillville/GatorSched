@@ -66,7 +66,7 @@ export function Button({
                   : 'rgba(227, 51, 51, 0.20)',
             foreground: true,
           }}
-          style={styles.pressable}
+          style={[styles.pressable]}
           {...props}
         >
           <Text style={[styles.text, textStyle]}>{title}</Text>

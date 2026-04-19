@@ -10,7 +10,8 @@ import {
 import { useToday } from '@/hooks';
 import { DaySchedule, generateSchedule, renderSchedule, RoleGroup } from '@/services';
 import { Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
 export default function Scheduler() {
@@ -36,27 +37,34 @@ export default function Scheduler() {
     setExpandedSections(initialExpandedState);
   }
 
-  useEffect(() => {
-    async function fetchSchedule() {
-      try {
-        setIsLoading(true);
-        setError(null);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      async function fetchSchedule() {
+        try {
+          setIsLoading(true);
+          setError(null);
 
-        const data = await renderSchedule(currentWeekStart);
-        setWeekDays(data.days);
+          const data = await renderSchedule(currentWeekStart);
+          setWeekDays(data.days);
 
-        const safeIndex = currentDayIndex < data.days.length ? currentDayIndex : 0;
-        setCurrentDayIndex(safeIndex);
-        applyDay(data.days[safeIndex] ?? null);
-      } catch (err) {
-        setError('Failed to load schedule.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+          const safeIndex = currentDayIndex < data.days.length ? currentDayIndex : 0;
+          setCurrentDayIndex(safeIndex);
+          applyDay(data.days[safeIndex] ?? null);
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to load schedule.');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
       }
-    }
-    fetchSchedule();
-  }, [currentWeekStart]);
+      fetchSchedule();
+    }, [currentWeekStart]),
+  );
 
   async function handleAutoSchedule() {
     try {

@@ -14,9 +14,16 @@ type ShiftDetailsProps = {
   avatars: AvatarOption[];
   staffingInfo: StaffingInformation;
   onEditShift: (shiftId: string) => void;
+  onManageAssignment: (shiftId: string) => void;
 };
 
-export function ShiftDetails({ shiftId, avatars, staffingInfo, onEditShift }: ShiftDetailsProps) {
+export function ShiftDetails({
+  shiftId,
+  avatars,
+  staffingInfo,
+  onEditShift,
+  onManageAssignment,
+}: ShiftDetailsProps) {
   const isFullyStaffed = staffingInfo.numberOfAssignments >= staffingInfo.staffingRequirement;
 
   const isUnassigned = staffingInfo.numberOfAssignments === 0;
@@ -76,7 +83,11 @@ export function ShiftDetails({ shiftId, avatars, staffingInfo, onEditShift }: Sh
       >
         <View style={styles.buttonContainer}>
           <Button title="Edit Shift" shape="rounded" onPress={() => onEditShift(shiftId)} />
-          <Button title="Manage Assignment" shape="rounded" />
+          <Button
+            title="Manage Assignment"
+            shape="rounded"
+            onPress={() => onManageAssignment(shiftId)}
+          />
         </View>
       </View>
     </View>

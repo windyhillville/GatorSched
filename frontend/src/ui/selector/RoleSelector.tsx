@@ -53,7 +53,7 @@ export function RoleSelector({
             width: 76,
             height: 76,
             borderRadius: 38,
-            backgroundColor: selected ? `${role.color}20` : 'transparent', // 👈 subtle tint
+            backgroundColor: selected ? `${role.color}20` : 'transparent',
             borderWidth: selected ? 3 : 1,
             borderColor: role.color,
           }}
@@ -62,7 +62,7 @@ export function RoleSelector({
             label={role.name}
             color={'#ffffff'}
             borderColor={role.color}
-            size={'verySmall'}
+            size={'xSmall'}
             textStyle={styles.text}
             img={null}
           />

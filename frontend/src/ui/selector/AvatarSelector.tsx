@@ -1,5 +1,5 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import { Avatar } from '../avatar';
+import { Avatar, AvatarSize } from '../avatar';
 import { SelectionRow } from './SelectionRow';
 
 export type AvatarOption = {
@@ -15,8 +15,10 @@ type AvatarSelectorProps = {
   selectedId?: string;
   selectedIds?: Record<string, boolean>;
   disabled?: boolean;
+  size?: AvatarSize;
   onChangeSelectedId?: (id: string) => void;
   onChangeSelectedIds?: (ids: Record<string, boolean>) => void;
+  style?: StyleProp<ViewStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
 };
 
@@ -26,8 +28,10 @@ export function AvatarSelector({
   selectedId,
   selectedIds = {},
   disabled = false,
+  size = 'xxSmall',
   onChangeSelectedId,
   onChangeSelectedIds,
+  style,
   contentContainerStyle,
 }: AvatarSelectorProps) {
   return (
@@ -62,16 +66,25 @@ export function AvatarSelector({
               width: 64,
               height: 64,
               borderRadius: 32,
-              backgroundColor: selected ? '#4A7DFF' : avatar.color, // '#E5E5E7'
+              backgroundColor: selected ? avatar.color : disabled ? avatar.color : 'transparent', // '#E5E5E7'
+              borderWidth: disabled ? 0 : 2,
+              borderColor: avatar.color,
             }}
           >
-            <Avatar name={avatar.name} color={avatar.color} img={null} size={'verySmall'} />
+            <Avatar
+              name={avatar.name}
+              color={disabled ? avatar.color : '#ffffff'}
+              img={null}
+              size={size}
+              borderColor={disabled ? undefined : avatar.color}
+              style={style}
+            />
           </View>
           <Text>{avatar.name}</Text>
         </View>
       )}
       disabled={disabled}
-      contentContainerStyle={contentContainerStyle}
+      contentContainerStyle={[styles.containerStyle, contentContainerStyle]}
     />
   );
 }
@@ -80,6 +93,10 @@ const styles = StyleSheet.create({
   avatarIconContainer: {
     alignItems: 'center',
     gap: 12,
+  },
+  containerStyle: {
+    width: '98%',
+    justifyContent: 'center',
   },
   text: {},
 });

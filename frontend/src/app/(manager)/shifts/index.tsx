@@ -1,4 +1,4 @@
-import { ShiftEditForm, ShiftInformation, ShiftsView } from '@/features';
+import { ManageAssignmentForm, ShiftEditForm, ShiftInformation, ShiftsView } from '@/features';
 import {
   // formatDisplayDate,
   // getDateFromWeekStartAndIndex,
@@ -13,16 +13,19 @@ import {
   editShift,
   EditShiftRequest,
   getShifts,
+  manageAssignment,
+  ManageAssignmentRequest,
   RoleInfo,
   ShiftsGroup,
 } from '@/services';
 import { DateNavigator, Header, PlusSign, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native';
 
 export default function Shifts() {
-  const [isModalPressed, setIsModalPressed] = useState(false);
+  const [isEditShiftModalPressed, setIsEditShiftModalPressed] = useState(false);
+  const [isManageAssignmentModalPressed, setIsManageAssignmentModalPressed] = useState(false);
   const [groups, setGroups] = useState<ShiftsGroup[]>([]);
   const [roles, setRoles] = useState<RoleInfo[]>([]);
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
@@ -76,12 +79,12 @@ export default function Shifts() {
     }, [currentWeekStart]), // Refetches if the user changes the date while on the screen
   );
 
-  async function handleSaveAllChanges(payload: EditShiftRequest, shiftId: string) {
+  async function handleSaveShiftChanges(payload: EditShiftRequest, shiftId: string) {
     try {
       setIsLoading(true);
       setError(null);
 
-      if (selectedShiftId) {
+      if (selectedShiftId && isEditShiftModalPressed) {
         await editShift(payload, shiftId);
       } else {
         await createShift(payload);
@@ -101,11 +104,45 @@ export default function Shifts() {
         [shiftId]: false,
       }));
 
-      setIsModalPressed(false);
+      setIsEditShiftModalPressed(false);
+      setIsManageAssignmentModalPressed(false);
       setSelectedShiftId(undefined);
       setIsCreateMode(false);
     } catch (err) {
       setError(selectedShiftId ? 'Failed to edit shift' : 'Failed to create shift');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleSaveAssignmentChanges(payload: ManageAssignmentRequest, shiftId: string) {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      await manageAssignment(payload, shiftId);
+
+      const data = await getShifts(currentWeekStart);
+      setGroups(data.groups);
+      setRoles(data.roles);
+
+      const initialExpandedSections = Object.fromEntries(
+        data.groups.map((group) => [group.role, true]),
+      );
+      setExpandedSections(initialExpandedSections);
+
+      setExpandedCards((prev) => ({
+        ...prev,
+        [shiftId]: false,
+      }));
+
+      setIsEditShiftModalPressed(false);
+      setIsManageAssignmentModalPressed(false);
+      setSelectedShiftId(undefined);
+      setIsCreateMode(false);
+    } catch (err) {
+      setError('Failed to edit assignment');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -146,6 +183,11 @@ export default function Shifts() {
         }
       : null;
 
+  const manageAssignmentInfo = rawShift && {
+    assignedEmployees: rawShift.assignedEmployees,
+    availableEmployees: rawShift.availableEmployees,
+  };
+
   const modalShiftInfo = selectedShiftInfo ?? createShiftInfo;
 
   return (
@@ -158,7 +200,7 @@ export default function Shifts() {
               onPress={() => {
                 setSelectedShiftId(undefined);
                 setIsCreateMode(true);
-                setIsModalPressed(true);
+                setIsEditShiftModalPressed(true);
               }}
             >
               <PlusSign size={29} />
@@ -166,47 +208,78 @@ export default function Shifts() {
           </View>
         }
       />
-      <View style={{ paddingTop: 32 }}>
-        <DateNavigator
-          label={getWeekBoundsLabel(currentWeekStart)}
-          onPrevious={() => setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek))}
-          onNext={() => setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek))}
-        />
-      </View>
-      <ShiftsView
-        groups={groups}
-        expandedSections={expandedSections}
-        expandedCards={expandedCards}
-        onToggleSection={(role) =>
-          setExpandedSections((prev) => ({
-            ...prev,
-            [role]: !(prev[role] ?? false),
-          }))
-        }
-        onToggleCard={(id) =>
-          setExpandedCards((prev) => ({
-            ...prev,
-            [id]: !(prev[id] ?? false),
-          }))
-        }
-        onEditShift={(shiftId: string) => {
-          setIsCreateMode(false);
-          setSelectedShiftId(shiftId);
-          setIsModalPressed(true);
-        }}
-      />
-      {isModalPressed && modalShiftInfo && (
+      {isLoading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size={36} />
+        </View>
+      ) : (
+        <>
+          <View style={{ paddingTop: 32 }}>
+            <DateNavigator
+              label={getWeekBoundsLabel(currentWeekStart)}
+              onPrevious={() => setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek))}
+              onNext={() => setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek))}
+            />
+          </View>
+          <ShiftsView
+            groups={groups}
+            expandedSections={expandedSections}
+            expandedCards={expandedCards}
+            onToggleSection={(role) =>
+              setExpandedSections((prev) => ({
+                ...prev,
+                [role]: !(prev[role] ?? false),
+              }))
+            }
+            onToggleCard={(id) =>
+              setExpandedCards((prev) => ({
+                ...prev,
+                [id]: !(prev[id] ?? false),
+              }))
+            }
+            onEditShift={(shiftId: string) => {
+              setIsCreateMode(false);
+              setSelectedShiftId(shiftId);
+              setIsManageAssignmentModalPressed(false);
+              setIsEditShiftModalPressed(true);
+            }}
+            onManageAssignment={(shiftId: string) => {
+              setIsCreateMode(false);
+              setSelectedShiftId(shiftId);
+              setIsEditShiftModalPressed(false);
+              setIsManageAssignmentModalPressed(true);
+            }}
+          />
+        </>
+      )}
+
+      {isEditShiftModalPressed && modalShiftInfo && (
         <ShiftEditForm
           key={selectedShiftId ?? (isCreateMode ? 'create' : 'none')}
           rolesInfo={roles}
-          editButtonPressed={isModalPressed}
+          editButtonPressed={isEditShiftModalPressed}
           shiftInfo={modalShiftInfo}
           targetDate={currentWeekStart}
-          onSaveAllChanges={handleSaveAllChanges}
+          isCreatingShift={isCreateMode}
+          onSaveShift={handleSaveShiftChanges}
           onExit={() => {
-            setIsModalPressed(false);
+            setIsEditShiftModalPressed(false);
             setSelectedShiftId(undefined);
             setIsCreateMode(false);
+          }}
+        />
+      )}
+
+      {isManageAssignmentModalPressed && manageAssignmentInfo && (
+        <ManageAssignmentForm
+          assignedEmployees={manageAssignmentInfo.assignedEmployees}
+          availableEmployees={manageAssignmentInfo.availableEmployees}
+          manageAssignmentPressed={isManageAssignmentModalPressed}
+          selectedShiftId={selectedShiftId}
+          onSaveAssignment={handleSaveAssignmentChanges}
+          onExit={() => {
+            setIsManageAssignmentModalPressed(false);
+            setSelectedShiftId(undefined);
           }}
         />
       )}

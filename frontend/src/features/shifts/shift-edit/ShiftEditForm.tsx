@@ -19,7 +19,8 @@ type ShiftEditFormProps = {
   rolesInfo: RoleInfo[];
   editButtonPressed: boolean;
   targetDate: string;
-  onSaveAllChanges: (payload: EditShiftRequest, shiftId: string) => Promise<void>;
+  isCreatingShift: boolean;
+  onSaveShift: (payload: EditShiftRequest, shiftId: string) => Promise<void>;
   onExit: () => void;
 };
 
@@ -28,7 +29,8 @@ export function ShiftEditForm({
   rolesInfo,
   editButtonPressed,
   targetDate,
-  onSaveAllChanges,
+  isCreatingShift,
+  onSaveShift,
   onExit,
 }: ShiftEditFormProps) {
   // const [isModalPressed, setIsModalPressed] = useState(false);
@@ -57,7 +59,7 @@ export function ShiftEditForm({
     }
 
     const computedDate = getDateFromDayKey(targetDate, selectedDayKey);
-    onSaveAllChanges(
+    onSaveShift(
       {
         date: computedDate,
         startTime: {
@@ -84,7 +86,7 @@ export function ShiftEditForm({
           <ExitButton size={20} onExit={onExit} />
         </View>
       </View>
-      <Header title="What would you like to change?" type={'small'} />
+      <Header title={isCreatingShift ? 'Create Shift' : 'Edit Shift'} type={'small'} />
       <ShiftModalNavigator onSelectView={(icon) => setActiveView(icon)} selectedIcon={activeView} />
 
       <View style={styles.content}>
