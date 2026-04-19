@@ -63,7 +63,7 @@ def test_scheduler_assigns_eligible_employee(db_session):
     role = _create_role(db_session, "TestRole1")
     employee = _create_employee(db_session, "Bob", "bob3@test.com", role.id)
     # Sunday, April 12th = weekday 6
-    _create_availability(db_session, employee.id, 6, time(6, 0), time(14, 0))
+    _create_availability(db_session, employee.id, 0, time(6, 0), time(14, 0))
     _create_shift(db_session, date(2026, 4, 12), time(6, 0), time(13, 0), role.id)
 
     result = generate_schedule_for_week(db_session, date(2026, 4, 12))
@@ -108,10 +108,10 @@ def test_scheduler_respects_max_weekly_hours(db_session):
     ryan = _create_employee(db_session, "Ryan", "Ryan342@test.com", role.id)
 
     # Both available Sunday and Monday
-    _create_availability(db_session, craig.id, 6, time(6, 0), time(22, 0))
     _create_availability(db_session, craig.id, 0, time(6, 0), time(22, 0))
-    _create_availability(db_session, ryan.id, 6, time(6, 0), time(22, 0))
+    _create_availability(db_session, craig.id, 1, time(6, 0), time(22, 0))
     _create_availability(db_session, ryan.id, 0, time(6, 0), time(22, 0))
+    _create_availability(db_session, ryan.id, 1, time(6, 0), time(22, 0))
 
     _create_shift(db_session, date(2026, 4, 12), time(9, 0), time(17, 0), role.id)
     _create_shift(db_session, date(2026, 4, 13), time(9, 0), time(17, 0), role.id)
@@ -133,7 +133,7 @@ def test_scheduler_no_multiple_shifts_per_day(db_session):
     # An employee should not be assigned to more than one shift a day
     role = _create_role(db_session, "TestRole4")
     employee = _create_employee(db_session, "George", "george1245@test.com", role.id)
-    _create_availability(db_session, employee.id, 6, time(6, 0), time(22, 0))
+    _create_availability(db_session, employee.id, 0, time(6, 0), time(22, 0))
 
     # Two non-overlapping shifts on the same day
     _create_shift(db_session, date(2026, 4, 12), time(7, 0), time(12, 0), role.id)
@@ -155,7 +155,7 @@ def test_scheduler_delete_and_replace(db_session):
     # Running the scheduler after a schedule has already been made should replace old assignments, not duplicate them
     role = _create_role(db_session, "TestRole5")
     employee = _create_employee(db_session, "Lenny", "lenny342@test.com", role.id)
-    _create_availability(db_session, employee.id, 6, time(6, 0), time(14, 0))
+    _create_availability(db_session, employee.id, 0, time(6, 0), time(14, 0))
     _create_shift(db_session, date(2026, 4, 12), time(6, 0), time(13, 0), role.id)
 
     # Run scheduler twice
@@ -186,10 +186,10 @@ def test_scheduler_balances_hours_across_employees(db_session):
     employee_b = _create_employee(db_session, "Walter", "walter312@test.com", role.id)
 
     # Both available all day Sunday and Monday
-    _create_availability(db_session, employee_a.id, 6, time(6, 0), time(22, 0))
-    _create_availability(db_session, employee_b.id, 6, time(6, 0), time(22, 0))
     _create_availability(db_session, employee_a.id, 0, time(6, 0), time(22, 0))
     _create_availability(db_session, employee_b.id, 0, time(6, 0), time(22, 0))
+    _create_availability(db_session, employee_a.id, 1, time(6, 0), time(22, 0))
+    _create_availability(db_session, employee_b.id, 1, time(6, 0), time(22, 0))
 
     # One shift Sunday, and one on Monday
     _create_shift(db_session, date(2026, 4, 12), time(9, 0), time(17, 0), role.id)
