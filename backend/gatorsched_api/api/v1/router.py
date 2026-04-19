@@ -18,6 +18,7 @@ from .routes.manager.scheduler.render_schedule import router as scheduled_router
 from .routes.manager.scheduler.scheduler import router as scheduler_router
 from .routes.manager.shifts.create_shift import router as create_shift_router
 from .routes.manager.shifts.edit_shift import router as edit_shift_router
+from .routes.manager.shifts.manage_assignment import router as manage_assignment_router
 from .routes.manager.shifts.render_shifts import router as render_shifts_router
 from .routes.manager.teams import router as teams_router
 
@@ -43,3 +44,4 @@ api_router.include_router(render_shifts_router)
 api_router.include_router(edit_shift_router)
 api_router.include_router(create_shift_router)
 api_router.include_router(scheduled_router)
+api_router.include_router(manage_assignment_router)

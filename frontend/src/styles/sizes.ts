@@ -1,6 +1,7 @@
 export const SIZES = {
   avatar: {
-    verySmall: 70,
+    xxSmall: 50,
+    xSmall: 70,
     small: 80,
     medium: 90,
     large: 100,

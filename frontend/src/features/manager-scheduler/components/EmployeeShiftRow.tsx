@@ -24,7 +24,7 @@ export function EmployeeShiftRow({
 
           <View style={{ flexDirection: 'row', gap: 12 }}>
             <View style={styles.profileContainer}>
-              <Avatar name={name} img="" color={color} size="verySmall" />
+              <Avatar name={name} img="" color={color} size="xSmall" />
             </View>
             <View style={styles.barContainer}>
               <ShiftBar
