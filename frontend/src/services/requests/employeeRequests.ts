@@ -37,7 +37,17 @@ export type EmployeeSwapRequestCard = EmployeeRequestCardBase & {
   coverShift: RequestShiftSummary;
 };
 
-export type EmployeeRequestCard = EmployeeSwapRequestCard;
+export type CallOutStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
+
+export type EmployeeCalloutRequestCard = EmployeeRequestCardBase & {
+  type: 'callout';
+  employee: RequestPerson;
+  shift: RequestShiftSummary;
+  reason: string | null;
+  status: CallOutStatus;
+}
+
+export type EmployeeRequestCard = EmployeeSwapRequestCard | EmployeeCalloutRequestCard;
 
 export type EmployeeRequestsResponse = {
   incoming: EmployeeRequestCard[];
