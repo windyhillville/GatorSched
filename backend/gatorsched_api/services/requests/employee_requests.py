@@ -6,9 +6,9 @@ from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.swap_request import SwapRequest
 from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 from gatorsched_api.schemas.employee.requests.employee_requests import (
+    EmployeeCalloutRequestCard,
     EmployeeRequestsResponse,
     EmployeeSwapRequestCard,
-    EmployeeCalloutRequestCard,
     RequestPerson,
     RequestShiftSummary,
 )
@@ -113,7 +113,8 @@ def get_employee_requests(db: Session, viewer_id: int) -> EmployeeRequestsRespon
             shift=RequestShiftSummary(
                 dayLabel=get_short_day_label(callout.assignment.shift.date),
                 timeRange=format_time_range(
-                    callout.assignment.shift.start_time, callout.assignment.shift.end_time,
+                    callout.assignment.shift.start_time,
+                    callout.assignment.shift.end_time,
                 ),
             ),
             reason=callout.reason,

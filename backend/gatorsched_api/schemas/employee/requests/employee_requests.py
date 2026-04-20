@@ -33,12 +33,14 @@ class EmployeeSwapRequestCard(EmployeeRequestCardBase):
     coverEmployee: RequestPerson
     coverShift: RequestShiftSummary
 
+
 class EmployeeCalloutRequestCard(EmployeeRequestCardBase):
     type: Literal["callout"] = "callout"
     employee: RequestPerson
     shift: RequestShiftSummary
     reason: str | None = None
     status: CallOutStatus
+
 
 # Placeholder alias until additional employee request card types are introduced
 EmployeeRequestCard = Annotated[
