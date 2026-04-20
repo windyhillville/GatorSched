@@ -1,4 +1,4 @@
-import { PersonData, ShiftData } from '@/features/types';
+import { PersonData, RequestStatus, ShiftData } from '@/features/types';
 import { useCardSelectionTransition } from '@/hooks';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -11,8 +11,14 @@ type SwapRequestCardProps = {
   toUser: PersonData;
   fromShift: ShiftData;
   toShift: ShiftData;
+  status: RequestStatus;
   expanded: boolean;
   onToggle: () => void;
+  onAccept?: () => void;
+  onDecline?: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
+  onCancel?: () => void;
 };
 
 export function SwapRequestCard({
@@ -21,8 +27,14 @@ export function SwapRequestCard({
   toUser,
   fromShift,
   toShift,
+  status,
   expanded,
   onToggle,
+  onAccept,
+  onDecline,
+  onApprove,
+  onReject,
+  onCancel,
 }: SwapRequestCardProps) {
   const { setMeasuredDetailHeight, setMeasuredHeaderHeight, detailStyle, headerStyle } =
     useCardSelectionTransition(expanded);
@@ -47,6 +59,12 @@ export function SwapRequestCard({
           toUser={toUser}
           fromShift={fromShift}
           toShift={toShift}
+          status={status}
+          onAccept={onAccept}
+          onDecline={onDecline}
+          onApprove={onApprove}
+          onReject={onReject}
+          onCancel={onCancel}
         />
       </Animate.View>
 
@@ -75,6 +93,12 @@ export function SwapRequestCard({
           toUser={toUser}
           fromShift={fromShift}
           toShift={toShift}
+          status={status}
+          onAccept={onAccept}
+          onDecline={onDecline}
+          onApprove={onApprove}
+          onReject={onReject}
+          onCancel={onCancel}
         />
       </View>
 

@@ -9,6 +9,8 @@ type ManagerRequestsViewProps = {
   expandedCards: Record<string, boolean>;
   onToggleSection: (role: string) => void;
   onToggleCard: (id: string) => void;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
 };
 
 export function ManagerRequestsView({
@@ -17,6 +19,8 @@ export function ManagerRequestsView({
   expandedCards,
   onToggleSection,
   onToggleCard,
+  onApprove,
+  onReject,
 }: ManagerRequestsViewProps) {
   return (
     <View style={styles.container}>
@@ -36,6 +40,11 @@ export function ManagerRequestsView({
                 request.type === 'swap' ? (
                   <SwapRequestCard
                     key={request.id}
+                    status={{
+                      employeeStatus: request.employee_status,
+                      managerStatus: request.manager_status,
+                    }}
+                    purpose="manager-approval"
                     fromUser={{
                       name: request.requester.name,
                       avatarUrl: request.requester.avatarUrl,
@@ -56,7 +65,8 @@ export function ManagerRequestsView({
                     }}
                     expanded={expandedCards[request.id] ?? false}
                     onToggle={() => onToggleCard(request.id)}
-                    purpose="manager-approval"
+                    onApprove={() => onApprove(request.id)}
+                    onReject={() => onReject(request.id)}
                   />
                 ) : (
                   <Text key={request.id}>Other Request Types...</Text>
