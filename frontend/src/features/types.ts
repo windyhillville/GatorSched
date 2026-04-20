@@ -1,3 +1,5 @@
+import { EmployeeRequestStatus, ManagerRequestStatus } from '@/services';
+
 export type PersonData = {
   name: string;
   avatarUrl: string | null;
@@ -7,4 +9,9 @@ export type PersonData = {
 export type ShiftData = {
   day: string;
   timeRange: string;
+};
+
+export type RequestStatus = {
+  employeeStatus: EmployeeRequestStatus;
+  managerStatus: ManagerRequestStatus;
 };

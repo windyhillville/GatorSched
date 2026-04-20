@@ -2,7 +2,7 @@ export type RequestPerson = {
   id: string;
   name: string;
   avatarUrl: string | null;
-  color: string | null;
+  color: string;
 };
 
 export type RequestShiftSummary = {

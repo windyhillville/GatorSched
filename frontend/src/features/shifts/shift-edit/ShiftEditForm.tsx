@@ -80,7 +80,7 @@ export function ShiftEditForm({
   }
 
   return (
-    <ShiftModalShell isActivated={editButtonPressed}>
+    <ShiftModalShell isActivated={editButtonPressed} style={{ height: 620 }}>
       <View style={styles.exitButtonWrapper}>
         <View style={styles.exitButtonInnerContainer}>
           <ExitButton size={20} onExit={onExit} />
@@ -135,12 +135,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     ...Platform.select({
       ios: {
-        paddingTop: 10,
-        left: 355,
+        // paddingTop: 1,
+        left: 340,
       },
       android: {
-        paddingTop: 12,
-        left: 344,
+        // paddingTop: 12,
+        left: 330,
       },
     }),
   },

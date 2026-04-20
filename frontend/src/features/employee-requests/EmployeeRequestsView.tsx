@@ -14,6 +14,9 @@ type EmployeeRequestsViewProps = {
   expandedCards: Record<string, boolean>;
   onToggleSection: (title: string) => void;
   onToggleCard: (id: string) => void;
+  onAccept: (id: string) => void;
+  onDecline: (id: string) => void;
+  onCancel: (id: string) => void;
 };
 
 export function EmployeeRequestsView({
@@ -22,6 +25,9 @@ export function EmployeeRequestsView({
   expandedCards,
   onToggleSection,
   onToggleCard,
+  onAccept,
+  onDecline,
+  onCancel,
 }: EmployeeRequestsViewProps) {
   return (
     <View style={styles.container}>
@@ -42,6 +48,11 @@ export function EmployeeRequestsView({
                 request.type === 'swap' ? (
                   <SwapRequestCard
                     key={request.id}
+                    status={{
+                      employeeStatus: request.employeeStatus,
+                      managerStatus: request.managerStatus,
+                    }}
+                    purpose={section.title === 'Incoming' ? 'swap-in' : 'swap-out'}
                     fromUser={{
                       name: request.requester.name,
                       avatarUrl: request.requester.avatarUrl,
@@ -62,7 +73,9 @@ export function EmployeeRequestsView({
                     }}
                     expanded={expandedCards[request.id] ?? false}
                     onToggle={() => onToggleCard(request.id)}
-                    purpose={section.title === 'Incoming' ? 'swap-in' : 'swap-out'}
+                    onAccept={() => onAccept(request.id)}
+                    onDecline={() => onDecline(request.id)}
+                    onCancel={() => onCancel(request.id)}
                   />
                 ) : (
                   <Text key={request.id}>Other Request Types...</Text>

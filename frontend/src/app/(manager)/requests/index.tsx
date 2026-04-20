@@ -1,5 +1,10 @@
 import { ManagerRequestsView } from '@/features';
-import { getManagerRequests, ManagerRequestCardGroup } from '@/services';
+import {
+  getManagerRequests,
+  managerApproveSwapRequest,
+  managerRejectSwapRequest,
+  ManagerRequestCardGroup,
+} from '@/services';
 import { Header, Screen } from '@/ui';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
@@ -49,6 +54,54 @@ export default function Requests() {
     }, []),
   );
 
+  async function handleApprove(id: string) {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const data = await managerApproveSwapRequest(id);
+
+      if (!data.success) {
+        throw new Error();
+      }
+
+      const groups = await getManagerRequests();
+
+      setGroups(groups);
+      const initialExpandedState = Object.fromEntries(groups.map((group) => [group.role, true]));
+      setExpandedSections(initialExpandedState);
+    } catch (err) {
+      setError('Failed to approve swap request');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  async function handleReject(id: string) {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const data = await managerRejectSwapRequest(id);
+
+      if (!data.success) {
+        throw new Error();
+      }
+
+      const groups = await getManagerRequests();
+
+      setGroups(groups);
+      const initialExpandedState = Object.fromEntries(groups.map((group) => [group.role, true]));
+      setExpandedSections(initialExpandedState);
+    } catch (err) {
+      setError('Failed to reject swap request');
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Screen insetTop>
       <Header title="Requests" />
@@ -68,6 +121,8 @@ export default function Requests() {
             [id]: !(prev[id] ?? false),
           }))
         }
+        onApprove={handleApprove}
+        onReject={handleReject}
       />
     </Screen>
   );
