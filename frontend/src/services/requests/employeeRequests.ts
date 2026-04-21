@@ -45,7 +45,7 @@ export type EmployeeCalloutRequestCard = EmployeeRequestCardBase & {
   shift: RequestShiftSummary;
   reason: string | null;
   status: CallOutStatus;
-}
+};
 
 export type EmployeeRequestCard = EmployeeSwapRequestCard | EmployeeCalloutRequestCard;
 
