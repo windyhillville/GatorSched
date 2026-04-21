@@ -1,10 +1,12 @@
 from sqlalchemy import and_, or_, select
 from sqlalchemy.orm import Session, joinedload
 
+from gatorsched_api.models.callout_request import CallOutRequest, CallOutStatus
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.swap_request import SwapRequest
 from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 from gatorsched_api.schemas.employee.requests.employee_requests import (
+    EmployeeCalloutRequestCard,
     EmployeeRequestsResponse,
     EmployeeSwapRequestCard,
     RequestPerson,
@@ -80,4 +82,43 @@ def get_employee_requests(db: Session, viewer_id: int) -> EmployeeRequestsRespon
         if viewer_id == swap.cover_id:
             incoming.append(card)
 
+    callout_stmt = (
+        select(CallOutRequest)
+        .where(
+            and_(
+                CallOutRequest.status == CallOutStatus.pending,
+                CallOutRequest.employee_id == viewer_id,
+            )
+        )
+        .options(
+            joinedload(CallOutRequest.employee),
+            joinedload(CallOutRequest.assignment).joinedload(ScheduleAssignment.shift),
+        )
+        .order_by(CallOutRequest.id.desc())
+    )
+
+    callouts = db.scalars(callout_stmt).unique().all()
+
+    for callout in callouts:
+        card = EmployeeCalloutRequestCard(
+            id=str(callout.id),
+            employeeStatus=EmployeeRequestStatus.pending,
+            managerStatus=ManagerRequestStatus.pending,
+            employee=RequestPerson(
+                id=str(callout.employee_id),
+                name=callout.employee.name,
+                avatarUrl=callout.employee.avatar_url,
+                color=callout.employee.color,
+            ),
+            shift=RequestShiftSummary(
+                dayLabel=get_short_day_label(callout.assignment.shift.date),
+                timeRange=format_time_range(
+                    callout.assignment.shift.start_time,
+                    callout.assignment.shift.end_time,
+                ),
+            ),
+            reason=callout.reason,
+        )
+
+        outgoing.append(card)
     return EmployeeRequestsResponse(incoming=incoming, outgoing=outgoing)

@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 
@@ -26,15 +26,25 @@ class EmployeeRequestCardBase(BaseModel):
 
 
 class EmployeeSwapRequestCard(EmployeeRequestCardBase):
-    type: RequestType = "swap"
+    type: Literal["swap"] = "swap"
     requester: RequestPerson
     requesterShift: RequestShiftSummary
     coverEmployee: RequestPerson
     coverShift: RequestShiftSummary
 
 
+class EmployeeCalloutRequestCard(EmployeeRequestCardBase):
+    type: Literal["callout"] = "callout"
+    employee: RequestPerson
+    shift: RequestShiftSummary
+    reason: str | None = None
+
+
 # Placeholder alias until additional employee request card types are introduced
-EmployeeRequestCard = EmployeeSwapRequestCard
+EmployeeRequestCard = Annotated[
+    EmployeeSwapRequestCard | EmployeeCalloutRequestCard,
+    Field(discriminator="type"),
+]
 
 
 class EmployeeRequestsResponse(BaseModel):
