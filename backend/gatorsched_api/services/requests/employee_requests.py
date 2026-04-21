@@ -118,7 +118,6 @@ def get_employee_requests(db: Session, viewer_id: int) -> EmployeeRequestsRespon
                 ),
             ),
             reason=callout.reason,
-            status=callout.status,
         )
 
         outgoing.append(card)

@@ -2,7 +2,6 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field
 
-from gatorsched_api.models.callout_request import CallOutStatus
 from gatorsched_api.models.types import EmployeeRequestStatus, ManagerRequestStatus
 
 RequestType = Literal["swap", "callout", "pickup"]
@@ -39,7 +38,6 @@ class EmployeeCalloutRequestCard(EmployeeRequestCardBase):
     employee: RequestPerson
     shift: RequestShiftSummary
     reason: str | None = None
-    status: CallOutStatus
 
 
 # Placeholder alias until additional employee request card types are introduced

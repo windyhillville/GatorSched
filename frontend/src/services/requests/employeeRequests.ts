@@ -7,22 +7,6 @@ import {
   RequestShiftSummary,
 } from './types';
 
-// type EmployeeRequestStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
-// type MananagerRequestStatus = 'not_sent' | 'pending' | 'approved' | 'rejected';
-// type RequestType = 'swap' | 'callout' | 'pickup';
-
-// export type RequestPerson = {
-//   id: string;
-//   name: string;
-//   avatarUrl: string | null;
-//   color: string | null;
-// };
-
-// export type RequestShiftSummary = {
-//   day: string;
-//   timeRange: string;
-// };
-
 export type EmployeeRequestCardBase = {
   id: string;
   employeeStatus: EmployeeRequestStatus;
@@ -37,14 +21,11 @@ export type EmployeeSwapRequestCard = EmployeeRequestCardBase & {
   coverShift: RequestShiftSummary;
 };
 
-export type CallOutStatus = 'pending' | 'accepted' | 'rejected' | 'cancelled';
-
 export type EmployeeCalloutRequestCard = EmployeeRequestCardBase & {
   type: 'callout';
   employee: RequestPerson;
   shift: RequestShiftSummary;
   reason: string | null;
-  status: CallOutStatus;
 };
 
 export type EmployeeRequestCard = EmployeeSwapRequestCard | EmployeeCalloutRequestCard;
