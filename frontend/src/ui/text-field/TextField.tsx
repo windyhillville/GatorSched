@@ -10,7 +10,7 @@ import {
 
 interface TextFieldProps extends TextInputProps {
   label: string;
-  // placeholder?: string;
+  placeholder?: string;
   inputStyleType: 'numeric' | 'text';
   containerStyle?: StyleProp<ViewStyle>;
 }
@@ -33,14 +33,18 @@ export function TextField({
 }
 
 const styles = StyleSheet.create({
-  textLabel: {},
+  textLabel: {
+    fontSize: 20,
+    textAlign: 'left',
+    fontWeight: 'bold',
+  },
   numericLabel: {
     fontSize: 24, // 18
     textAlign: 'center',
   },
   textOuterContainer: {
     gap: 8,
-    width: 250,
+    width: 315,
   },
   numericOuterContainer: {
     gap: 16,
@@ -49,8 +53,8 @@ const styles = StyleSheet.create({
   textContainer: {
     borderWidth: 1,
     borderColor: '#a3a3a3',
-    borderRadius: 10,
-    height: 38,
+    borderRadius: 15,
+    height: 55,
     justifyContent: 'center',
     paddingLeft: 12,
   },
