@@ -1,3 +1,4 @@
+export * from './auth';
 export * from './availability';
 export * from './employee-requests';
 export * from './manager-requests';
