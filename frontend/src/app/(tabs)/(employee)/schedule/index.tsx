@@ -14,7 +14,8 @@ import {
 import { useAuth, useDaySelectionTransition, useToday } from '@/hooks';
 import { EmployeeScheduleResponse, getEmployeeSchedule } from '@/services';
 import { Button, Chevron, Header, Screen } from '@/ui';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
@@ -34,24 +35,55 @@ export default function Schedule() {
   const { user } = useAuth();
   const currentUserId = user?.id;
 
-  useEffect(() => {
-    async function getSchedule() {
-      if (!currentUserId) return;
-      try {
-        setIsLoading(true);
-        setError(null);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+      async function getSchedule() {
+        if (!currentUserId) return;
+        try {
+          setIsLoading(true);
+          setError(null);
 
-        const request = await getEmployeeSchedule(currentUserId, currentWeekStart);
-        setScheduleInfo(request);
-      } catch (err) {
-        setError('Failed to retrieve schedule.');
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+          const request = await getEmployeeSchedule(currentUserId, currentWeekStart);
+
+          if (isActive) {
+            setScheduleInfo(request);
+          }
+        } catch (err) {
+          if (isActive) {
+            setError('Failed to retrieve schedule.');
+            console.error(err);
+          }
+        } finally {
+          if (isActive) {
+            setIsLoading(false);
+          }
+        }
       }
-    }
-    getSchedule();
-  }, [currentUserId, currentWeekStart]);
+      getSchedule();
+      return () => {
+        isActive = false;
+      };
+    }, [currentUserId, currentWeekStart]),
+  );
+  // useEffect(() => {
+  //   async function getSchedule() {
+  //     if (!currentUserId) return;
+  //     try {
+  //       setIsLoading(true);
+  //       setError(null);
+
+  //       const request = await getEmployeeSchedule(currentUserId, currentWeekStart);
+  //       setScheduleInfo(request);
+  //     } catch (err) {
+  //       setError('Failed to retrieve schedule.');
+  //       console.error(err);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   getSchedule();
+  // }, [currentUserId, currentWeekStart]);
 
   const handleFullSchedule = () => {};
 
