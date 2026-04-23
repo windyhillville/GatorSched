@@ -18,20 +18,9 @@ from gatorsched_api.schemas.manager.scheduler.scheduler import (
 )
 from gatorsched_api.services.datetime_formatting import format_time_label, get_shift_duration_hours
 
-# from gatorsched_api.models.role import Role
-
-## NOTE: Temporary fix until we add a "color" attribute to our Employee entity
-EMPLOYEE_COLORS = {
-    "Benjamin Davidson": "lightblue",
-    "Dominick Consiglio": "lightgreen",
-    "Daniel Moody": "skyblue",
-    "Ron Don": "lightpink",
-    "Johnny Johnson": "peachpuff",
-}
-
 
 def get_employee_color(employee: Employee) -> str:
-    return EMPLOYEE_COLORS.get(employee.name, "lightblue")
+    return employee.color or "lightblue"
 
 
 def generate_schedule_for_week(db: Session, week_start: date) -> GenerateScheduleResponse:
