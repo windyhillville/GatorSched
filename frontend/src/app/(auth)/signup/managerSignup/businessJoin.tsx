@@ -13,7 +13,7 @@ export default function SignUp() {
   async function createAccount() {
     // ensure fields are not blank
     const isBlank = (str: string) => str.trim().length === 0;
-    if (isBlank(data.business) || isBlank(data.location) || isBlank(data.role)) {
+    if (isBlank(data.business) || isBlank(data.location)) {
       alert('Please fill out all fields with valid information.');
     }
     // create account and log in
