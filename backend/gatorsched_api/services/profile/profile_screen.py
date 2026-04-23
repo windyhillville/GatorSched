@@ -16,7 +16,8 @@ def get_profile_screen(db: Session, viewer_id: int) -> ProfileScreenResponse:
         email=employee.email,
         phone=employee.phone,
         color=employee.color,
+        avatarUrl=employee.avatar_url,
         role=employee.role.name,
         maxWeeklyHours=employee.max_weekly_hours,
-        accessLevel=employee.access_level,
+        # accessLevel=employee.access_level,
     )
