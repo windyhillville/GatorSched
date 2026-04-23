@@ -98,27 +98,27 @@ export function CreateSwapRequestForm({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     width: '100%',
-    paddingTop: 8,
   },
   navWrapper: {
     alignItems: 'center',
     marginTop: 12,
   },
   contentWrapper: {
-    flex: 1,
+    // flex: 1,
     width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 20,
+    marginVertical: 48,
+    // paddingTop: 20,
   },
   buttonOuterContainer: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 20,
+    // paddingTop: 20,
     paddingBottom: 24,
   },
   buttonInnerContainer: {

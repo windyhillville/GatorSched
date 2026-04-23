@@ -1,7 +1,7 @@
 import { EmployeeRequestCard } from '@/services';
 import { AccordionSection } from '@/ui';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { SwapRequestCard } from './components';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { CallOutRequestCard, SwapRequestCard } from './components';
 
 export type RequestSection = {
   title: 'Incoming' | 'Outgoing';
@@ -78,7 +78,25 @@ export function EmployeeRequestsView({
                     onCancel={() => onCancel(request.id)}
                   />
                 ) : (
-                  <Text key={request.id}>Other Request Types...</Text>
+                  <CallOutRequestCard
+                    key={request.id}
+                    purpose="callout-out"
+                    user={{
+                      name: request.employee.name,
+                      color: request.employee.color,
+                      avatarUrl: request.employee.avatarUrl,
+                    }}
+                    shift={{ day: request.shift.dayLabel, timeRange: request.shift.timeRange }}
+                    status={{
+                      employeeStatus: request.employeeStatus,
+                      managerStatus: request.managerStatus,
+                    }}
+                    expanded={expandedCards[request.id] ?? false}
+                    onToggle={() => onToggleCard(request.id)}
+                    onAccept={() => onAccept(request.id)}
+                    onDecline={() => onDecline(request.id)}
+                    onCancel={() => onCancel(request.id)}
+                  />
                 ),
               )}
             </View>

@@ -3,7 +3,8 @@ import { useCardSelectionTransition } from '@/hooks';
 import { Avatar, Card, ExpandableCardHeader } from '@/ui';
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animate from 'react-native-reanimated';
-import { SwapRequestDetails, SwapRequestPurpose } from './SwapRequestDetails';
+import { SwapRequestDetails } from './SwapRequestDetails';
+import { SwapRequestPurpose } from './utils/decision';
 
 type SwapRequestCardProps = {
   purpose: SwapRequestPurpose;

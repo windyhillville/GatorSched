@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   contentContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     width: '100%',
   },
 });

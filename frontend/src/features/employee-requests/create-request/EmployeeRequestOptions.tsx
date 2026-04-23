@@ -30,7 +30,6 @@ export function EmployeeRequestOptions({
   const [swapRequestInfo, setSwapRequestInfo] = useState<EmployeeSwapRequestInfoResponse | null>(
     null,
   );
-  const [modalPhase, setModalPhase] = useState<RequestModalPhase>('picker');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -68,8 +67,9 @@ export function EmployeeRequestOptions({
   function handleCreateSwap() {}
 
   const modalHeight = requestType === null ? 300 : requestType === 'swap' ? 500 : '45%';
+  // style={{ minHeight: modalHeight }
   return (
-    <ShiftModalShell isActivated={isCreateRequestButtonPressed} style={{ minHeight: modalHeight }}>
+    <ShiftModalShell isActivated={isCreateRequestButtonPressed}>
       <View style={styles.exitButtonWrapper}>
         <View style={styles.exitButtonInnerContainer}>
           <ExitButton size={20} onExit={onExit} />
@@ -132,8 +132,13 @@ const styles = StyleSheet.create({
   exitButtonInnerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 50,
+    // borderWidth: 1,
+    // borderRadius: 50,
     borderColor: '#E33333',
+  },
+  navContainer: {
+    flex: 1,
+    marginTop: 32,
+    backgroundColor: 'blue',
   },
 });

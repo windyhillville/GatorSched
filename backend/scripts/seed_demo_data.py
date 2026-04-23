@@ -26,12 +26,18 @@ def seed():
     # ---------- Roles ----------
     server_role = Role(name="Server", color="#2BE0BC", description="Front of house server")
     cook_role = Role(name="Cook", color="#E02B55", description="Back of house cook")
+    bartender_role = Role(name="Bartender", color="#F5A623", description="Behind the bar")
+    dishwasher_role = Role(name="Dishwasher", color="#9013FE", description="Cleans dishes")
+    host_role = Role(name="Host", color="#7ED321", description="Greet and seat guests")
 
-    db.add_all([server_role, cook_role])
+    db.add_all([server_role, cook_role, bartender_role, dishwasher_role, host_role])
     db.commit()
 
     db.refresh(server_role)
     db.refresh(cook_role)
+    db.refresh(bartender_role)
+    db.refresh(dishwasher_role)
+    db.refresh(host_role)
 
     # ---------- Employees ----------
     ben = Employee(
@@ -79,8 +85,53 @@ def seed():
         color="peachpuff",
         avatar_url=None,
     )
+    marcus = Employee(
+        name="Marcus Green",
+        email="marcus@example.com",
+        role_id=bartender_role.id,
+        is_active=True,
+        max_weekly_hours=35,
+        color="lightcoral",
+        avatar_url=None,
+    )
+    sarah = Employee(
+        name="Sarah Paris",
+        email="sarah@example.com",
+        role_id=host_role.id,
+        is_active=True,
+        max_weekly_hours=30,
+        color="lavender",
+        avatar_url=None,
+    )
+    louis = Employee(
+        name="Louis Smith",
+        email="louis@example.com",
+        role_id=dishwasher_role.id,
+        is_active=True,
+        max_weekly_hours=35,
+        color="wheat",
+        avatar_url=None,
+    )
+    emma = Employee(
+        name="Emma Patel",
+        email="emma@example.com",
+        role_id=server_role.id,
+        is_active=True,
+        max_weekly_hours=15,
+        color="lightyellow",
+        avatar_url=None,
+    )
+    tyler = Employee(
+        name="Tyler Brooks",
+        email="tyler@example.com",
+        role_id=cook_role.id,
+        is_active=True,
+        max_weekly_hours=20,
+        color="gainsboro",
+        avatar_url=None,
+    )
 
-    employees = [ben, dom, dan, ron, johnny]
+    employees = [ben, dom, dan, ron, johnny, marcus, sarah, louis, emma, tyler]
 
     db.add_all(employees)
     db.commit()
@@ -93,53 +144,139 @@ def seed():
     availabilities = [
         # Benjamin Davidson (Server)
         Availability(
-            employee_id=ben.id, day_of_week=6, start_time=time(6, 0), end_time=time(14, 0)
+            employee_id=ben.id, day_of_week=0, start_time=time(6, 0), end_time=time(20, 0)
         ),
         Availability(
-            employee_id=ben.id, day_of_week=0, start_time=time(9, 0), end_time=time(17, 0)
+            employee_id=ben.id, day_of_week=1, start_time=time(9, 0), end_time=time(17, 0)
         ),
         Availability(
-            employee_id=ben.id, day_of_week=2, start_time=time(10, 0), end_time=time(18, 0)
+            employee_id=ben.id, day_of_week=2, start_time=time(11, 0), end_time=time(19, 0)
+        ),
+        Availability(
+            employee_id=ben.id, day_of_week=4, start_time=time(8, 0), end_time=time(16, 0)
+        ),
+        Availability(
+            employee_id=ben.id, day_of_week=6, start_time=time(14, 0), end_time=time(22, 0)
         ),
         # Dominick Consiglio (Server)
         Availability(
-            employee_id=dom.id, day_of_week=6, start_time=time(10, 0), end_time=time(18, 0)
+            employee_id=dom.id, day_of_week=0, start_time=time(6, 0), end_time=time(20, 0)
         ),
         Availability(
-            employee_id=dom.id, day_of_week=1, start_time=time(11, 0), end_time=time(19, 0)
+            employee_id=dom.id, day_of_week=1, start_time=time(9, 0), end_time=time(17, 0)
         ),
         Availability(
-            employee_id=dom.id, day_of_week=4, start_time=time(8, 0), end_time=time(16, 0)
+            employee_id=dom.id, day_of_week=3, start_time=time(10, 0), end_time=time(18, 0)
+        ),
+        Availability(
+            employee_id=dom.id, day_of_week=5, start_time=time(8, 0), end_time=time(16, 0)
         ),
         # Daniel Moody (Server)
         Availability(
-            employee_id=dan.id, day_of_week=6, start_time=time(12, 0), end_time=time(22, 0)
+            employee_id=dan.id, day_of_week=0, start_time=time(6, 0), end_time=time(20, 0)
         ),
         Availability(
-            employee_id=dan.id, day_of_week=3, start_time=time(8, 0), end_time=time(16, 0)
+            employee_id=dan.id, day_of_week=4, start_time=time(8, 0), end_time=time(16, 0)
         ),
         Availability(
-            employee_id=dan.id, day_of_week=5, start_time=time(14, 0), end_time=time(22, 0)
+            employee_id=dan.id, day_of_week=5, start_time=time(8, 0), end_time=time(16, 0)
+        ),
+        Availability(
+            employee_id=dan.id, day_of_week=6, start_time=time(14, 0), end_time=time(22, 0)
         ),
         # Ron Don (Cook)
         Availability(
-            employee_id=ron.id, day_of_week=6, start_time=time(7, 0), end_time=time(15, 0)
+            employee_id=ron.id, day_of_week=0, start_time=time(7, 0), end_time=time(22, 0)
         ),
         Availability(
-            employee_id=ron.id, day_of_week=0, start_time=time(14, 0), end_time=time(22, 0)
+            employee_id=ron.id, day_of_week=1, start_time=time(14, 0), end_time=time(22, 0)
         ),
         Availability(
-            employee_id=ron.id, day_of_week=2, start_time=time(6, 0), end_time=time(14, 0)
+            employee_id=ron.id, day_of_week=2, start_time=time(13, 0), end_time=time(21, 0)
+        ),
+        Availability(
+            employee_id=ron.id, day_of_week=3, start_time=time(6, 0), end_time=time(14, 0)
+        ),
+        Availability(
+            employee_id=ron.id, day_of_week=5, start_time=time(12, 0), end_time=time(20, 0)
         ),
         # Johnny Johnson (Cook)
         Availability(
-            employee_id=johnny.id, day_of_week=6, start_time=time(14, 0), end_time=time(23, 0)
+            employee_id=johnny.id, day_of_week=0, start_time=time(7, 0), end_time=time(22, 0)
         ),
         Availability(
-            employee_id=johnny.id, day_of_week=1, start_time=time(13, 0), end_time=time(21, 0)
+            employee_id=johnny.id, day_of_week=1, start_time=time(14, 0), end_time=time(22, 0)
         ),
         Availability(
-            employee_id=johnny.id, day_of_week=4, start_time=time(12, 0), end_time=time(20, 0)
+            employee_id=johnny.id, day_of_week=2, start_time=time(13, 0), end_time=time(21, 0)
+        ),
+        Availability(
+            employee_id=johnny.id, day_of_week=3, start_time=time(6, 0), end_time=time(14, 0)
+        ),
+        Availability(
+            employee_id=johnny.id, day_of_week=5, start_time=time(12, 0), end_time=time(20, 0)
+        ),
+        # Marcus (Bartender)
+        Availability(
+            employee_id=marcus.id, day_of_week=0, start_time=time(15, 0), end_time=time(23, 0)
+        ),
+        Availability(
+            employee_id=marcus.id, day_of_week=2, start_time=time(15, 0), end_time=time(23, 0)
+        ),
+        Availability(
+            employee_id=marcus.id, day_of_week=3, start_time=time(15, 0), end_time=time(23, 0)
+        ),
+        Availability(
+            employee_id=marcus.id, day_of_week=5, start_time=time(15, 0), end_time=time(23, 0)
+        ),
+        Availability(
+            employee_id=marcus.id, day_of_week=6, start_time=time(15, 0), end_time=time(23, 0)
+        ),
+        # Sarah (Host)
+        Availability(
+            employee_id=sarah.id, day_of_week=1, start_time=time(10, 0), end_time=time(20, 0)
+        ),
+        Availability(
+            employee_id=sarah.id, day_of_week=2, start_time=time(10, 0), end_time=time(20, 0)
+        ),
+        Availability(
+            employee_id=sarah.id, day_of_week=3, start_time=time(10, 0), end_time=time(20, 0)
+        ),
+        Availability(
+            employee_id=sarah.id, day_of_week=4, start_time=time(10, 0), end_time=time(20, 0)
+        ),
+        Availability(
+            employee_id=sarah.id, day_of_week=6, start_time=time(10, 0), end_time=time(20, 0)
+        ),
+        # Louis (Dishwasher)
+        Availability(
+            employee_id=louis.id, day_of_week=0, start_time=time(6, 0), end_time=time(22, 0)
+        ),
+        Availability(
+            employee_id=louis.id, day_of_week=1, start_time=time(6, 0), end_time=time(22, 0)
+        ),
+        Availability(
+            employee_id=louis.id, day_of_week=2, start_time=time(6, 0), end_time=time(22, 0)
+        ),
+        Availability(
+            employee_id=louis.id, day_of_week=3, start_time=time(6, 0), end_time=time(22, 0)
+        ),
+        Availability(
+            employee_id=louis.id, day_of_week=4, start_time=time(6, 0), end_time=time(22, 0)
+        ),
+        # Emma (Server) Strict
+        Availability(
+            employee_id=emma.id, day_of_week=4, start_time=time(17, 0), end_time=time(22, 0)
+        ),
+        Availability(
+            employee_id=emma.id, day_of_week=5, start_time=time(17, 0), end_time=time(22, 0)
+        ),
+        # Tyler (Cook) Strict
+        Availability(
+            employee_id=tyler.id, day_of_week=0, start_time=time(12, 0), end_time=time(18, 0)
+        ),
+        Availability(
+            employee_id=tyler.id, day_of_week=6, start_time=time(12, 0), end_time=time(18, 0)
         ),
     ]
 
@@ -193,6 +330,20 @@ def seed():
             role_id=cook_role.id,
             min_staff_req=1,
         ),
+        Shift(
+            date=sun,
+            start_time=time(16, 0),
+            end_time=time(22, 0),
+            role_id=bartender_role.id,
+            min_staff_req=1,
+        ),
+        Shift(
+            date=sun,
+            start_time=time(10, 0),
+            end_time=time(18, 0),
+            role_id=dishwasher_role.id,
+            min_staff_req=1,
+        ),
         # Monday
         Shift(
             date=mon,
@@ -206,6 +357,13 @@ def seed():
             start_time=time(14, 0),
             end_time=time(22, 0),
             role_id=cook_role.id,
+            min_staff_req=1,
+        ),
+        Shift(
+            date=mon,
+            start_time=time(11, 0),
+            end_time=time(19, 0),
+            role_id=host_role.id,
             min_staff_req=1,
         ),
         # Tuesday
@@ -223,6 +381,13 @@ def seed():
             role_id=cook_role.id,
             min_staff_req=1,
         ),
+        Shift(
+            date=tue,
+            start_time=time(14, 0),
+            end_time=time(22, 0),
+            role_id=dishwasher_role.id,
+            min_staff_req=1,
+        ),
         # Wednesday
         Shift(
             date=wed,
@@ -238,6 +403,13 @@ def seed():
             role_id=cook_role.id,
             min_staff_req=1,
         ),
+        Shift(
+            date=wed,
+            start_time=time(11, 0),
+            end_time=time(19, 0),
+            role_id=host_role.id,
+            min_staff_req=1,
+        ),
         # Thursday
         Shift(
             date=thu,
@@ -246,12 +418,26 @@ def seed():
             role_id=server_role.id,
             min_staff_req=1,
         ),
+        Shift(
+            date=thu,
+            start_time=time(10, 0),
+            end_time=time(18, 0),
+            role_id=dishwasher_role.id,
+            min_staff_req=1,
+        ),
         # Friday
         Shift(
             date=fri,
             start_time=time(8, 0),
             end_time=time(16, 0),
             role_id=server_role.id,
+            min_staff_req=1,
+        ),
+        Shift(
+            date=fri,
+            start_time=time(12, 0),
+            end_time=time(20, 0),
+            role_id=cook_role.id,
             min_staff_req=1,
         ),
         Shift(
