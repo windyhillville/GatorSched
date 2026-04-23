@@ -1,5 +1,5 @@
-import { Stack } from 'expo-router';
 import { SignupProvider } from '@/hooks';
+import { Stack } from 'expo-router';
 
 export default function AuthLayout() {
   return (

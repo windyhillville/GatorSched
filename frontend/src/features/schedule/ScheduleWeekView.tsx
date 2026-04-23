@@ -29,7 +29,7 @@ export function ScheduleWeekView({
 
         <DayGrid
           days={employeeShifts.map((shift) => ({
-            key: shift.key,
+            key: `${shift.key}-${shift.timeRange}`,
             label: shift.shortLabel,
             timeRange: shift.timeRange,
           }))}

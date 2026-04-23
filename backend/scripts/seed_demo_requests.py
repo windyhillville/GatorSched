@@ -2,7 +2,6 @@ from sqlalchemy import select
 
 from gatorsched_api.db.init_db import init_db
 from gatorsched_api.db.session import SessionLocal
-from gatorsched_api.models.callout_request import CallOutRequest, CallOutStatus
 from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.swap_request import SwapRequest
@@ -34,7 +33,6 @@ def seed_requests():
 
     ben = by_name.get("Benjamin Davidson", [])
     dom = by_name.get("Dominick Consiglio", [])
-    dan = by_name.get("Daniel Moody", [])
     ron = by_name.get("Ron Don", [])
     johnny = by_name.get("Johnny Johnson", [])
 
@@ -71,34 +69,6 @@ def seed_requests():
         db.add_all(swap_requests)
         db.commit()
         print("Created swap request(s).")
-
-    # Callout Requests
-    callout_requests = []
-
-    if ron:
-        callout_requests.append(
-            CallOutRequest(
-                employee_id=ron[0].employee_id,
-                assignment_id=ron[0].id,
-                status=CallOutStatus.pending,
-                reason="Feeling sick",
-            )
-        )
-
-    if dan:
-        callout_requests.append(
-            CallOutRequest(
-                employee_id=dan[0].employee_id,
-                assignment_id=dan[0].id,
-                status=CallOutStatus.pending,
-                reason=None,
-            )
-        )
-
-    if callout_requests:
-        db.add_all(callout_requests)
-        db.commit()
-        print("Created callout request(s).")
 
     print("Demo requests seed complete!")
 
