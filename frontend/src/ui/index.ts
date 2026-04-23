@@ -9,6 +9,7 @@ export * from './day-icon';
 export * from './header';
 export * from './icons';
 export * from './layout';
+export * from './profile-row';
 export * from './selector';
 export * from './shift-duration-bar';
 export * from './text-field';
