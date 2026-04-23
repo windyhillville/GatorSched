@@ -1,7 +1,5 @@
 from pydantic import BaseModel
 
-from gatorsched_api.models.employee import AccessLevel
-
 
 class ProfileScreenResponse(BaseModel):
     id: str
@@ -9,6 +7,7 @@ class ProfileScreenResponse(BaseModel):
     email: str
     phone: str | None = None
     color: str
+    avatarUrl: str | None = None
     role: str
     maxWeeklyHours: int | None = None
-    accessLevel: AccessLevel
+    # accessLevel: AccessLevel
