@@ -5,6 +5,7 @@ from .routes.employee.availability import router as employee_availabilities_rout
 from .routes.employee.cancel_swap import router as cancel_swap_router
 from .routes.employee.create_swap_request import router as create_swap_request_router
 from .routes.employee.decline_swap import router as decline_swap_router
+from .routes.employee.profile_screen import router as profile_screen_router
 from .routes.employee.render_swap_request_info import router as render_swap_request
 from .routes.employee.requests import router as requests_router
 from .routes.employee.schedule import router as employee_schedule_router
@@ -59,3 +60,4 @@ api_router.include_router(decline_swap_router)
 api_router.include_router(cancel_swap_router)
 api_router.include_router(approve_swap_router)
 api_router.include_router(reject_swap_router)
+api_router.include_router(profile_screen_router)
