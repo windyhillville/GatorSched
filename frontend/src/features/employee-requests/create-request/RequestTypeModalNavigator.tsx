@@ -27,11 +27,12 @@ export function RequestTypeModalNavigator({ onSelectRequestType }: RequestTypeMo
 
 const styles = StyleSheet.create({
   requestTypeWrapper: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     gap: 12,
+    marginTop: 24,
+    marginBottom: 25,
   },
   requestTypeContainer: {
     // justifyContent: 'center',
