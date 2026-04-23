@@ -1,5 +1,6 @@
 from datetime import date
 
+from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session, selectinload
 
@@ -39,7 +40,13 @@ def get_swap_request_info(
             .joinedload(Shift.role)
         )
     )
-    requester = db.scalars(requesterStmt).unique().one()
+    requester = db.scalars(requesterStmt).unique().first()
+
+    if not requester:
+        raise HTTPException(
+            status_code=404,
+            detail="No requester assignments found for this week.",
+        )
 
     teammatesStmt = (
         select(Employee)

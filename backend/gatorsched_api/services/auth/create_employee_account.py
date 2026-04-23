@@ -54,7 +54,7 @@ def create_employee_account(
         avatar_url=payload.avatarUrl,
         max_weekly_hours=32,
         access_level=AccessLevel.employee,
-        is_active=payload.isActive,
+        is_active=True,
         role_id=role.id,
     )
 

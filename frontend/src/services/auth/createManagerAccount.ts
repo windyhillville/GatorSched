@@ -6,7 +6,6 @@ export type CreateManagerRequest = {
   password: string;
   phone: string | null;
   avatarUrl: string | null;
-  isActive: boolean;
   roles: string[];
 };
 
@@ -18,7 +17,7 @@ export async function createManagerAccount(
   payload: CreateManagerRequest,
 ): Promise<CreateManagerResponse> {
   const res = await fetch(`${API_BASE}/auth/create-manager-account`, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },

@@ -1,23 +1,31 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
-import { Header, Screen, TextField } from '@/ui';
 import { AuthForm } from '@/features';
-import { useState } from 'react';
-import { Link } from 'expo-router';
-import { Colors } from '@/styles/colors';
 import { useAuth } from '@/hooks';
+import { login } from '@/services';
+import { Colors } from '@/styles/colors';
+import { Header, Screen, TextField } from '@/ui';
+import { Link } from 'expo-router';
+import { useState } from 'react';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 export default function Login() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { logIn } = useAuth();
 
-  const handleLogin = () => {
-    if (true) {
-      logIn();
-    } else {
-      alert('Invalid username / password');
+  async function handleLogin() {
+    try {
+      const response = await login({ email: email, password: password });
+
+      logIn({ accessToken: response.accessToken, user: response.user });
+    } catch (err) {
+      console.error(err);
     }
-  };
+    // if (true) {
+    //   logIn();
+    // } else {
+    //   alert('Invalid username / password');
+    // }
+  }
 
   return (
     <Screen insetTop>
@@ -31,8 +39,8 @@ export default function Login() {
           style={{ height: 70 }}
           maxLength={30}
           placeholder="TheRealRonDon"
-          onChangeText={setUsername}
-          value={username}
+          onChangeText={setEmail}
+          value={email}
         />
         <TextField
           label={'Password'}

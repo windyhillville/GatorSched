@@ -7,8 +7,7 @@ class CreateManagerAccountRequest(BaseModel):
     password: str
     phone: str | None = None
     avatarUrl: str | None = None
-    isActive: bool
-    roles: str
+    roles: list[str]
 
 
 class CreateManagerAccountResponse(BaseModel):

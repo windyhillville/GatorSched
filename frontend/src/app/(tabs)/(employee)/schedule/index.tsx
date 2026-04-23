@@ -11,7 +11,7 @@ import {
   getWeekStart,
   isToday,
 } from '@/features/utils';
-import { useDaySelectionTransition, useToday } from '@/hooks';
+import { useAuth, useDaySelectionTransition, useToday } from '@/hooks';
 import { EmployeeScheduleResponse, getEmployeeSchedule } from '@/services';
 import { Button, Chevron, Header, Screen } from '@/ui';
 import { useEffect, useState } from 'react';
@@ -31,14 +31,17 @@ export default function Schedule() {
   const today = useToday();
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(today));
 
-  const viewerId = '1';
+  const { user } = useAuth();
+  const currentUserId = user?.id;
+
   useEffect(() => {
     async function getSchedule() {
+      if (!currentUserId) return;
       try {
         setIsLoading(true);
         setError(null);
 
-        const request = await getEmployeeSchedule(viewerId, currentWeekStart);
+        const request = await getEmployeeSchedule(currentUserId, currentWeekStart);
         setScheduleInfo(request);
       } catch (err) {
         setError('Failed to retrieve schedule.');
@@ -48,7 +51,7 @@ export default function Schedule() {
       }
     }
     getSchedule();
-  }, [viewerId, currentWeekStart]);
+  }, [currentUserId, currentWeekStart]);
 
   const handleFullSchedule = () => {};
 

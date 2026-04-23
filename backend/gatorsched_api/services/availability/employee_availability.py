@@ -19,8 +19,8 @@ def get_employee_availabilities(db: Session, viewer_id: int) -> EmployeeAvailabi
 
     employee_availabilities: list[EmployeeAvailability] = []
 
-    sunday_first_order = [6, 0, 1, 2, 3, 4, 5]
-    for day_idx in sunday_first_order:
+    # sunday_first_order = [6, 0, 1, 2, 3, 4, 5]
+    for day_idx in range(7):
         day = avail_map.get(day_idx)
 
         employee_availability = build_employee_availability(day_idx, day)

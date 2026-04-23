@@ -1,6 +1,6 @@
 import { ShiftModalShell } from '@/features/shifts/ShiftModalShell';
 import { getWeekStart } from '@/features/utils';
-import { useToday } from '@/hooks';
+import { useAuth, useToday } from '@/hooks';
 import {
   CreateSwapRequestPayload,
   EmployeeSwapRequestInfoResponse,
@@ -33,19 +33,22 @@ export function EmployeeRequestOptions({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const viewerId = '1';
   const today = useToday();
   const [currentWeekStart, setCurrentWeekStart] = useState(getWeekStart(today));
 
-  async function handleSelectRequestType(requestType: RequestOption) {
-    setRequestType(requestType);
+  const { user } = useAuth();
+  const currentUserId = user?.id;
 
+  async function handleSelectRequestType(requestType: RequestOption) {
+    if (!currentUserId) return;
+
+    setRequestType(requestType);
     try {
       setIsLoading(true);
       setError(null);
 
       if (requestType === 'swap') {
-        const data = await getSwapRequestInfo(viewerId, currentWeekStart);
+        const data = await getSwapRequestInfo(currentUserId, currentWeekStart);
         setSwapRequestInfo(data);
       } else if (requestType === 'callout') {
       } else {

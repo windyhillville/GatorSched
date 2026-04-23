@@ -1,4 +1,5 @@
 import { EmployeeRequestOptions, EmployeeRequestsView, RequestSection } from '@/features';
+import { useAuth } from '@/hooks';
 import { getEmployeeRequests } from '@/services';
 import {
   CreateSwapRequestPayload,
@@ -22,17 +23,21 @@ export default function Requests() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const viewerId = '2';
+  const { user } = useAuth();
+
+  const currentUserId = user?.id;
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
       async function fetchEmployeeRequests() {
+        if (!currentUserId) return;
+
         try {
           setIsLoading(true);
           setError(null);
 
-          const requests = await getEmployeeRequests(viewerId);
+          const requests = await getEmployeeRequests(currentUserId);
 
           if (isActive) {
             const sections: RequestSection[] = [
@@ -69,10 +74,12 @@ export default function Requests() {
       return () => {
         isActive = false;
       };
-    }, [viewerId]),
+    }, [currentUserId]),
   );
 
   async function handleCreateSwapRequest(payload: CreateSwapRequestPayload) {
+    if (!currentUserId) return;
+
     try {
       setIsLoading(true);
       setError(null);
@@ -83,7 +90,7 @@ export default function Requests() {
         throw new Error();
       }
 
-      const requests = await getEmployeeRequests(viewerId);
+      const requests = await getEmployeeRequests(currentUserId);
       const sections: RequestSection[] = [
         {
           title: 'Incoming',
@@ -110,6 +117,8 @@ export default function Requests() {
   }
 
   async function handleAccept(id: string) {
+    if (!currentUserId) return;
+
     try {
       setIsLoading(true);
       setError(null);
@@ -120,7 +129,7 @@ export default function Requests() {
         throw new Error();
       }
 
-      const requests = await getEmployeeRequests(viewerId);
+      const requests = await getEmployeeRequests(currentUserId);
       const sections: RequestSection[] = [
         {
           title: 'Incoming',
@@ -146,6 +155,8 @@ export default function Requests() {
   }
 
   async function handleDecline(id: string) {
+    if (!currentUserId) return;
+
     try {
       setIsLoading(true);
       setError(null);
@@ -156,7 +167,7 @@ export default function Requests() {
         throw new Error();
       }
 
-      const requests = await getEmployeeRequests(viewerId);
+      const requests = await getEmployeeRequests(currentUserId);
       const sections: RequestSection[] = [
         {
           title: 'Incoming',
@@ -182,6 +193,8 @@ export default function Requests() {
   }
 
   async function handleCancel(id: string) {
+    if (!currentUserId) return;
+
     try {
       setIsLoading(true);
       setError(null);
@@ -192,7 +205,7 @@ export default function Requests() {
         throw new Error();
       }
 
-      const requests = await getEmployeeRequests(viewerId);
+      const requests = await getEmployeeRequests(currentUserId);
       const sections: RequestSection[] = [
         {
           title: 'Incoming',
