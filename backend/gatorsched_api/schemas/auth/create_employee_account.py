@@ -7,7 +7,6 @@ class CreateEmployeeAccountRequest(BaseModel):
     password: str
     phone: str | None = None
     avatarUrl: str | None = None
-    isActive: bool
     roleName: str
 
 

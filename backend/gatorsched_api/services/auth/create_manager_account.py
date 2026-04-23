@@ -101,7 +101,7 @@ def create_manager_account(
         avatar_url=payload.avatarUrl,
         max_weekly_hours=40,
         access_level=AccessLevel.manager,
-        is_active=payload.isActive,
+        is_active=True,
         role_id=manager_role.id,
     )
 

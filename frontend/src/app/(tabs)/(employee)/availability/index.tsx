@@ -1,5 +1,5 @@
 import { AvailabilityDayEditorCard, AvailabilityToggle, AvailabilityWeekView } from '@/features';
-import { useDaySelectionTransition } from '@/hooks';
+import { useAuth, useDaySelectionTransition } from '@/hooks';
 import { EmployeeAvailability, getAvailabilities, setAvailability } from '@/services';
 import { Button, Header, Screen } from '@/ui';
 import { TimeValue } from '@/ui/time-picker/types';
@@ -8,13 +8,13 @@ import { Platform, StyleSheet, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 
 const week: Record<string, number> = {
-  Mon: 0,
-  Tue: 1,
-  Wed: 2,
-  Thu: 3,
-  Fri: 4,
-  Sat: 5,
-  Sun: 6,
+  Sun: 0,
+  Mon: 1,
+  Tue: 2,
+  Wed: 3,
+  Thu: 4,
+  Fri: 5,
+  Sat: 6,
 };
 
 export default function Availability() {
@@ -26,13 +26,18 @@ export default function Availability() {
   const selectedDay = availabilityInfo.find((d) => d.key === selectedDayKey) ?? null;
   const [isToggled, setIsToggled] = useState(false);
 
+  const { user } = useAuth();
+  const currentUserId = user?.id;
+
   useEffect(() => {
     async function fetchAvailabilities() {
+      if (!currentUserId) return;
+
       try {
         setIsLoading(true);
         setError(null);
 
-        const request = await getAvailabilities('1');
+        const request = await getAvailabilities(currentUserId);
         setAvailabilityInfo(request.availabilities);
       } catch (err) {
         setError('Failed to retrieve availabilities.');
@@ -51,6 +56,7 @@ export default function Availability() {
   const handleRequestTimeOff = () => {};
 
   const handleOnConfirm = async (payload: { start: TimeValue; end: TimeValue }) => {
+    if (!currentUserId) return;
     try {
       setIsLoading(true);
       setError(null);
@@ -66,7 +72,7 @@ export default function Availability() {
             endTimePeriod: payload.end.period,
             isAvailable: isToggled,
           },
-          '1',
+          currentUserId,
         );
         setAvailabilityInfo((prev) =>
           prev.map((day) => (day.key === response.availability.key ? response.availability : day)),

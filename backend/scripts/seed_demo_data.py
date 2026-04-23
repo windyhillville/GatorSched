@@ -1,11 +1,15 @@
 from datetime import date, time, timedelta
 
+from pwdlib import PasswordHash
+
 from gatorsched_api.db.init_db import init_db
 from gatorsched_api.db.session import SessionLocal
 from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.employee import Employee
 from gatorsched_api.models.role import Role
 from gatorsched_api.models.shift import Shift
+
+dummy_hash = PasswordHash.recommended().hash("password123")
 
 
 def get_current_week_start() -> date:
@@ -43,6 +47,7 @@ def seed():
     ben = Employee(
         name="Benjamin Davidson",
         email="ben@example.com",
+        password_hash=dummy_hash,
         role_id=server_role.id,
         is_active=True,
         max_weekly_hours=30,
@@ -52,6 +57,7 @@ def seed():
     dom = Employee(
         name="Dominick Consiglio",
         email="dom@example.com",
+        password_hash=dummy_hash,
         role_id=server_role.id,
         is_active=True,
         max_weekly_hours=25,
@@ -61,6 +67,7 @@ def seed():
     dan = Employee(
         name="Daniel Moody",
         email="dan@example.com",
+        password_hash=dummy_hash,
         role_id=server_role.id,
         is_active=True,
         max_weekly_hours=20,
@@ -70,6 +77,7 @@ def seed():
     ron = Employee(
         name="Ron Don",
         email="ron@example.com",
+        password_hash=dummy_hash,
         role_id=cook_role.id,
         is_active=True,
         max_weekly_hours=35,
@@ -79,6 +87,7 @@ def seed():
     johnny = Employee(
         name="Johnny Johnson",
         email="johnny@example.com",
+        password_hash=dummy_hash,
         role_id=cook_role.id,
         is_active=True,
         max_weekly_hours=30,
@@ -88,6 +97,7 @@ def seed():
     marcus = Employee(
         name="Marcus Green",
         email="marcus@example.com",
+        password_hash=dummy_hash,
         role_id=bartender_role.id,
         is_active=True,
         max_weekly_hours=35,
@@ -97,6 +107,7 @@ def seed():
     sarah = Employee(
         name="Sarah Paris",
         email="sarah@example.com",
+        password_hash=dummy_hash,
         role_id=host_role.id,
         is_active=True,
         max_weekly_hours=30,
@@ -106,6 +117,7 @@ def seed():
     louis = Employee(
         name="Louis Smith",
         email="louis@example.com",
+        password_hash=dummy_hash,
         role_id=dishwasher_role.id,
         is_active=True,
         max_weekly_hours=35,
@@ -115,6 +127,7 @@ def seed():
     emma = Employee(
         name="Emma Patel",
         email="emma@example.com",
+        password_hash=dummy_hash,
         role_id=server_role.id,
         is_active=True,
         max_weekly_hours=15,
@@ -124,6 +137,7 @@ def seed():
     tyler = Employee(
         name="Tyler Brooks",
         email="tyler@example.com",
+        password_hash=dummy_hash,
         role_id=cook_role.id,
         is_active=True,
         max_weekly_hours=20,

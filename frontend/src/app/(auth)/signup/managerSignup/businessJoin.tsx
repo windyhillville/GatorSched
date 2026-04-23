@@ -1,14 +1,16 @@
-import { Platform, StyleSheet } from 'react-native';
-import { Chevron, Header, Screen, TextField } from '@/ui';
 import { AuthForm } from '@/features';
-import { useRouter } from 'expo-router';
 import { useAuth, useSignup } from '@/hooks';
+import { createManagerAccount, login } from '@/services';
+import { Chevron, Header, Screen, TextField } from '@/ui';
+import { useRouter } from 'expo-router';
+import { Platform, StyleSheet } from 'react-native';
 
 export default function SignUp() {
   const router = useRouter();
-  const { data, updateSignupData } = useSignup();
+  const { data, resetSignup, updateSignupData } = useSignup();
   const { logIn } = useAuth();
-  const createAccount = () => {
+
+  async function createAccount() {
     // ensure fields are not blank
     const isBlank = (str: string) => str.trim().length === 0;
     if (isBlank(data.business) || isBlank(data.location) || isBlank(data.role)) {
@@ -19,12 +21,29 @@ export default function SignUp() {
       // update manager role
       updateSignupData({ role: 'manager' });
 
-      // logic for creating account
+      try {
+        const accountCreationResponse = await createManagerAccount({
+          name: data.name,
+          email: data.email,
+          password: data.password,
+          phone: data.phone,
+          avatarUrl: null,
+          roles: ['Manager'],
+        });
 
-      // log in
-      logIn();
+        if (!accountCreationResponse.success) {
+          throw new Error('Failed to create business account');
+        }
+
+        const loginResponse = await login({ email: data.email, password: data.password });
+        logIn({ accessToken: loginResponse.accessToken, user: loginResponse.user });
+
+        resetSignup();
+      } catch (err) {
+        console.error(err);
+      }
     }
-  };
+  }
 
   return (
     <Screen insetTop>

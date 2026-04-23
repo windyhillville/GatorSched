@@ -18,9 +18,9 @@ export type LoginResponse = {
   user: UserCredentials;
 };
 
-export async function validateUserAndLogin(payload: LoginRequest): Promise<LoginResponse> {
+export async function login(payload: LoginRequest): Promise<LoginResponse> {
   const res = await fetch(`${API_BASE}/auth/login`, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },

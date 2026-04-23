@@ -6,7 +6,6 @@ export type CreateEmployeeRequest = {
   password: string;
   phone: string | null;
   avatarUrl: string | null;
-  isActive: boolean;
   roleName: string;
 };
 
@@ -18,7 +17,7 @@ export async function createEmployeeAccount(
   payload: CreateEmployeeRequest,
 ): Promise<CreateEmployeeResponse> {
   const res = await fetch(`${API_BASE}/auth/create-employee-account`, {
-    method: 'PUT',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
