@@ -9,11 +9,13 @@ idna==3.11
 iniconfig==2.3.0
 packaging==26.0
 pluggy==1.6.0
+pwdlib[argon2]
 pydantic==2.12.5
 pydantic-settings==2.12.0
 pydantic_core==2.41.5
 Pygments==2.19.2
 python-dotenv==1.2.1
+PyJWT[crypto]
 SQLAlchemy==2.0.46
 starlette==0.50.0
 typing-inspection==0.4.2

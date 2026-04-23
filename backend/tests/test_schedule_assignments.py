@@ -1,5 +1,7 @@
 from datetime import date, time
 
+import pytest
+
 from gatorsched_api.models.employee import AccessLevel, Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
@@ -15,6 +17,7 @@ def test_schedule_assignments_returns_one_after_insert(client, db_session, cashi
     employee = Employee(
         name="Ben Davidson",
         email="ben11@example.com",
+        password_hash=pytest.dummy_hash,
         color="#454567",
         access_level=AccessLevel.manager,
         is_active=True,
@@ -60,6 +63,7 @@ def test_create_schedule_assignment(client, db_session, cashier_role):
     employee = Employee(
         name="John Smith",
         email="john@example.com",
+        password_hash=pytest.dummy_hash,
         color="#454567",
         access_level=AccessLevel.employee,
         is_active=True,

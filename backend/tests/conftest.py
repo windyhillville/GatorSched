@@ -11,6 +11,8 @@ from gatorsched_api.db.deps import get_db
 from gatorsched_api.main import app
 from gatorsched_api.models.role import Role
 
+from pwdlib import PasswordHash
+
 SQLALCHEMY_DATABASE_URL = "sqlite://"
 
 # - sqlite:// (no file path) + StaticPool keeps ONE in-memory DB alive across entire testing suite
@@ -29,6 +31,10 @@ def override_get_db() -> Generator[Session, None, None]:
         yield db
     finally:
         db.close()
+
+
+def pytest_configure():
+    pytest.dummy_hash = PasswordHash.recommended().hash("password123")
 
 
 @pytest.fixture(scope="session", autouse=True)

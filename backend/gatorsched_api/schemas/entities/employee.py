@@ -8,6 +8,7 @@ from .role import RoleRead
 class EmployeeBase(BaseModel):
     name: str
     email: EmailStr
+    password_hash: str
     phone: str | None = None
     color: str
     avatar_url: str | None = None

@@ -1,5 +1,7 @@
 from datetime import date, time
 
+import pytest
+
 from gatorsched_api.models.employee import AccessLevel, Employee
 from gatorsched_api.models.schedule_assignment import ScheduleAssignment
 from gatorsched_api.models.shift import Shift
@@ -15,6 +17,7 @@ def test_create_callout_request(client, db_session, cashier_role):
     employee = Employee(
         name="Callout Test",
         email="callout@example.com",
+        password_hash=pytest.dummy_hash,
         access_level=AccessLevel.employee,
         color="#000000",
         is_active=True,
