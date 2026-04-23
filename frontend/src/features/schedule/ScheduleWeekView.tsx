@@ -33,6 +33,7 @@ export function ScheduleWeekView({
             label: shift.shortLabel,
             timeRange: shift.timeRange,
           }))}
+          size="medium"
           onDayPress={onDayPress}
         />
 

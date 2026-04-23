@@ -135,8 +135,6 @@ const styles = StyleSheet.create({
   exitButtonInnerContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 50,
     borderColor: '#E33333',
   },
 

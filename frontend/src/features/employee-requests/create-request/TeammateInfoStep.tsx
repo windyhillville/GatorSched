@@ -31,7 +31,7 @@ export function TeammateInfoStep({
       <View style={styles.teammateInfoContainer}>
         {!selectedTeammate ? (
           <View style={styles.infoTextContainer}>
-            <Text>Select a teammate to view available shifts</Text>
+            <Text style={styles.infoText}>Select a teammate to view available shifts</Text>
           </View>
         ) : shifts && shifts.length > 0 ? (
           <ShiftSelectionStep
@@ -52,10 +52,11 @@ export function TeammateInfoStep({
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: 'blue',
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 24,
+    gap: 24,
+    // paddingVertical: 24,
   },
   teammateInfoContainer: {
     // backgroundColor: 'red',
@@ -64,5 +65,13 @@ const styles = StyleSheet.create({
   infoTextContainer: {
     alignItems: 'center',
     justifyContent: 'center',
+    // borderWidth: 1,
+    borderRadius: 12,
+    backgroundColor: '#F4F5F7',
+    borderColor: '#D0D5DD',
+    padding: 12,
+  },
+  infoText: {
+    color: '#344054',
   },
 });
