@@ -1,6 +1,6 @@
 import { API_BASE } from '../apiConfig';
 
-type ProfileScreenResponse = {
+export type ProfileScreenResponse = {
   id: string;
   name: string;
   email: string;

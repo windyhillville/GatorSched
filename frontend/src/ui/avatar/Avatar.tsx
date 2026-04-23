@@ -2,7 +2,7 @@ import { Colors, SIZES } from '@/styles';
 import { Image } from 'expo-image';
 import { StyleProp, StyleSheet, Text, TextStyle, View, ViewStyle } from 'react-native';
 
-export type AvatarSize = 'xxSmall' | 'xSmall' | 'small' | 'medium' | 'large';
+export type AvatarSize = 'xxSmall' | 'xSmall' | 'small' | 'medium' | 'large' | 'xLarge';
 
 type AvatarProps = {
   img: string | null;
@@ -21,6 +21,7 @@ const sizeMap = {
   small: SIZES.avatar.small,
   medium: SIZES.avatar.medium,
   large: SIZES.avatar.large,
+  xLarge: SIZES.avatar.xLarge,
 };
 
 export function Avatar({
