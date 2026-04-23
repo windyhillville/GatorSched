@@ -5,5 +5,6 @@ export const SIZES = {
     small: 80,
     medium: 90,
     large: 100,
+    xLarge: 200,
   },
 };
