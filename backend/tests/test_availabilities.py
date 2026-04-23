@@ -1,5 +1,7 @@
 from datetime import time
 
+import pytest
+
 from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.employee import AccessLevel, Employee
 
@@ -14,6 +16,7 @@ def test_availability_returns_one_after_insert(client, db_session, cashier_role)
     employee = Employee(
         name="Ben Davidson",
         email="ben44@example.com",
+        password_hash=pytest.dummy_hash,
         color="#456785",
         access_level=AccessLevel.manager,
         is_active=True,
@@ -48,6 +51,7 @@ def test_create_availability(client, db_session, cashier_role):
     employee = Employee(
         name="John Smith",
         email="john3@example.com",
+        password_hash=pytest.dummy_hash,
         color="#343434",
         access_level=AccessLevel.employee,
         is_active=True,

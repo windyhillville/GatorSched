@@ -1,5 +1,7 @@
 from datetime import date, time
 
+import pytest
+
 from gatorsched_api.models.availability import Availability
 from gatorsched_api.models.employee import AccessLevel, Employee
 from gatorsched_api.models.role import Role
@@ -21,6 +23,7 @@ def _create_employee(db, name, email, role_id, max_weekly_hours=None):
     employee = Employee(
         name=name,
         email=email,
+        password_hash=pytest.dummy_hash,
         color="#000000",
         access_level=AccessLevel.employee,
         is_active=True,

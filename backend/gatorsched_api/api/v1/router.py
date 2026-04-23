@@ -1,5 +1,8 @@
 from fastapi import APIRouter
 
+from .routes.auth.create_employee_account import router as create_employee_account_router
+from .routes.auth.create_manager_account import router as create_manager_account_router
+from .routes.auth.login import router as login_router
 from .routes.employee.accept_swap import router as accept_swap_router
 from .routes.employee.availability import router as employee_availabilities_router
 from .routes.employee.cancel_swap import router as cancel_swap_router
@@ -61,3 +64,6 @@ api_router.include_router(cancel_swap_router)
 api_router.include_router(approve_swap_router)
 api_router.include_router(reject_swap_router)
 api_router.include_router(profile_screen_router)
+api_router.include_router(create_employee_account_router)
+api_router.include_router(create_manager_account_router)
+api_router.include_router(login_router)
