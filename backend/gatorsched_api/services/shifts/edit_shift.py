@@ -9,7 +9,7 @@ from gatorsched_api.schemas.manager.shifts.edit_shift import (
     EditShiftRequest,
     EditShiftResponse,
 )
-from gatorsched_api.schemas.manager.shifts.shifts import (
+from gatorsched_api.schemas.manager.shifts.shared_types import (
     TimeRange,
 )
 from gatorsched_api.services.datetime_formatting import (

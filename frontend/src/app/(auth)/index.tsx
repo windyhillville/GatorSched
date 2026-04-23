@@ -33,12 +33,12 @@ export default function Login() {
 
       <AuthForm onSubmit={handleLogin} buttonText="Log In">
         <TextField
-          label={'Username'}
+          label={'Email'}
           inputMode="text"
           inputStyleType="text"
           style={{ height: 70 }}
           maxLength={30}
-          placeholder="TheRealRonDon"
+          placeholder="rdon@gmail.com"
           onChangeText={setEmail}
           value={email}
         />
