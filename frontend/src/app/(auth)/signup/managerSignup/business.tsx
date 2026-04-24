@@ -1,6 +1,6 @@
-import { Platform, StyleSheet, Text, View } from 'react-native';
 import { Button, Chevron, Header, Screen } from '@/ui';
 import { useRouter } from 'expo-router';
+import { Platform, StyleSheet, Text, View } from 'react-native';
 
 export default function SignUp() {
   const router = useRouter();
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     flex: 1,
     width: '100%',
-    maxWidth: 400,
+    // maxWidth: 400,
     justifyContent: 'center',
     alignItems: 'center',
     gap: 30,
