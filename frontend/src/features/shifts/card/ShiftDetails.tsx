@@ -62,12 +62,14 @@ export function ShiftDetails({
         ) : (
           <View>
             <View style={{ gap: 24 }}>
-              <Text style={styles.informationText}>
-                <Text style={styles.boldText}>{shortage}</Text>{' '}
-                {shortage === 1
-                  ? 'more employee needs to be assigned'
-                  : 'more employees need to be assigned'}
-              </Text>
+              <View style={{ alignItems: 'center' }}>
+                <Text style={styles.informationText}>
+                  <Text style={styles.boldText}>{shortage}</Text>{' '}
+                  {shortage === 1
+                    ? 'more employee needs to be assigned'
+                    : 'more employees need to be assigned'}
+                </Text>
+              </View>
               <AvatarSelector
                 avatars={avatars}
                 disabled={true}
