@@ -35,6 +35,7 @@ def seed_requests():
     dom = by_name.get("Dominick Consiglio", [])
     ron = by_name.get("Ron Don", [])
     johnny = by_name.get("Johnny Johnson", [])
+    dan = by_name.get("Daniel Moody", [])
 
     # Swap Requests
     swap_requests = []
@@ -60,6 +61,19 @@ def seed_requests():
                 cover_id=ron[0].employee_id,
                 requester_assignment_id=johnny[0].id,
                 cover_assignment_id=ron[1].id,
+                employee_status=EmployeeRequestStatus.accepted,
+                manager_status=ManagerRequestStatus.pending,
+            )
+        )
+
+    # Daniel and Ben already agreed -> awaiting manager
+    if dan and ben:
+        swap_requests.append(
+            SwapRequest(
+                requester_id=dan[0].employee_id,
+                cover_id=ben[0].employee_id,
+                requester_assignment_id=dan[0].id,
+                cover_assignment_id=ben[0].id,
                 employee_status=EmployeeRequestStatus.accepted,
                 manager_status=ManagerRequestStatus.pending,
             )
