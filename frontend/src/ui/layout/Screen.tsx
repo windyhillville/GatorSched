@@ -1,7 +1,7 @@
 import { StyleSheet, View, type ViewProps } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // import { Colors, Spacing } from "@tokens";
-import { Colors, Spacing } from '../../styles/';
+import { Colors, Spacing } from '@/styles';
 
 export type ScreenProps = ViewProps & {
   padded?: boolean | number;
@@ -16,7 +16,7 @@ export type ScreenProps = ViewProps & {
 export function Screen({
   padded = false,
   centered = false,
-  backgroundColor = Colors.bg,
+  backgroundColor = Colors.baseWhite, // backgroundColor = Colors.bg,
   insetTop = false,
   insetBottom = true,
   insetLeft = true,
