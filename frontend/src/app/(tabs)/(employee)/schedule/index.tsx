@@ -130,7 +130,7 @@ export default function Schedule() {
                 setCurrentWeekStart((prevWeek) => getPreviousWeekStart(prevWeek))
               }
               onNextWeek={() => setCurrentWeekStart((prevWeek) => getNextWeekStart(prevWeek))}
-              onDayPress={(dayKey) => setSelectedDayKey(dayKey)}
+              onDayPress={(dayKey) => setSelectedDayKey(dayKey.slice(0, 3))}
             />
 
             <View style={styles.buttonWrapper}>
